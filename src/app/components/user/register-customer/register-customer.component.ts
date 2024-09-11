@@ -23,12 +23,10 @@ export class RegisterCustomerComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       console.log(this.registerForm.value);
-      // Aquí puedes añadir la lógica para enviar los datos
     }
   }
 
   onGoogleAuth() {
-    // Lógica para autenticación con Google
     console.log('Autenticación con Google');
   }
 
