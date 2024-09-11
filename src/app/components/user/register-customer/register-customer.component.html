@@ -1,1 +1,35 @@
-<p>register-customer works!</p>
+<div class="register-container">
+    <h2>Registro de Cliente</h2>
+    
+    <form  (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nombre">Nombre Completo</label>
+        <input type="text" id="nombre" formControlName="nombre" placeholder="Ingrese su nombre completo" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="email">Correo Electrónico</label>
+        <input type="email" id="email" formControlName="email" placeholder="Ingrese su correo electrónico" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" formControlName="telefono" placeholder="Ingrese su número de teléfono" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="direccion">Dirección</label>
+        <input type="text" id="direccion" formControlName="direccion" placeholder="Ingrese su dirección" required />
+      </div>
+  
+      <button type="submit" class="btn-submit">Registrar</button>
+    </form>
+  
+    <div class="google-auth">
+      <p>O regístrate con:</p>
+      <button (click)="onGoogleAuth()" class="btn-google">
+        <img src="https://e7.pngegg.com/pngimages/114/607/png-clipart-g-suite-pearl-river-middle-school-google-software-suite-email-sign-up-button-text-logo.png" alt="Google Icon" /> Continuar con Google
+      </button>
+    </div>
+  </div>
+  
