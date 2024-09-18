@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-register-customer',
   standalone: true,
-  imports: [],
+  imports: [NavbarComponent],
   templateUrl: './register-customer.component.html',
   styleUrl: './register-customer.component.css'
 })
