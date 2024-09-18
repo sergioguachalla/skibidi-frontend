@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NavbarComponent } from '../../shared/navbar/navbar.component';
+
 
 @Component({
   selector: 'app-register-librarian',
   standalone: true,
-  imports: [],
+  imports: [NavbarComponent],
   templateUrl: './register-librarian.component.html',
   styleUrl: './register-librarian.component.css'
 })
