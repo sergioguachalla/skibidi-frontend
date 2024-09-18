@@ -1,35 +1,47 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
+import {NgIf} from "@angular/common";
 
 
 @Component({
   selector: 'app-register-librarian',
   standalone: true,
-  imports: [NavbarComponent],
+    imports: [NavbarComponent, FormsModule, NgIf, ReactiveFormsModule],
   templateUrl: './register-librarian.component.html',
   styleUrl: './register-librarian.component.css'
 })
 export class RegisterLibrarianComponent {
-  registerLibrarianForm: FormGroup;
+  registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    this.registerLibrarianForm = this.fb.group({
-      nombre: ['', Validators.required],
+  constructor(private formBuilder: FormBuilder) {
+    this.registerForm = this.formBuilder.group({
+      nombres: ['', Validators.required],
+      apellidos: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      telefono: ['', Validators.required],
-      numeroEmpleado: ['', Validators.required],
-      departamento: ['', Validators.required]
+      celular: ['', [Validators.required, ]], // ejemplo de validación para números de celular de 10 dígitos
+      direccion: ['', Validators.required],
+      username: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: this.passwordMatchValidator // Validador personalizado para confirmar que las contraseñas coinciden
     });
   }
 
-  onSubmit() {
-    if (this.registerLibrarianForm.valid) {
-      console.log(this.registerLibrarianForm.value);
-    }
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+
+    return password === confirmPassword ? null : { mismatch: true };
   }
 
-  onGoogleAuth() {
-    console.log('Autenticación con Google');
+  onSubmit() {
+    if (this.registerForm.valid) {
+      console.log('Formulario válido:', this.registerForm.value);
+    } else {
+      console.log('Formulario no válido');
+      this.registerForm.markAllAsTouched(); // Esto marca todos los campos como tocados para mostrar los errores
+    }
   }
 }
