@@ -1,0 +1,8 @@
+.background-shadow {
+  background-color: rgba(0, 0, 0, 0.1); /* Fondo negro con opacidad */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 20px; /* Espacio interno */
+}
+.h2-centered {
+  text-align: center;
+}
