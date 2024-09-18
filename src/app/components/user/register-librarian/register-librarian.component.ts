@@ -2,12 +2,15 @@ import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import {NgIf} from "@angular/common";
+import { CommonModule } from '@angular/common';
 
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-register-librarian',
   standalone: true,
-    imports: [NavbarComponent, FormsModule, NgIf, ReactiveFormsModule],
+  imports: [NavbarComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './register-librarian.component.html',
   styleUrl: './register-librarian.component.css'
 })
@@ -36,12 +39,23 @@ export class RegisterLibrarianComponent {
     return password === confirmPassword ? null : { mismatch: true };
   }
 
-  onSubmit() {
+  openModal() {
     if (this.registerForm.valid) {
-      console.log('Formulario válido:', this.registerForm.value);
+      const modalElement = document.getElementById('confirmationModal');
+      const modal = new bootstrap.Modal(modalElement!);
+      modal.show();
     } else {
-      console.log('Formulario no válido');
-      this.registerForm.markAllAsTouched(); // Esto marca todos los campos como tocados para mostrar los errores
+      this.registerForm.markAllAsTouched(); // Muestra los errores si el formulario no es válido
     }
+  }
+
+  confirmSubmission() {
+    if (this.registerForm.valid) {
+      console.log('Formulario confirmado:', this.registerForm.value);
+      // Aquí puedes enviar la información al backend o realizar alguna acción
+    }
+    const modalElement = document.getElementById('confirmationModal');
+    const modal = bootstrap.Modal.getInstance(modalElement!);
+    modal.hide();
   }
 }

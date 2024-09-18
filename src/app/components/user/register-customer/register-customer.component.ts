@@ -4,6 +4,8 @@ import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-register-customer',
   standalone: true,
@@ -36,12 +38,23 @@ export class RegisterCustomerComponent {
     return password === confirmPassword ? null : { mismatch: true };
   }
 
-  onSubmit() {
+  openModal() {
     if (this.registerForm.valid) {
-      console.log('Formulario válido:', this.registerForm.value);
+      const modalElement = document.getElementById('confirmationModal');
+      const modal = new bootstrap.Modal(modalElement!);
+      modal.show();
     } else {
-      console.log('Formulario no válido');
-      this.registerForm.markAllAsTouched(); // Esto marca todos los campos como tocados para mostrar los errores
+      this.registerForm.markAllAsTouched(); // Muestra los errores si el formulario no es válido
     }
+  }
+
+  confirmSubmission() {
+    if (this.registerForm.valid) {
+      console.log('Formulario confirmado:', this.registerForm.value);
+      // Aquí puedes enviar la información al backend o realizar alguna acción
+    }
+    const modalElement = document.getElementById('confirmationModal');
+    const modal = bootstrap.Modal.getInstance(modalElement!);
+    modal.hide();
   }
 }

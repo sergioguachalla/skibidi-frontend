@@ -3,8 +3,8 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="background-shadow">
-        <form class="" [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
-          <h2 class="h2-centered">Regístrate como Bibliotecario</h2>
+        <form [formGroup]="registerForm" (ngSubmit)="openModal()" novalidate>
+          <h2 class="h2-centered">Regístrate como bibliotecario</h2>
 
           <div class="row mb-3">
             <div class="col-md-6">
@@ -78,13 +78,38 @@
             </div>
           </div>
 
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <button type="submit" class="btn btn-primary">Crear una cuenta</button>
+          <div class="row mb-3 justify-content-center">
+            <div class="col-md-3">
+              <button type="button" class="btn btn-primary w-100" (click)="openModal()">Crear una cuenta</button>
             </div>
-
+            <div class="col-md-3">
+              <button class="btn btn-secondary w-100" type="button">Cancelar</button>
+            </div>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Confirma tu información</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Nombres:</strong> {{ registerForm.get('nombres')?.value }}</p>
+        <p><strong>Apellidos:</strong> {{ registerForm.get('apellidos')?.value }}</p>
+        <p><strong>Correo Electrónico:</strong> {{ registerForm.get('email')?.value }}</p>
+        <p><strong>Celular:</strong> {{ registerForm.get('celular')?.value }}</p>
+        <p><strong>Dirección:</strong> {{ registerForm.get('direccion')?.value }}</p>
+        <p><strong>Username:</strong> {{ registerForm.get('username')?.value }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Editar</button>
+        <button type="button" class="btn btn-primary" (click)="confirmSubmission()">Confirmar</button>
       </div>
     </div>
   </div>
