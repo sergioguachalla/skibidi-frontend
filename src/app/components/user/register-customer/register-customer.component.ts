@@ -1,3 +1,5 @@
+
+
 import {Component, inject} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
@@ -7,6 +9,7 @@ import {PersonDto} from "../../../model/dto/PersonDto";
 import {UserDto} from "../../../model/dto/UserDto";
 import {UserRegistrationDto} from "../../../model/dto/UserRegistrationDto";
 import {CustomerServiceService} from "../../../services/customer-service.service";
+import {BehaviorSubject} from "rxjs";
 
 declare var bootstrap: any;
 
@@ -30,7 +33,8 @@ export class RegisterCustomerComponent {
     { value: 'BN', label: 'Beni' },
     { value: 'PD', label: 'Pando' }
   ];
-
+  loading$ = new BehaviorSubject<boolean>(false);
+  success$ = new BehaviorSubject<boolean | null>(null);
   customerService: CustomerServiceService= inject(CustomerServiceService);
   constructor(private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
@@ -68,7 +72,14 @@ export class RegisterCustomerComponent {
 
   confirmSubmission() {
     if (this.registerForm.valid) {
-      const personDto: PersonDto = {
+      this.loading$.next(true); // Cambiamos el estado a 'loading'
+      this.success$.next(null);
+
+      const modalElement = document.getElementById('statusModal');
+      const modal = new bootstrap.Modal(modalElement!);
+      modal.show();
+
+      const personDto = {
         name: this.registerForm.get('nombres')?.value,
         lastName: this.registerForm.get('apellidos')?.value,
         idNumber: this.registerForm.get('ci')?.value,
@@ -76,29 +87,37 @@ export class RegisterCustomerComponent {
         address: this.registerForm.get('direccion')?.value
       };
 
-      const userDto: UserDto = {
+      const userDto = {
         name: this.registerForm.get('username')?.value,
         email: this.registerForm.get('email')?.value,
         password: this.registerForm.get('password')?.value
       };
 
-      const userRegistrationDto: UserRegistrationDto = {
+      const userRegistrationDto = {
         personDto: personDto,
         userDto: userDto
       };
+      setTimeout(() => {
+        this.customerService.registerCustomer(userRegistrationDto).subscribe(
+          response => {
+            this.loading$.next(false);
+            this.success$.next(true);
 
-      console.log('Registrando usuario:', userRegistrationDto);
-      this.customerService.registerCustomer(userRegistrationDto).subscribe(
-        response => {
-          console.log('Registro exitoso:', response);
-        },
-        error => {
-          console.error('Error en el registro:', error);
-        }
-      );
+            setTimeout(() => {
+              modal.hide();
+            }, 2000);
+          },
+          error => {
+            this.loading$.next(false);
+            this.success$.next(false);
+          }
+        );
+      }, 1000);
     }
-    const modalElement = document.getElementById('confirmationModal');
-    const modal = bootstrap.Modal.getInstance(modalElement!);
-    modal.hide();
+
+    const confirmationModalElement = document.getElementById('confirmationModal');
+    const confirmationModal = bootstrap.Modal.getInstance(confirmationModalElement!);
+    confirmationModal.hide();
   }
+
 }
