@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Asegúrate de importar esto
+import { NavbarComponent } from '../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-view-books',
   standalone: true,
-  imports: [CommonModule], // Importa CommonModule para utilizar *ngFor y otras directivas comunes
+  imports: [CommonModule, NavbarComponent], // Importa CommonModule para utilizar *ngFor y otras directivas comunes
   templateUrl: './view-books.component.html',
   styleUrls: ['./view-books.component.css']
 })
 export class ViewBooksComponent {
-
   // Datos estáticos de ejemplo
   librosFiltrados = [
     {
@@ -35,5 +35,14 @@ export class ViewBooksComponent {
 
   onSearch() {
     console.log('Búsqueda en curso...');
+  }
+
+  toggleAvailability(libro: any) {
+    // Mostrar cuadro de confirmación
+    const confirmChange = confirm(`¿Desea ${libro.disponible ? 'ocupar' : 'disponibilizar'} el libro "${libro.titulo}"?`);
+    if (confirmChange) {
+      // Cambiar el estado del libro si se confirma
+      libro.disponible = !libro.disponible;
+    }
   }
 }
