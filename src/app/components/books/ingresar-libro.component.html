@@ -9,9 +9,9 @@
           <!-- Campo para el título del libro -->
           <div class="row mb-3">
             <div class="col-md-12">
-              <label for="titulo" class="form-label">Título del libro:</label>
-              <input id="titulo" formControlName="titulo" type="text" class="form-control" placeholder="Título del libro" required>
-              <div *ngIf="libroForm.get('titulo')?.invalid && libroForm.get('titulo')?.touched" class="text-danger">
+              <label for="title" class="form-label">Título del libro:</label>
+              <input id="title" formControlName="title" type="text" class="form-control" placeholder="Título del libro" required>
+              <div *ngIf="libroForm.get('title')?.invalid && libroForm.get('title')?.touched" class="text-danger">
                 El título es requerido.
               </div>
             </div>
