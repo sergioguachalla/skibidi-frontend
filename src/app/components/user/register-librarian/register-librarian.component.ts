@@ -8,6 +8,7 @@ import {PersonDto} from "../../../model/dto/PersonDto";
 import {UserDto} from "../../../model/dto/UserDto";
 import {UserRegistrationDto} from "../../../model/dto/UserRegistrationDto";
 import {LibrarianService} from "../../../services/librarian.service";
+import {BehaviorSubject} from "rxjs";
 
 
 declare var bootstrap: any;
@@ -32,7 +33,8 @@ export class RegisterLibrarianComponent {
     { value: 'BN', label: 'Beni' },
     { value: 'PD', label: 'Pando' }
   ];
-
+  loading$ = new BehaviorSubject<boolean>(false);
+  success$ = new BehaviorSubject<boolean | null>(null);
   librarianService: LibrarianService= inject(LibrarianService);
   constructor(private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
@@ -70,7 +72,14 @@ export class RegisterLibrarianComponent {
 
   confirmSubmission() {
     if (this.registerForm.valid) {
-      const personDto: PersonDto = {
+      this.loading$.next(true); // Cambiamos el estado a 'loading'
+      this.success$.next(null);
+
+      const modalElement = document.getElementById('statusModal');
+      const modal = new bootstrap.Modal(modalElement!);
+      modal.show();
+
+      const personDto = {
         name: this.registerForm.get('nombres')?.value,
         lastName: this.registerForm.get('apellidos')?.value,
         idNumber: this.registerForm.get('ci')?.value,
@@ -78,29 +87,36 @@ export class RegisterLibrarianComponent {
         address: this.registerForm.get('direccion')?.value
       };
 
-      const userDto: UserDto = {
+      const userDto = {
         name: this.registerForm.get('username')?.value,
         email: this.registerForm.get('email')?.value,
         password: this.registerForm.get('password')?.value
       };
 
-      const userRegistrationDto: UserRegistrationDto = {
+      const userRegistrationDto = {
         personDto: personDto,
         userDto: userDto
       };
+      setTimeout(() => {
+        this.librarianService.registerLibrarian(userRegistrationDto).subscribe(
+          response => {
+            this.loading$.next(false);
+            this.success$.next(true);
 
-      console.log('Registrando usuario:', userRegistrationDto);
-      this.librarianService.registerLibrarian(userRegistrationDto).subscribe(
-        response => {
-          console.log('Registro exitoso:', response);
-        },
-        error => {
-          console.error('Error en el registro:', error);
-        }
-      );
+            setTimeout(() => {
+              modal.hide();
+            }, 2000);
+          },
+          error => {
+            this.loading$.next(false);
+            this.success$.next(false);
+          }
+        );
+      }, 1000);
     }
-    const modalElement = document.getElementById('confirmationModal');
-    const modal = bootstrap.Modal.getInstance(modalElement!);
-    modal.hide();
+
+    const confirmationModalElement = document.getElementById('confirmationModal');
+    const confirmationModal = bootstrap.Modal.getInstance(confirmationModalElement!);
+    confirmationModal.hide();
   }
 }
