@@ -15,6 +15,17 @@ declare var bootstrap: any;
 })
 export class RegisterCustomerComponent {
   registerForm: FormGroup;
+  departamentos = [
+    { value: 'LP', label: 'La Paz' },
+    { value: 'SCZ', label: 'Santa Cruz' },
+    { value: 'CBB', label: 'Cochabamba' },
+    { value: 'OR', label: 'Oruro' },
+    { value: 'PT', label: 'Potosí' },
+    { value: 'TJ', label: 'Tarija' },
+    { value: 'CH', label: 'Chuquisaca' },
+    { value: 'BN', label: 'Beni' },
+    { value: 'PD', label: 'Pando' }
+  ];
 
   constructor(private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
@@ -25,7 +36,9 @@ export class RegisterCustomerComponent {
       direccion: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
+      ci: ['', Validators.required],
+      departamento: ['', Validators.required]
     }, {
       validator: this.passwordMatchValidator // Validador personalizado para confirmar que las contraseñas coinciden
     });
@@ -44,14 +57,13 @@ export class RegisterCustomerComponent {
       const modal = new bootstrap.Modal(modalElement!);
       modal.show();
     } else {
-      this.registerForm.markAllAsTouched(); // Muestra los errores si el formulario no es válido
+      this.registerForm.markAllAsTouched();
     }
   }
 
   confirmSubmission() {
     if (this.registerForm.valid) {
       console.log('Formulario confirmado:', this.registerForm.value);
-      // Aquí puedes enviar la información al backend o realizar alguna acción
     }
     const modalElement = document.getElementById('confirmationModal');
     const modal = bootstrap.Modal.getInstance(modalElement!);

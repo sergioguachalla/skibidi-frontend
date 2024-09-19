@@ -23,6 +23,26 @@
               </div>
             </div>
           </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="ci" class="form-label">C.I.:</label>
+              <input type="number" formControlName="ci" class="form-control" id="ci" placeholder="C.I.">
+              <div *ngIf="registerForm.get('ci')?.invalid && registerForm.get('ci')?.touched" class="text-danger">
+                El C.I. es requerido.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="departamento" class="form-label">Departamento:</label>
+              <select formControlName="departamento" class="form-select" id="departamento">
+                <option value="" selected>Selecciona un departamento</option>
+                <option *ngFor="let depto of departamentos" [value]="depto.value">{{ depto.label }}</option>
+              </select>
+              <div *ngIf="registerForm.get('departamento')?.invalid && registerForm.get('departamento')?.touched" class="text-danger">
+                El departamento es requerido.
+              </div>
+            </div>
+          </div>
 
           <div class="row mb-3">
             <div class="col-md-6">
