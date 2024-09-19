@@ -1,0 +1,34 @@
+<div class="view-books-container">
+    <h2>BUSQUEDA DE LIBRO</h2>
+  
+    <!-- Barra de búsqueda -->
+    <div class="search-bar">
+      <input type="text" placeholder="Buscar libro" (input)="updateSearchQuery($event)">
+      <button (click)="onSearch()">
+        <span>🔍</span>
+      </button>
+    </div>
+  
+    <!-- Lista de libros -->
+    <div *ngFor="let libro of librosFiltrados" class="book-item">
+      <div class="book-info">
+        <img class="book-image" [src]="libro.imagen" alt="Imagen del libro">
+        
+        <div class="book-details">
+          <h3 class="book-title"><a href="#">{{ libro.titulo }}</a></h3>
+          <p class="book-author">{{ libro.autor }}</p>
+          <p class="book-description">{{ libro.descripcion }}</p>
+          <a href="#" class="book-link">Más información</a>
+        </div>
+      </div>
+  
+      <div class="book-status">
+        <label class="switch">
+          <input type="checkbox" [checked]="libro.disponible">
+          <span class="slider"></span>
+        </label>
+        <span class="availability">DISPONIBLE</span>
+      </div>
+    </div>
+  </div>
+  
