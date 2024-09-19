@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'navbar',
@@ -8,5 +9,14 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+
+  private keycloakService: KeycloakService = inject(KeycloakService);
+
+  constructor() {
+  }
+
+  login() {
+    this.keycloakService.login();
+  }
 
 }
