@@ -21,11 +21,14 @@ export class BookService {
     return this.http.post<BookDto>(this.apiUrl, book);
   }
 
-  getAllBooks(): Observable<ApiResponse> { // Cambia el tipo de retorno aquí
+  getAllBooks(): Observable<ApiResponse> { 
     return this.http.get<ApiResponse>(this.apiUrl);
   }
 
   getBookByIsbn(isbn: string): Observable<BookDto> {
     return this.http.get<BookDto>(`${this.apiUrl}/${isbn}`);
+  }
+  updateBook(id: number, book: BookDto): Observable<any> {
+    return this.http.put(`http://localhost:8091/api/v1/books/${id}`, book);
   }
 }

@@ -24,10 +24,14 @@ export class ViewBooksComponent implements OnInit {
   loadBooks() {
     this.bookService.getAllBooks().subscribe(
       response => {
-        console.log('Respuesta del API:', response); // Log de la respuesta completa
+        console.log('Respuesta del API:', response);
         if (response.successful) {
-          this.librosFiltrados = response.data;
-          this.mensaje = 'Libros recuperados exitosamente!'; // Mensaje de éxito
+          this.librosFiltrados = response.data.map((libro, index) => ({
+            ...libro,
+            id: index + 1 
+          }));
+          console.log('Libros cargados:', this.librosFiltrados);
+          this.mensaje = 'Libros recuperados exitosamente!';
         } else {
           console.error('Error al cargar los libros:', response.message);
           this.mensaje = 'No se pudieron recuperar los libros.';
@@ -50,13 +54,30 @@ export class ViewBooksComponent implements OnInit {
   }
 
   toggleAvailability(libro: BookDto) {
-    const originalStatus = libro.status; // Guarda el estado original
+    const originalStatus = libro.status; 
     const confirmMessage = libro.status ? '¿Desea marcar este libro como OCUPADO?' : '¿Desea marcar este libro como DISPONIBLE?';
   
     if (confirm(confirmMessage)) {
-      libro.status = !originalStatus; // Cambia el estado solo si se acepta
+      libro.status = !originalStatus; 
+  
+      
+      const updatedBook = { ...libro }; 
+  
+      console.log('ID del libro:', libro.id); 
+  
+      this.bookService.updateBook(libro.id, updatedBook).subscribe(
+        response => {
+          console.log('Estado actualizado:', response);
+          this.mensaje = 'Estado del libro actualizado exitosamente!';
+        },
+        error => {
+          console.error('Error al actualizar el libro:', error);
+          libro.status = originalStatus; 
+          this.mensaje = 'Error al actualizar el estado del libro.';
+        }
+      );
     } else {
-      libro.status = originalStatus; // Restaura el estado original si se cancela
+      libro.status = originalStatus; 
     }
   }
 }

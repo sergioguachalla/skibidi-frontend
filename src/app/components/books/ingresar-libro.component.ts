@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
-import { BookService } from '../../services/book.service'; // Importamos el servicio
+import { BookService } from '../../services/book.service';
+import { GenreService } from '../../services/genre.service';
+
 @Component({
   selector: 'app-ingresar-libro',
   standalone: true,
@@ -15,19 +17,35 @@ import { BookService } from '../../services/book.service'; // Importamos el serv
   templateUrl: './ingresar-libro.component.html',
   styleUrls: ['./ingresar-libro.component.css']
 })
-export class IngresarLibroComponent {
+export class IngresarLibroComponent implements OnInit {
   libroForm: FormGroup;
+  genres: any[] = [];
 
-  constructor(private formBuilder: FormBuilder, private bookService: BookService) {
+  constructor(private formBuilder: FormBuilder, private bookService: BookService, private genreService: GenreService) {
     this.libroForm = this.formBuilder.group({
       title: ['', Validators.required],
       isbn: ['', Validators.required],
       status: [true],
       registrationDate: [new Date()],
-      image_url: ['']
+      image_url: [''],
+      genre: ['', Validators.required]
     });
   }
 
+  ngOnInit(): void {
+    this.getGenres();
+  }
+
+  getGenres(): void {
+    this.genreService.getAllGenres().subscribe(
+      (response: any) => {
+        this.genres = response.data; 
+      },
+      (error: any) => {
+        console.error('Error al cargar los géneros:', error);
+      }
+    );
+  }
   onSubmit() {
     if (this.libroForm.valid) {
       this.libroForm.patchValue({ registrationDate: new Date() });

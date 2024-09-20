@@ -28,6 +28,19 @@
             </div>
           </div>
 
+          <!-- Dropdown para seleccionar el género -->
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label for="genre" class="form-label">Género:</label>
+              <select id="genre" formControlName="genre" class="form-select">
+                <option *ngFor="let genre of genres" [value]="genre.genreId">{{ genre.genreName }}</option>
+              </select>
+              <div *ngIf="libroForm.get('genre')?.invalid && libroForm.get('genre')?.touched" class="text-danger">
+                El género es requerido.
+              </div>
+            </div>
+          </div>
+
           <!-- Botón para enviar el formulario -->
           <div class="row mb-3">
             <div class="col-md-6">
