@@ -4,7 +4,9 @@ import { Observable } from 'rxjs';
 import { BookDto } from '../Model/book.model';
 
 interface ApiResponse {
-  data: BookDto[];
+  data: {
+    content: BookDto[];          
+  };
   message: string;
   successful: boolean;
 }
