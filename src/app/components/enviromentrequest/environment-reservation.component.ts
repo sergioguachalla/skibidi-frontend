@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { EnvironmentService } from '../../services/environment.service';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { Environment, EnvironmentReservationDto } from '../../Model/environment.model';
+
 
 @Component({
   selector: 'app-environment-reservation',
@@ -8,28 +11,42 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
   templateUrl: './environment-reservation.component.html',
   styleUrls: ['./environment-reservation.component.css']
 })
-export class EnvironmentReservationComponent {
-  reservation = {
-    clientId: '',
-    environmentId: '',
+export class EnvironmentReservationComponent implements OnInit {
+  environments: Environment[] = [];
+  reservation: EnvironmentReservationDto = {
+    clientId: 0,
+    environmentId: 0,
     reservationDate: '',
     clockIn: '',
     clockOut: '',
     purpose: ''
   };
 
-  users = [
-    { id: 1, name: 'User 1' },
-    { id: 2, name: 'User 2' },
-  ];
+  constructor(private environmentService: EnvironmentService) {}
 
-  environments = [
-    { id: 1, name: 'Sala 1' },
-    { id: 2, name: 'Sala 2' },
-  ];
+  ngOnInit(): void {
+    this.loadEnvironments();
+  }
 
-  onSubmit() {
-    console.log('Reserva de ambiente:', this.reservation);
-    // Aquí puedes enviar la reserva al backend o manejarla
+  loadEnvironments(): void {
+    this.environmentService.getAllEnvironments().subscribe(
+      response => {
+        this.environments = response;
+      },
+      error => {
+        console.error('Error al cargar los ambientes:', error);
+      }
+    );
+  }
+
+  onSubmit(): void {
+    this.environmentService.createEnvironmentReservation(this.reservation).subscribe(
+      response => {
+        console.log('Reserva creada:', response);
+      },
+      error => {
+        console.error('Error al crear la reserva:', error);
+      }
+    );
   }
 }
