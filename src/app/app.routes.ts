@@ -2,9 +2,6 @@ import { Routes } from '@angular/router';
 import { RegisterCustomerComponent } from './components/user/register-customer/register-customer.component';
 import { RegisterLibrarianComponent } from './components/user/register-librarian/register-librarian.component';
 
-
-import { RegisterCustomerComponent } from './components/user/register-customer/register-customer.component';
-import { RegisterLibrarianComponent } from './components/user/register-librarian/register-librarian.component';
 import { IngresarLibroComponent } from './components/books/ingresar-libro.component';
 import { ViewBooksComponent } from './components/viewbook/view-books.component';
 

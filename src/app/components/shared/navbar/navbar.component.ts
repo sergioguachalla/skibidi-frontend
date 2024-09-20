@@ -20,6 +20,9 @@ export class NavbarComponent {
   login() {
     this.keycloakService.login();
   }
+  logout() {
+    this.keycloakService.logout();
+  }
 
 
 }
