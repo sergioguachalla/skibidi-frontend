@@ -38,4 +38,33 @@ export class LandingPageComponent implements OnInit {
       'Method not implemented. check LandingPageComponent.ts > onViewBooks()',
     );
   }
+
+  openRegisterBookModal(): void {
+    const modal = new (window as any).bootstrap.Modal(
+      document.getElementById('chooseRegistrationModal'),
+    );
+    modal.show();
+  }
+
+  openIsbnModal(): void {
+    (window as any).bootstrap.Modal.getInstance(
+      document.getElementById('chooseRegistrationModal'),
+    ).hide();
+
+    const modal = new (window as any).bootstrap.Modal(
+      document.getElementById('registerIsbnModal'),
+    );
+    modal.show();
+  }
+
+  submitIsbn(): void {
+    const isbn = (document.getElementById('isbnInput') as HTMLInputElement)
+      .value;
+
+    console.log(`ISBN ingresado: ${isbn}`);
+
+    (window as any).bootstrap.Modal.getInstance(
+      document.getElementById('registerIsbnModal'),
+    ).hide();
+  }
 }
