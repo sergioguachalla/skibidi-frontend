@@ -1,0 +1,64 @@
+<navbar></navbar>
+<div class="view-books-container">
+  <h2>BUSQUEDA DE LIBRO</h2>
+
+  <div class="search-bar">
+    <input type="text" placeholder="Buscar libro" (input)="updateSearchQuery($event)">
+    <button (click)="onSearch()">
+      <span>🔍</span>
+    </button>
+
+    <!-- Dropdown Menu in the Red Rectangle area -->
+    <div class="dropdown-container">
+      <select (change)="filterByGenreId($event)" >
+        <option value="">Todos los géneros</option>
+        <ng-container *ngFor="let genre of genres">
+          <option value="{{ genre.genreId }}">{{ genre.genreName }}</option>
+        </ng-container>
+
+        <!-- Agrega más opciones según sea necesario -->
+      </select>
+    </div>
+  </div>
+
+  <div *ngFor="let libro of librosFiltrados" class="book-item">
+    <div class="book-info">
+      <img class="book-image" [src]="libro.image_url || 'https://via.placeholder.com/100x120'" alt="Imagen del libro">
+
+      <div class="book-details">
+        <h3 class="book-title"><a href="#">{{ libro.title }}</a></h3>
+        <p class="book-author">{{ libro.isbn }}</p>
+        <p class="book-description">{{ libro.registrationDate | date }}</p>
+        <a href="#" class="book-link">Más información</a>
+      </div>
+    </div>
+
+    <div class="book-status">
+      <label class="switch">
+        <input type="checkbox" [checked]="libro.status" (change)="toggleAvailability(libro)">
+        <span class="slider"></span>
+      </label>
+      <span class="availability" [ngClass]="{'available': libro.status, 'unavailable': !libro.status}">
+        {{ libro.status ? 'DISPONIBLE' : 'OCUPADO' }}
+      </span>
+    </div>
+  </div>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+      <li class="page-item disabled">
+        <a class="page-link">Anterior</a>
+      </li>
+      <ng-container *ngFor="let page of pagesArray">
+        <li class="page-item" (click)="onPageChange(page)">
+          <a class="page-link">{{ page }}</a>
+        </li>
+      </ng-container>
+
+      <li class="page-item">
+        <a class="page-link">Siguiente</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+

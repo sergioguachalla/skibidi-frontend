@@ -1,0 +1,97 @@
+<nav class="navbar navbar-expand-lg" style="background-color: #4f75ff">
+  <div class="container-fluid">
+    <a class="navbar-brand" (click)="onClickToHome()" role="button" >Skibidi Library</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            aria-current="page"
+            role="button"
+            (click)="onClickToHome()"
+          >Libros</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" role="button"
+            (click)="onClickToEnvReservation()">Reservar Sala de Ambiente</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Registrar Libros
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="openIsbnModal()" role="button">Registrar por ISBN</a></li>
+            <li><a class="dropdown-item" (click)="onClickToRegisterManual()" role="button" >Registro manual</a></li>
+          </ul>
+        </li>
+
+      </ul>
+      <form class="d-flex" role="search" style="background-color: azure">
+
+        <button class="btn btn-outline-success" (click)="logout()">
+          Salir
+        </button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+
+
+<div
+  class="modal fade"
+  id="registerIsbnModal"
+  tabindex="-1"
+  aria-labelledby="registerIsbnModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerIsbnModalLabel">
+          Registrar Libro por ISBN
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="isbnInput" class="form-label">ISBN</label>
+            <input
+              type="text"
+              class="form-control"
+              id="isbnInput"
+              placeholder="Ingresa el ISBN del libro"
+            />
+          </div>
+          <button type="button" class="btn btn-primary" (click)="submitIsbn()">
+            Subir Datos
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

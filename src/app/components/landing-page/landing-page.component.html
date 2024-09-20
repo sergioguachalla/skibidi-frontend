@@ -1,0 +1,150 @@
+<div class="container-fluid p-0">
+  <!-- Hero Section -->
+  <div
+    class="jumbotron jumbotron-fluid text-white text-center bg-primary py-5 mb-0"
+  >
+    <div class="container">
+      <h1 class="display-4">Bienvenido a UCB Degree</h1>
+      <p class="lead">
+        Accede a una educación de calidad en la Universidad Católica Boliviana.
+      </p>
+      <div class="mt-4">
+        <button class="btn btn-light btn-lg mx-2" (click)="onLogin()">
+          Iniciar Sesión
+        </button>
+        <button
+          class="btn btn-outline-light btn-lg mx-2"
+          (click)="onRegisterCustomer()"
+        >
+          Registrar Cliente
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Section: Features -->
+  <div class="container py-5">
+    <div class="row text-center">
+      <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-person-plus-fill text-primary display-4 mb-3"></i>
+            <h5 class="card-title">Registrar Bibliotecario</h5>
+            <p class="card-text">
+              Añade nuevos bibliotecarios al sistema para una mejor gestión de
+              la biblioteca.
+            </p>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-book-half text-primary display-4 mb-3"></i>
+            <h5 class="card-title">Registrar Libros</h5>
+            <p class="card-text">
+              Gestiona la colección de la biblioteca añadiendo nuevos libros al
+              catálogo.
+            </p>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-mortarboard-fill text-primary display-4 mb-3"></i>
+            <h5 class="card-title">Programas Académicos</h5>
+            <p class="card-text">
+              Ofrecemos una amplia variedad de programas de grado y posgrado
+              adaptados a tus necesidades.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Call to Action Section -->
+  <div class="text-center bg-light py-5">
+    <button class="btn btn-primary btn-lg" (click)="onRegisterLibrarian()">
+      Registrate como bibliotecario
+    </button>
+  </div>
+  <!-- Footer -->
+  <footer class="text-center text-white bg-primary py-3">
+    <p>&copy; 2024 UCB Degree. Todos los derechos reservados.</p>
+  </footer>
+</div>
+
+<!-- Modal: Choose Registration Method -->
+<div
+  class="modal fade"
+  id="chooseRegistrationModal"
+  tabindex="-1"
+  aria-labelledby="chooseRegistrationModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="chooseRegistrationModalLabel">
+          ¿Cómo deseas registrar el libro?
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body text-center">
+        <button class="btn btn-primary mb-3" (click)="openIsbnModal()">
+          Por ISBN
+        </button>
+        <br />
+        <button class="btn btn-secondary">Manual</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Register by ISBN -->
+<div
+  class="modal fade"
+  id="registerIsbnModal"
+  tabindex="-1"
+  aria-labelledby="registerIsbnModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerIsbnModalLabel">
+          Registrar Libro por ISBN
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="isbnInput" class="form-label">ISBN</label>
+            <input
+              type="text"
+              class="form-control"
+              id="isbnInput"
+              placeholder="Ingresa el ISBN del libro"
+            />
+          </div>
+          <button type="button" class="btn btn-primary" (click)="submitIsbn()">
+            Subir Datos
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+<navbar></navbar>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="background-shadow">
+        
+        <!-- Mensaje de éxito -->
+        <div *ngIf="libroIngresadoExitosamente" class="alert alert-success">
+          Libro ingresado exitosamente.
+        </div>
+
+        <form [formGroup]="libroForm" (ngSubmit)="onSubmit()">
+          <h2 class="h2-centered">Ingresar nuevo libro</h2>
+
+          <!-- Campo para el título del libro -->
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label for="title" class="form-label">Título del libro:</label>
+              <input id="title" formControlName="title" type="text" class="form-control" placeholder="Título del libro" required>
+              <div *ngIf="libroForm.get('title')?.invalid && libroForm.get('title')?.touched" class="text-danger">
+                El título es requerido.
+              </div>
+            </div>
+          </div>
+
+          <!-- Resto del formulario... -->
+          <!-- Campo para el número de ISBN -->
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label for="isbn" class="form-label">Número de ISBN:</label>
+              <input id="isbn" formControlName="isbn" type="text" class="form-control" placeholder="Número de ISBN" required>
+              <div *ngIf="libroForm.get('isbn')?.invalid && libroForm.get('isbn')?.touched" class="text-danger">
+                El número de ISBN es requerido.
+              </div>
+            </div>
+          </div>
+
+          <!-- Dropdown para seleccionar el género -->
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label for="genre" class="form-label">Género:</label>
+              <select id="genre" formControlName="genreId" class="form-select" required>
+                <option value="" disabled selected>Seleccione un género</option>
+                <option *ngFor="let genre of genres" [value]="genre.genreId">{{ genre.genreName }}</option>
+              </select>
+              <div *ngIf="libroForm.get('genreId')?.invalid && libroForm.get('genreId')?.touched" class="text-danger">
+                El género es requerido.
+              </div>
+            </div>
+          </div>
+
+          <!-- Campos dinámicos para los autores -->
+          <div formArrayName="authors" class="row mb-3">
+            <div *ngFor="let authorCtrl of authors.controls; let i = index" [formGroupName]="i" class="col-md-12">
+              <label for="author-{{i}}" class="form-label">Autor {{i + 1}}:</label>
+              <input id="author-{{i}}" formControlName="author" type="text" class="form-control" placeholder="Nombre del autor" required>
+              <button type="button" (click)="removeAuthorField(i)" class="btn btn-danger mt-2">Eliminar Autor</button>
+              <div *ngIf="authorCtrl.invalid && authorCtrl.touched" class="text-danger">El nombre del autor es requerido.</div>
+            </div>
+          </div>
+
+          <!-- Botón para enviar el formulario -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-primary">Ingresar Libro</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
