@@ -20,6 +20,7 @@ import { GenreService } from '../../services/genre.service';
 export class IngresarLibroComponent implements OnInit {
   libroForm: FormGroup;
   genres: any[] = [];
+  libroIngresadoExitosamente: boolean = false; // Variable para el mensaje de éxito
 
   constructor(private formBuilder: FormBuilder, private bookService: BookService, private genreService: GenreService) {
     this.libroForm = this.formBuilder.group({
@@ -80,9 +81,12 @@ export class IngresarLibroComponent implements OnInit {
       this.bookService.createBook(bookData).subscribe(
         response => {
           console.log('Libro registrado exitosamente:', response);
+          this.libroIngresadoExitosamente = true; // Mostrar el mensaje de éxito
+          this.libroForm.reset(); // Opcional: resetear el formulario
         },
         error => {
           console.error('Error al registrar el libro:', error);
+          this.libroIngresadoExitosamente = false; 
         }
       );
     } else {

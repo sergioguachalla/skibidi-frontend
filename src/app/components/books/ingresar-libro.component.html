@@ -3,6 +3,12 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="background-shadow">
+        
+        <!-- Mensaje de éxito -->
+        <div *ngIf="libroIngresadoExitosamente" class="alert alert-success">
+          Libro ingresado exitosamente.
+        </div>
+
         <form [formGroup]="libroForm" (ngSubmit)="onSubmit()">
           <h2 class="h2-centered">Ingresar nuevo libro</h2>
 
@@ -17,6 +23,7 @@
             </div>
           </div>
 
+          <!-- Resto del formulario... -->
           <!-- Campo para el número de ISBN -->
           <div class="row mb-3">
             <div class="col-md-12">
@@ -31,8 +38,8 @@
           <!-- Dropdown para seleccionar el género -->
           <div class="row mb-3">
             <div class="col-md-12">
-              <label for="genreId" class="form-label">Género:</label>
-              <select id="genreId" formControlName="genreId" class="form-select" required>
+              <label for="genre" class="form-label">Género:</label>
+              <select id="genre" formControlName="genreId" class="form-select" required>
                 <option value="" disabled selected>Seleccione un género</option>
                 <option *ngFor="let genre of genres" [value]="genre.genreId">{{ genre.genreName }}</option>
               </select>
