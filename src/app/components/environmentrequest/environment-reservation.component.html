@@ -16,8 +16,15 @@
   <!-- Selección de ambiente -->
   <div>
     <label for="environmentId">Ambiente:</label>
-    <select id="environmentId" [(ngModel)]="selectedEnvironmentId" name="environmentId">
-      <option *ngFor="let environment of environments" [value]="environment.environmentId">
+    <select
+      id="environmentId"
+      [(ngModel)]="selectedEnvironmentId"
+      name="environmentId"
+    >
+      <option
+        *ngFor="let environment of environments"
+        [value]="environment.environmentId"
+      >
         {{ environment.name }} (Capacidad: {{ environment.capacity }})
       </option>
     </select>
@@ -26,49 +33,92 @@
   <!-- Fecha de reserva -->
   <div>
     <label for="reservationDate">Fecha de Reserva:</label>
-    <input type="date" id="reservationDate" [(ngModel)]="reservation.reservationDate" name="reservationDate">
+    <input
+      type="date"
+      id="reservationDate"
+      [(ngModel)]="reservation.reservationDate"
+      name="reservationDate"
+    />
   </div>
 
   <!-- Hora de entrada -->
   <div>
     <label for="clockIn">Hora de Entrada:</label>
-    <input type="time" id="clockIn" [(ngModel)]="reservation.clockIn" name="clockIn">
+    <input
+      type="time"
+      id="clockIn"
+      [(ngModel)]="reservation.clockIn"
+      name="clockIn"
+    />
   </div>
 
   <!-- Hora de salida -->
   <div>
     <label for="clockOut">Hora de Salida:</label>
-    <input type="time" id="clockOut" [(ngModel)]="reservation.clockOut" name="clockOut">
+    <input
+      type="time"
+      id="clockOut"
+      [(ngModel)]="reservation.clockOut"
+      name="clockOut"
+    />
   </div>
 
   <!-- Propósito de la reserva -->
   <div>
     <label for="purpose">Propósito:</label>
-    <textarea id="purpose" [(ngModel)]="reservation.purpose" name="purpose" placeholder="Describa el propósito aquí"></textarea>
+    <textarea
+      id="purpose"
+      [(ngModel)]="reservation.purpose"
+      name="purpose"
+      placeholder="Describa el propósito aquí"
+    ></textarea>
   </div>
 
   <!-- Botón de reservar -->
   <button type="button" (click)="openConfirmationModal()">Reservar</button>
 </div>
 
-<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="confirmationModal"
+  tabindex="-1"
+  aria-labelledby="confirmationModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="confirmationModalLabel">Confirma tu información</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="confirmationModalLabel">
+          Confirma tu información
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="modal-body">
-        <p><strong>Usuario:</strong> {{ selectedUserName }}</p>
-        <p><strong>Ambiente:</strong> {{ selectedEnvironmentName }}</p>
-        <p><strong>Fecha de Reserva:</strong> {{ reservation.reservationDate }}</p>
+        <!-- <p><strong>Usuario:</strong> {{ selectedUserName }}</p> -->
+        <!-- <p><strong>Ambiente:</strong> {{ selectedEnvironmentName }}</p> -->
+        <p>
+          <strong>Fecha de Reserva:</strong> {{ reservation.reservationDate }}
+        </p>
         <p><strong>Hora de Entrada:</strong> {{ reservation.clockIn }}</p>
         <p><strong>Hora de Salida:</strong> {{ reservation.clockOut }}</p>
         <p><strong>Propósito:</strong> {{ reservation.purpose }}</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Editar</button>
-        <button type="button" class="btn btn-primary" (click)="confirmSubmission()">Confirmar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Editar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="confirmSubmission()"
+        >
+          Confirmar
+        </button>
       </div>
     </div>
   </div>
