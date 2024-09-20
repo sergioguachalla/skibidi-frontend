@@ -17,6 +17,7 @@ declare var bootstrap: any;
   selector: 'app-register-librarian',
   standalone: true,
   imports: [NavbarComponent, CommonModule, ReactiveFormsModule],
+
   templateUrl: './register-librarian.component.html',
   styleUrl: './register-librarian.component.css'
 })
@@ -36,6 +37,7 @@ export class RegisterLibrarianComponent {
   loading$ = new BehaviorSubject<boolean>(false);
   success$ = new BehaviorSubject<boolean | null>(null);
   librarianService: LibrarianService= inject(LibrarianService);
+
   constructor(private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
       nombres: ['', Validators.required],
@@ -50,6 +52,7 @@ export class RegisterLibrarianComponent {
       departamento: ['', Validators.required]
     }, {
       validator: this.passwordMatchValidator
+
     });
   }
 
@@ -118,5 +121,6 @@ export class RegisterLibrarianComponent {
     const confirmationModalElement = document.getElementById('confirmationModal');
     const confirmationModal = bootstrap.Modal.getInstance(confirmationModalElement!);
     confirmationModal.hide();
+
   }
 }

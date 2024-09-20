@@ -1,6 +1,7 @@
 
 
 import {Component, inject} from '@angular/core';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
@@ -12,6 +13,7 @@ import {CustomerServiceService} from "../../../services/customer-service.service
 import {BehaviorSubject} from "rxjs";
 
 declare var bootstrap: any;
+
 
 @Component({
   selector: 'app-register-customer',
@@ -36,6 +38,7 @@ export class RegisterCustomerComponent {
   loading$ = new BehaviorSubject<boolean>(false);
   success$ = new BehaviorSubject<boolean | null>(null);
   customerService: CustomerServiceService= inject(CustomerServiceService);
+
   constructor(private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
       nombres: ['', Validators.required],
@@ -50,6 +53,14 @@ export class RegisterCustomerComponent {
       departamento: ['', Validators.required]
     }, {
       validator: this.passwordMatchValidator
+      celular: ['', [Validators.required, ]], // ejemplo de validación para números de celular de 10 dígitos
+      direccion: ['', Validators.required],
+      username: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: this.passwordMatchValidator // Validador personalizado para confirmar que las contraseñas coinciden
+
     });
   }
 
@@ -119,5 +130,6 @@ export class RegisterCustomerComponent {
     const confirmationModal = bootstrap.Modal.getInstance(confirmationModalElement!);
     confirmationModal.hide();
   }
+
 
 }

@@ -4,6 +4,7 @@ import {UserRegistrationDto} from "../model/dto/UserRegistrationDto";
 import {Observable} from "rxjs";
 import {Development} from "../environments/development";
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,4 +16,5 @@ export class CustomerServiceService {
   registerCustomer(userRegistrationDto: UserRegistrationDto): Observable<any> {
     return this.http.post<any>(this.apiUrl, userRegistrationDto);
   }
+
 }
