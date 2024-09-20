@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
@@ -20,6 +20,7 @@ import { GenreService } from '../../services/genre.service';
 export class IngresarLibroComponent implements OnInit {
   libroForm: FormGroup;
   genres: any[] = [];
+  libroIngresadoExitosamente: boolean = false; // Variable para el mensaje de éxito
 
   constructor(private formBuilder: FormBuilder, private bookService: BookService, private genreService: GenreService) {
     this.libroForm = this.formBuilder.group({
@@ -28,12 +29,31 @@ export class IngresarLibroComponent implements OnInit {
       status: [true],
       registrationDate: [new Date()],
       image_url: [''],
-      genre: ['', Validators.required]
+      genreId: ['', Validators.required], // Cambiado a genreId
+      authors: this.formBuilder.array([this.createAuthorField()])
     });
   }
 
   ngOnInit(): void {
     this.getGenres();
+  }
+
+  createAuthorField(): FormGroup {
+    return this.formBuilder.group({
+      author: ['', Validators.required]
+    });
+  }
+
+  addAuthorField(): void {
+    this.authors.push(this.createAuthorField());
+  }
+
+  removeAuthorField(index: number): void {
+    this.authors.removeAt(index);
+  }
+
+  get authors(): FormArray {
+    return this.libroForm.get('authors') as FormArray;
   }
 
   getGenres(): void {
@@ -46,17 +66,27 @@ export class IngresarLibroComponent implements OnInit {
       }
     );
   }
+
   onSubmit() {
     if (this.libroForm.valid) {
       this.libroForm.patchValue({ registrationDate: new Date() });
-      console.log('Datos del libro que se envían:', this.libroForm.value);
+      
+      const bookData = {
+        ...this.libroForm.value,
+        authors: this.authors.controls.map(control => control.value.author)
+      };
 
-      this.bookService.createBook(this.libroForm.value).subscribe(
+      console.log('Datos del libro que se envían:', bookData);
+
+      this.bookService.createBook(bookData).subscribe(
         response => {
           console.log('Libro registrado exitosamente:', response);
+          this.libroIngresadoExitosamente = true; // Mostrar el mensaje de éxito
+          this.libroForm.reset(); // Opcional: resetear el formulario
         },
         error => {
           console.error('Error al registrar el libro:', error);
+          this.libroIngresadoExitosamente = false; 
         }
       );
     } else {

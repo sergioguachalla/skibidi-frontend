@@ -3,6 +3,12 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="background-shadow">
+        
+        <!-- Mensaje de éxito -->
+        <div *ngIf="libroIngresadoExitosamente" class="alert alert-success">
+          Libro ingresado exitosamente.
+        </div>
+
         <form [formGroup]="libroForm" (ngSubmit)="onSubmit()">
           <h2 class="h2-centered">Ingresar nuevo libro</h2>
 
@@ -17,6 +23,7 @@
             </div>
           </div>
 
+          <!-- Resto del formulario... -->
           <!-- Campo para el número de ISBN -->
           <div class="row mb-3">
             <div class="col-md-12">
@@ -32,12 +39,23 @@
           <div class="row mb-3">
             <div class="col-md-12">
               <label for="genre" class="form-label">Género:</label>
-              <select id="genre" formControlName="genre" class="form-select">
+              <select id="genre" formControlName="genreId" class="form-select" required>
+                <option value="" disabled selected>Seleccione un género</option>
                 <option *ngFor="let genre of genres" [value]="genre.genreId">{{ genre.genreName }}</option>
               </select>
-              <div *ngIf="libroForm.get('genre')?.invalid && libroForm.get('genre')?.touched" class="text-danger">
+              <div *ngIf="libroForm.get('genreId')?.invalid && libroForm.get('genreId')?.touched" class="text-danger">
                 El género es requerido.
               </div>
+            </div>
+          </div>
+
+          <!-- Campos dinámicos para los autores -->
+          <div formArrayName="authors" class="row mb-3">
+            <div *ngFor="let authorCtrl of authors.controls; let i = index" [formGroupName]="i" class="col-md-12">
+              <label for="author-{{i}}" class="form-label">Autor {{i + 1}}:</label>
+              <input id="author-{{i}}" formControlName="author" type="text" class="form-control" placeholder="Nombre del autor" required>
+              <button type="button" (click)="removeAuthorField(i)" class="btn btn-danger mt-2">Eliminar Autor</button>
+              <div *ngIf="authorCtrl.invalid && authorCtrl.touched" class="text-danger">El nombre del autor es requerido.</div>
             </div>
           </div>
 
