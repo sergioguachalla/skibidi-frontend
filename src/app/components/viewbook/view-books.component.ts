@@ -26,9 +26,10 @@ export class ViewBooksComponent implements OnInit {
       response => {
         console.log('Respuesta del API:', response);
         if (response.successful) {
-          this.librosFiltrados = response.data.map((libro, index) => ({
+          // Acceder a response.data.content
+          this.librosFiltrados = response.data.content.map((libro, index) => ({
             ...libro,
-            id: index + 1 
+            id: index + 1  // Puedes manejar el ID como lo necesites
           }));
           console.log('Libros cargados:', this.librosFiltrados);
           this.mensaje = 'Libros recuperados exitosamente!';
@@ -43,7 +44,7 @@ export class ViewBooksComponent implements OnInit {
       }
     );
   }
-
+  
   updateSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
     console.log('Buscar:', input.value);
