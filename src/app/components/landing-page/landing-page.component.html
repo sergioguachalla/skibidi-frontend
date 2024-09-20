@@ -1,0 +1,80 @@
+<div class="container-fluid p-0">
+  <!-- Hero Section -->
+  <div
+    class="jumbotron jumbotron-fluid text-white text-center bg-primary py-5 mb-0"
+  >
+    <div class="container">
+      <h1 class="display-4">Bienvenido a UCB Degree</h1>
+      <p class="lead">
+        Accede a una educación de calidad en la Universidad Católica Boliviana.
+      </p>
+      <div class="mt-4">
+        <button class="btn btn-light btn-lg mx-2" (click)="onLogin()">
+          Iniciar Sesión
+        </button>
+        <button
+          class="btn btn-outline-light btn-lg mx-2"
+          (click)="onRegisterCustomer()"
+        >
+          Registrar Cliente
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Section: Features -->
+  <div class="container py-5">
+    <div class="row text-center">
+      <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-person-plus-fill text-primary display-4 mb-3"></i>
+            <h5 class="card-title">Registrar Bibliotecario</h5>
+            <p class="card-text">
+              Añade nuevos bibliotecarios al sistema para una mejor gestión de
+              la biblioteca.
+            </p>
+            <button class="btn btn-primary" (click)="onRegisterLibrarian()">
+              Registrar bibliotecario
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-book-half text-primary display-4 mb-3"></i>
+            <h5 class="card-title">Registrar Libros</h5>
+            <p class="card-text">
+              Gestiona la colección de la biblioteca añadiendo nuevos libros al
+              catálogo.
+            </p>
+            <button class="btn btn-primary" (click)="onViewBooks()">
+              Registrar libros???
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <i class="bi bi-mortarboard-fill text-primary display-4 mb-3"></i>
+            <h5 class="card-title">Programas Académicos</h5>
+            <p class="card-text">
+              Ofrecemos una amplia variedad de programas de grado y posgrado
+              adaptados a tus necesidades.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Call to Action Section -->
+  <div class="text-center bg-light py-5">
+    <h2 class="mb-3">CALL TO ACTION</h2>
+    <h2 class="mb-3">¡Empieza hoy tu camino al éxito!</h2>
+  </div>
+  <!-- Footer -->
+  <footer class="text-center text-white bg-primary py-3">
+    <p>&copy; 2024 UCB Degree. Todos los derechos reservados.</p>
+  </footer>
+</div>
