@@ -39,7 +39,7 @@ export class IngresarLibroComponent implements OnInit {
   getGenres(): void {
     this.genreService.getAllGenres().subscribe(
       (response: any) => {
-        this.genres = response.data; 
+        this.genres = response.data;
       },
       (error: any) => {
         console.error('Error al cargar los géneros:', error);

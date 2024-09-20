@@ -5,7 +5,7 @@ import { BookDto } from '../Model/book.model';
 
 interface ApiResponse {
   data: {
-    content: BookDto[];          
+    content: BookDto[];
   };
   message: string;
   successful: boolean;
@@ -23,8 +23,8 @@ export class BookService {
     return this.http.post<BookDto>(this.apiUrl, book);
   }
 
-  getAllBooks(): Observable<ApiResponse> { 
-    return this.http.get<ApiResponse>(this.apiUrl);
+  getAllBooks(): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.apiUrl}?page=0&size=2`);
   }
 
   getBookByIsbn(isbn: string): Observable<BookDto> {
@@ -33,4 +33,10 @@ export class BookService {
   updateBook(id: number, book: BookDto): Observable<any> {
     return this.http.put(`http://localhost:8091/api/v1/books/${id}`, book);
   }
+
+  findBooksByGenre(genreId: number): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.apiUrl}?page=0&size=2&genreId=${genreId}`);
+  }
+
+
 }
