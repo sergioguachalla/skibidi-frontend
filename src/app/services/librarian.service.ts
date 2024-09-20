@@ -1,20 +1,18 @@
-import {inject, Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {Development} from "../environments/development";
 import {UserRegistrationDto} from "../model/dto/UserRegistrationDto";
 import {Observable} from "rxjs";
-import {Development} from "../environments/development";
-
 
 @Injectable({
   providedIn: 'root'
 })
-export class CustomerServiceService {
+export class LibrarianService {
   constructor(private http: HttpClient) { }
 
-  private apiUrl = Development.API_URL + '/users/client';
+  private apiUrl = Development.API_URL + '/librarian';
 
-  registerCustomer(userRegistrationDto: UserRegistrationDto): Observable<any> {
+  registerLibrarian(userRegistrationDto: UserRegistrationDto): Observable<any> {
     return this.http.post<any>(this.apiUrl, userRegistrationDto);
   }
-
 }
