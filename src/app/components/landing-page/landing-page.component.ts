@@ -10,17 +10,27 @@ import {KeycloakService} from "keycloak-angular";
   styleUrl: './landing-page.component.css',
 })
 export class LandingPageComponent implements OnInit {
-  constructor(private router: Router) {}
   private keycloakService: KeycloakService = inject(KeycloakService);
 
+  constructor(private router: Router) {}
+
   ngOnInit(): void {
-    throw new Error(
-      'Method not implemented. check LandingPageComponent.ts > ngOnInit()',
-    );
+    this.checkAuthentication();
+  }
+
+  checkAuthentication(): void {
+    const isLoggedIn: boolean = this.keycloakService.isLoggedIn();
+    if (isLoggedIn) {
+      this.router.navigate(['/view-book']);
+    }
   }
 
   onLogin(): void {
-    this.keycloakService.login();
+    this.keycloakService.login().then(() => {
+      this.checkAuthentication();
+    }).catch((error) => {
+      console.error('Error al intentar iniciar sesión:', error);
+    });
   }
 
   onRegisterCustomer(): void {
