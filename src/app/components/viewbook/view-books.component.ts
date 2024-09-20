@@ -22,6 +22,9 @@ export class ViewBooksComponent implements OnInit {
   mensaje: string = '';
   genres: GenreDto[] = [];
 
+  pages: number = 0;
+  pagesArray: number[] = [];
+
 
   constructor(private bookService: BookService) {
   }
@@ -30,6 +33,7 @@ export class ViewBooksComponent implements OnInit {
     this.loadBooks();
     this.findGenres();
 
+
   }
 
   loadBooks() {
@@ -37,6 +41,8 @@ export class ViewBooksComponent implements OnInit {
       response => {
         console.log('Respuesta del API:', response);
         if (response.successful) {
+          this.pages = response.data.totalPages!;
+          this.pagesArray = Array.from({ length: this.pages }, (_, i) => i + 1);
           // Acceder a response.data.content
           this.librosFiltrados = response.data.content.map((libro, index) => ({
             ...libro,
@@ -126,4 +132,24 @@ export class ViewBooksComponent implements OnInit {
     );
   }
 
+  onPageChange(page: number) {
+    this.bookService.getAllBooks2(page-1).subscribe(
+      response => {
+        if (response.successful) {
+          this.librosFiltrados = response.data.content.map((libro, index) => ({
+            ...libro,
+            id: index + 1
+          }));
+          this.mensaje = 'Libros recuperados exitosamente!';
+        } else {
+          console.error('Error al cargar los libros:', response.message);
+          this.mensaje = 'No se pudieron recuperar los libros.';
+        }
+      },
+      error => {
+        console.error('Error al conectar con el API:', error);
+        this.mensaje = 'Ocurrió un error al conectar con el API.';
+      }
+    );
+  }
 }

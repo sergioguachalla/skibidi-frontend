@@ -6,6 +6,12 @@ import { BookDto } from '../Model/book.model';
 interface ApiResponse {
   data: {
     content: BookDto[];
+    totalPages: number | null;
+    size : number | null;
+    pageable : {
+      pageNumber: number | null;
+      pageSize: number | null;
+    }
   };
   message: string;
   successful: boolean;
@@ -24,8 +30,14 @@ export class BookService {
   }
 
   getAllBooks(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${this.apiUrl}?page=0&size=2`);
+    return this.http.get<ApiResponse>(`${this.apiUrl}?page=0&size=1`);
   }
+
+  getAllBooks2(page: number): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.apiUrl}?page=${page}&size=1`);
+  }
+
+
 
   getBookByIsbn(isbn: string): Observable<BookDto> {
     return this.http.get<BookDto>(`${this.apiUrl}/${isbn}`);
