@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
+import {KeycloakService} from "keycloak-angular";
 
 @Component({
   selector: 'app-landing-page',
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class LandingPageComponent implements OnInit {
   constructor(private router: Router) {}
+  private keycloakService: KeycloakService = inject(KeycloakService);
 
   ngOnInit(): void {
     throw new Error(
@@ -18,9 +20,7 @@ export class LandingPageComponent implements OnInit {
   }
 
   onLogin(): void {
-    throw new Error(
-      'Method not implemented. check LandingPageComponent.ts > onLogin()',
-    );
+    this.keycloakService.login();
   }
 
   onRegisterCustomer(): void {
@@ -28,9 +28,7 @@ export class LandingPageComponent implements OnInit {
   }
 
   onRegisterLibrarian(): void {
-    throw new Error(
-      'Method not implemented. check LandingPageComponent.ts > onRegisterLibrarian()',
-    );
+    this.router.navigate(['/register-librarian']);
   }
 
   onViewBooks(): void {

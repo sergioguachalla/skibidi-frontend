@@ -9,6 +9,7 @@ import {UserDto} from "../../../model/dto/UserDto";
 import {UserRegistrationDto} from "../../../model/dto/UserRegistrationDto";
 import {LibrarianService} from "../../../services/librarian.service";
 import {BehaviorSubject} from "rxjs";
+import {Router} from "@angular/router";
 
 
 declare var bootstrap: any;
@@ -37,6 +38,7 @@ export class RegisterLibrarianComponent {
   loading$ = new BehaviorSubject<boolean>(false);
   success$ = new BehaviorSubject<boolean | null>(null);
   librarianService: LibrarianService= inject(LibrarianService);
+  router: Router = inject(Router);
 
   constructor(private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
@@ -122,5 +124,9 @@ export class RegisterLibrarianComponent {
     const confirmationModal = bootstrap.Modal.getInstance(confirmationModalElement!);
     confirmationModal.hide();
 
+  }
+
+  goHome() {
+    this.router.navigate(['/']);
   }
 }

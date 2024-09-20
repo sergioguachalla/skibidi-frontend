@@ -19,9 +19,34 @@ export class NavbarComponent {
   }
   logout() {
     this.keycloakService.logout();
+    this.router.navigate(['']);
   }
 
   onClickToHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/view-book']);
+  }
+
+  onClickToEnvReservation() {
+    this.router.navigate(['/reservation-enviroment']);
+  }
+  onClickToRegisterManual() {
+    this.router.navigate(['/ingresar-libro']);
+  }
+
+
+  openIsbnModal(): void {
+    const modal = new (window as any).bootstrap.Modal(
+      document.getElementById('registerIsbnModal'),
+    );
+    modal.show();
+  }
+
+  submitIsbn(): void {
+    const isbn = (document.getElementById('isbnInput') as HTMLInputElement)
+      .value;
+    console.log(`ISBN ingresado: ${isbn}`);
+    (window as any).bootstrap.Modal.getInstance(
+      document.getElementById('registerIsbnModal'),
+    ).hide();
   }
 }

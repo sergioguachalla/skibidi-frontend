@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import {CustomerServiceService} from "../../../services/customer-service.service";
 import {BehaviorSubject} from "rxjs";
+import {Router} from "@angular/router";
 
 declare var bootstrap: any;
 
@@ -34,7 +35,7 @@ export class RegisterCustomerComponent {
   loading$ = new BehaviorSubject<boolean>(false);
   success$ = new BehaviorSubject<boolean | null>(null);
   customerService: CustomerServiceService= inject(CustomerServiceService);
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private router: Router) {
     this.registerForm = this.formBuilder.group({
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
@@ -118,4 +119,7 @@ export class RegisterCustomerComponent {
     confirmationModal.hide();
   }
 
+  goHome() {
+    this.router.navigate(['/']);
+  }
 }
