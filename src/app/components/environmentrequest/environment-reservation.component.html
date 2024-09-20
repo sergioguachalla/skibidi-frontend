@@ -59,8 +59,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p><strong>Usuario:</strong> {{ getUserNameById(selectedClientId) }}</p>
-        <p><strong>Ambiente:</strong> {{ getEnvironmentNameById(selectedEnvironmentId) }}</p>
+        <p><strong>Usuario:</strong> {{ selectedUserName }}</p>
+        <p><strong>Ambiente:</strong> {{ selectedEnvironmentName }}</p>
         <p><strong>Fecha de Reserva:</strong> {{ reservation.reservationDate }}</p>
         <p><strong>Hora de Entrada:</strong> {{ reservation.clockIn }}</p>
         <p><strong>Hora de Salida:</strong> {{ reservation.clockOut }}</p>

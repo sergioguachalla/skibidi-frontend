@@ -8,7 +8,6 @@ import { UserClientService } from '../../services/userclient.service';
 import { UserClient } from '../../Model/userclient.model';
 
 declare var bootstrap: any;
-
 @Component({
   selector: 'app-reservation',
   standalone: true,
@@ -33,6 +32,9 @@ export class ReservationComponent implements OnInit {
     status: 1
   };
 
+  selectedUserName: string = '';
+  selectedEnvironmentName: string = '';
+
   constructor(
     private environmentService: EnvironmentService,
     private userClientService: UserClientService
@@ -50,8 +52,15 @@ export class ReservationComponent implements OnInit {
 
   openConfirmationModal(): void {
     if (this.selectedEnvironmentId && this.selectedClientId) {
+      const selectedUser = this.userClients.find(user => user.clientId === this.selectedClientId);
+      const selectedEnvironment = this.environments.find(env => env.environmentId === this.selectedEnvironmentId);
+
+      this.selectedUserName = selectedUser ? selectedUser.username : 'Desconocido';
+      this.selectedEnvironmentName = selectedEnvironment ? selectedEnvironment.name : 'Desconocido';
+
       this.reservation.environmentId = this.selectedEnvironmentId;
       this.reservation.clientId = this.selectedClientId;
+
       const modalElement = document.getElementById('confirmationModal');
       const modal = new bootstrap.Modal(modalElement);
       modal.show();
@@ -64,26 +73,12 @@ export class ReservationComponent implements OnInit {
     const reservationDate = this.reservation.reservationDate;
     this.reservation.clockIn = new Date(`${reservationDate}T${this.reservation.clockIn}:00`);
     this.reservation.clockOut = new Date(`${reservationDate}T${this.reservation.clockOut}:00`);
-
-    console.log('Datos enviados para la reserva:', this.reservation);
-
     this.environmentService.createEnvironmentReservation(this.reservation).subscribe(response => {
-      console.log('Reserva realizada:', response);
       const modalElement = document.getElementById('confirmationModal');
       const modal = bootstrap.Modal.getInstance(modalElement);
       modal.hide();
     }, error => {
       console.error('Error al realizar la reserva:', error);
     });
-  }
-
-  getUserNameById(clientId: number | null): string {
-    const user = this.userClients.find(user => user.clientId === clientId);
-    return user ? user.username : 'Desconocido';
-  }
-
-  getEnvironmentNameById(environmentId: number | null): string {
-    const environment = this.environments.find(env => env.environmentId === environmentId);
-    return environment ? environment.name : 'Desconocido';
   }
 }
