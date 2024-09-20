@@ -1,23 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { from, Observable } from 'rxjs';
-import {Environment, EnvironmentReservationDto} from '../Model/environment.model'
+import { Observable } from 'rxjs';
+import { Environment, EnvironmentReservationDto } from '../Model/environment.model';
+
+interface EnvironmentResponse {
+  data: Environment[];
+  message: string;
+  successful: boolean;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class EnvironmentService {
-  private baseUrl = 'http://localhost:8091/api/v1/environments';
+  private environmentsUrl = 'http://localhost:8091/api/v1/environment/'; 
+  private reservationUrl = 'http://localhost:8091/api/v1/environments'; 
 
   constructor(private http: HttpClient) {}
 
-  
-  getAllEnvironments(): Observable<Environment[]> {
-    return this.http.get<Environment[]>(this.baseUrl);
+  getAllEnvironments(): Observable<EnvironmentResponse> {
+    return this.http.get<EnvironmentResponse>(this.environmentsUrl);
   }
 
-  
   createEnvironmentReservation(reservation: EnvironmentReservationDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}/`, reservation);
+    return this.http.post(`${this.reservationUrl}/`, reservation);
   }
 }

@@ -1,0 +1,52 @@
+<navbar></navbar>
+
+<div class="reservation-form">
+  <h2>Reserva de ambiente</h2>
+
+  <!-- Selección de usuario -->
+  <div>
+    <label for="clientId">Usuario:</label>
+    <select id="clientId" [(ngModel)]="selectedClientId" name="clientId">
+      <option *ngFor="let user of userClients" [value]="user.clientId">
+        {{ user.username }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Selección de ambiente -->
+  <div>
+    <label for="environmentId">Ambiente:</label>
+    <select id="environmentId" [(ngModel)]="selectedEnvironmentId" name="environmentId">
+      <option *ngFor="let environment of environments" [value]="environment.environmentId">
+        {{ environment.name }} (Capacidad: {{ environment.capacity }})
+      </option>
+    </select>
+  </div>
+
+  <!-- Fecha de reserva -->
+  <div>
+    <label for="reservationDate">Fecha de Reserva:</label>
+    <input type="date" id="reservationDate" [(ngModel)]="reservation.reservationDate" name="reservationDate">
+  </div>
+
+  <!-- Hora de entrada -->
+  <div>
+    <label for="clockIn">Hora de Entrada:</label>
+    <input type="time" id="clockIn" [(ngModel)]="reservation.clockIn" name="clockIn">
+  </div>
+
+  <!-- Hora de salida -->
+  <div>
+    <label for="clockOut">Hora de Salida:</label>
+    <input type="time" id="clockOut" [(ngModel)]="reservation.clockOut" name="clockOut">
+  </div>
+
+  <!-- Propósito de la reserva -->
+  <div>
+    <label for="purpose">Propósito:</label>
+    <textarea id="purpose" [(ngModel)]="reservation.purpose" name="purpose" placeholder="Describa el propósito aquí"></textarea>
+  </div>
+
+  <!-- Botón de reservar -->
+  <button type="submit" (click)="makeReservation()">Reservar</button>
+</div>

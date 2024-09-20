@@ -5,7 +5,7 @@ import { LandingPageComponent } from './components/landing-page/landing-page.com
 import { IngresarLibroComponent } from './components/books/ingresar-libro.component';
 import { ViewBooksComponent } from './components/viewbook/view-books.component';
 
-import { EnvironmentReservationComponent } from './components/enviromentrequest/environment-reservation.component'
+import { ReservationComponent } from './components/environmentrequest/environment-reservation.component';
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },
@@ -13,6 +13,6 @@ export const routes: Routes = [
     {path: 'register-librarian', component: RegisterLibrarianComponent},
     {path: 'view-book', component: ViewBooksComponent},
     {path: 'ingresar-libro', component: IngresarLibroComponent},
-    {path: 'reservation-enviroment', component: EnvironmentReservationComponent}
+    {path: 'reservation-enviroment', component: ReservationComponent}
 
 ];
