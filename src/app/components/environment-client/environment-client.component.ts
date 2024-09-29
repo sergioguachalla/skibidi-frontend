@@ -1,11 +1,15 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {NgIf} from "@angular/common";
+import {NavbarComponent} from "../shared/navbar/navbar.component";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-environment-client',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    NavbarComponent,
+    FormsModule
   ],
   templateUrl: './environment-client.component.html',
   styleUrl: './environment-client.component.css'
@@ -13,6 +17,12 @@ import {NgIf} from "@angular/common";
 export class EnvironmentClientComponent {
   @ViewChild('mapa', { static: false }) mapaRef!: ElementRef;
   mensaje: string = '';
+  reserva = {
+    fecha: '',
+    horaEntrada: '',
+    horaSalida: '',
+    proposito: ''
+  };
 
   ngAfterViewInit() {
     const objectElement = this.mapaRef.nativeElement as HTMLObjectElement;
@@ -40,6 +50,14 @@ export class EnvironmentClientComponent {
       }
     };
   }
-
+  onSubmit() {
+    if (this.mensaje) {
+      console.log('Reserva enviada:', {
+        sala: this.mensaje,
+        ...this.reserva
+      });
+      alert('Reserva realizada con éxito para ' + this.mensaje);
+    }
+  }
 
 }

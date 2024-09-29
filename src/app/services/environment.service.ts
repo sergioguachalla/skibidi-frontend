@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Environment, EnvironmentReservationDto } from '../Model/environment.model';
+import {Development} from "../environments/development";
 
 interface EnvironmentResponse {
   data: Environment[];
@@ -13,8 +14,10 @@ interface EnvironmentResponse {
   providedIn: 'root'
 })
 export class EnvironmentService {
-  private environmentsUrl = 'http://localhost:8091/api/v1/environment/'; 
-  private reservationUrl = 'http://localhost:8091/api/v1/environments'; 
+  private apiUrl = Development.API_URL;
+
+  private environmentsUrl = this.apiUrl+'/environment/';
+  private reservationUrl = this.apiUrl+'/environments';
 
   constructor(private http: HttpClient) {}
 
@@ -24,5 +27,9 @@ export class EnvironmentService {
 
   createEnvironmentReservation(reservation: EnvironmentReservationDto): Observable<any> {
     return this.http.post(`${this.reservationUrl}/`, reservation);
+  }
+
+  getEnvironmentsAvailability(): Observable<EnvironmentResponse> {
+    return this.http.get<EnvironmentResponse>(`${this.environmentsUrl}/availability`);
   }
 }

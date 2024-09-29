@@ -1,3 +1,67 @@
-<p>environment-client works!</p>
-<object *ngIf="true" type="image/svg+xml" data="assets/sala.svg" #mapa class="mapa-salas"></object>
-<p>{{ mensaje }}</p>
+<navbar></navbar>
+
+<div class="container mt-4 p-4" style="background-color: #f8f9fa; border-radius: 8px;">
+  <div class="row">
+    <!-- Subtitulo, por favor selecciona una sala -->
+    <div class="col-md-6 d-flex justify-content-center align-items-center">
+      <object *ngIf="true" type="image/svg+xml" data="assets/sala.svg" #mapa class="mapa-salas"></object>
+    </div>
+
+    <!-- Columna para el formulario -->
+    <div class="col-md-6">
+      <p class="text-center">{{ mensaje }}</p>
+      <div>
+        <h5 class="text-center">Formulario de Reserva</h5>
+        <form (ngSubmit)="onSubmit()" #reservaForm="ngForm">
+          <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha de Reserva</label>
+            <input
+              type="date"
+              id="fecha"
+              class="form-control"
+              name="fecha"
+              [(ngModel)]="reserva.fecha"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="horaEntrada" class="form-label">Hora de Entrada</label>
+            <input
+              type="time"
+              id="horaEntrada"
+              class="form-control"
+              name="horaEntrada"
+              [(ngModel)]="reserva.horaEntrada"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="horaSalida" class="form-label">Hora de Salida</label>
+            <input
+              type="time"
+              id="horaSalida"
+              class="form-control"
+              name="horaSalida"
+              [(ngModel)]="reserva.horaSalida"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="proposito" class="form-label">Propósito de la Reserva</label>
+            <textarea
+              id="proposito"
+              class="form-control"
+              name="proposito"
+              [(ngModel)]="reserva.proposito"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Enviar Reserva</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
