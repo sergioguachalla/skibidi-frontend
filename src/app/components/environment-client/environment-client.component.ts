@@ -4,6 +4,7 @@ import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {FormsModule} from "@angular/forms";
 import {EnvironmentService} from "../../services/environment.service";
 import {KeycloakService} from "keycloak-angular";
+import { Environment, EnvironmentReservationDto } from '../../Model/environment.model';
 
 @Component({
   selector: 'app-environment-client',
@@ -102,26 +103,33 @@ export class EnvironmentClientComponent {
 
 
   onSubmit() {
-    console.log('keycloakid:', this.keycloakService.getKeycloakInstance().subject!);
-    if (this.mensaje) {
-      console.log('Reserva enviada:', {
-        sala: this.mensaje,
-        ...this.reserva
-      });
-
-      const from = `${this.reserva.fecha}T${this.reserva.horaEntrada}:00`;
-      const to = `${this.reserva.fecha}T${this.reserva.horaSalida}:00`;
-
-      this.environmentService.getEnvironmentsAvailability(from, to).subscribe(
+    if (this.mensaje && this.mensaje.includes('Sala seleccionada:')) {
+      const environmentId = parseInt(this.mensaje.split('SALA-B')[1], 10);
+      console.log('ID del ambiente seleccionado:', environmentId);
+      const reservation: EnvironmentReservationDto = {
+        //todo: get clientId from keycloak
+        clientId: 1,
+        environmentId: environmentId,
+        reservationDate: this.reserva.fecha,
+        clockIn: new Date(`${this.reserva.fecha}T${this.reserva.horaEntrada}:00`),
+        clockOut: new Date(`${this.reserva.fecha}T${this.reserva.horaSalida}:00`),
+        purpose: this.reserva.proposito,
+        reservationStatus: true,
+        status: 1
+      };
+      this.environmentService.createEnvironmentReservation(reservation).subscribe(
         (response) => {
-          console.log('Disponibilidad recibida:', response);
+          console.log('Reserva realizada:', response);
           alert('Reserva realizada con éxito para ' + this.mensaje);
         },
         (error) => {
-          console.error('Error al obtener la disponibilidad:', error);
+          console.error('Error al registrar la reserva:', error);
           alert('Hubo un error al realizar la reserva.');
         }
       );
+    } else {
+      alert('Por favor, seleccione una sala disponible antes de enviar la reserva.');
     }
   }
+
 }
