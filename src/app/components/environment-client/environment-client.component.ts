@@ -1,10 +1,10 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {NgIf} from "@angular/common";
 import {NavbarComponent} from "../shared/navbar/navbar.component";
-import {FormsModule} from "@angular/forms";
-import {EnvironmentService} from "../../services/environment.service";
-import {KeycloakService} from "keycloak-angular";
-import { Environment, EnvironmentReservationDto } from '../../Model/environment.model';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { EnvironmentService } from "../../services/environment.service";
+import { KeycloakService } from "keycloak-angular";
+import {EnvironmentReservationDto} from "../../Model/environment.model";
 
 @Component({
   selector: 'app-environment-client',
@@ -12,7 +12,7 @@ import { Environment, EnvironmentReservationDto } from '../../Model/environment.
   imports: [
     NgIf,
     NavbarComponent,
-    FormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './environment-client.component.html',
   styleUrl: './environment-client.component.css'
@@ -20,50 +20,39 @@ import { Environment, EnvironmentReservationDto } from '../../Model/environment.
 export class EnvironmentClientComponent {
   @ViewChild('mapa', { static: false }) mapaRef!: ElementRef;
   mensaje: string = '';
-  reserva = {
-    fecha: '',
-    horaEntrada: '',
-    horaSalida: '',
-    proposito: ''
-  };
   today: string = "";
   currentTime: string = '';
+  reservaForm: FormGroup;
+
   constructor(
     private environmentService: EnvironmentService,
-    private keycloakService: KeycloakService
+    private keycloakService: KeycloakService,
+    private formBuilder: FormBuilder
   ) {
     const currentDate = new Date();
     this.today = currentDate.toISOString().split('T')[0];
     this.currentTime = currentDate.toTimeString().slice(0, 5);
+    this.reservaForm = this.formBuilder.group({
+      fecha: ['', Validators.required],
+      horaEntrada: ['', Validators.required],
+      horaSalida: ['', Validators.required],
+      proposito: ['', Validators.required]
+    });
   }
-
 
   ngAfterViewInit() {
     const objectElement = this.mapaRef.nativeElement as HTMLObjectElement;
-
     objectElement.onload = () => {
       this.updateSVG();
     };
   }
 
-
-  //TODO: verificar lo del día+1S
   onDateOrTimeChange() {
+    const { fecha, horaEntrada, horaSalida } = this.reservaForm.value;
 
-    if (this.reserva.fecha === this.today) {
-      if (this.reserva.horaEntrada && this.reserva.horaEntrada < this.currentTime) {
-        alert('La hora de entrada no puede ser anterior a la hora actual.');
-        this.reserva.horaEntrada = '';
-      }
-    }
-    if (this.reserva.horaEntrada && this.reserva.horaSalida && this.reserva.horaSalida <= this.reserva.horaEntrada) {
-      alert('La hora de salida debe ser posterior a la hora de entrada.');
-      this.reserva.horaSalida = '';
-    }
-
-    if (this.reserva.fecha && this.reserva.horaEntrada && this.reserva.horaSalida) {
-      const from = `${this.reserva.fecha}T${this.reserva.horaEntrada}:00`;
-      const to = `${this.reserva.fecha}T${this.reserva.horaSalida}:00`;
+    if (fecha && horaEntrada && horaSalida) {
+      const from = `${fecha}T${horaEntrada}:00`;
+      const to = `${fecha}T${horaSalida}:00`;
 
       this.environmentService.getEnvironmentsAvailability(from, to).subscribe(
         (response) => {
@@ -91,7 +80,6 @@ export class EnvironmentClientComponent {
       this.setupClickEvents(svgDoc);
     }
   }
-
 
   setupClickEvents(svgDoc: Document) {
     let previousSala: Element | null = null;
@@ -121,22 +109,21 @@ export class EnvironmentClientComponent {
     }
   }
 
-
   onSubmit() {
-    if (this.mensaje && this.mensaje.includes('Sala seleccionada:')) {
+    if (this.reservaForm.valid && this.mensaje && this.mensaje.includes('Sala seleccionada:')) {
       const environmentId = parseInt(this.mensaje.split('SALA-B')[1], 10);
       console.log('ID del ambiente seleccionado:', environmentId);
       const reservation: EnvironmentReservationDto = {
-        //todo: get clientId from keycloak
         clientId: 1,
         environmentId: environmentId,
-        reservationDate: this.reserva.fecha,
-        clockIn: new Date(`${this.reserva.fecha}T${this.reserva.horaEntrada}:00`),
-        clockOut: new Date(`${this.reserva.fecha}T${this.reserva.horaSalida}:00`),
-        purpose: this.reserva.proposito,
+        reservationDate: this.reservaForm.get('fecha')?.value,
+        clockIn: new Date(`${this.reservaForm.get('fecha')?.value}T${this.reservaForm.get('horaEntrada')?.value}:00`),
+        clockOut: new Date(`${this.reservaForm.get('fecha')?.value}T${this.reservaForm.get('horaSalida')?.value}:00`),
+        purpose: this.reservaForm.get('proposito')?.value,
         reservationStatus: true,
         status: 1
       };
+
       this.environmentService.createEnvironmentReservation(reservation).subscribe(
         (response) => {
           console.log('Reserva realizada:', response);
@@ -151,5 +138,4 @@ export class EnvironmentClientComponent {
       alert('Por favor, seleccione una sala disponible antes de enviar la reserva.');
     }
   }
-
 }

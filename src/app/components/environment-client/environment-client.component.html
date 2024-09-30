@@ -10,58 +10,67 @@
       <p class="text-center">{{ mensaje }}</p>
       <div>
         <h5 class="text-center">Formulario de Reserva</h5>
-        <form (ngSubmit)="onSubmit()" #reservaForm="ngForm">
+        <form [formGroup]="reservaForm" (ngSubmit)="onSubmit()">
+
           <div class="mb-3">
             <label for="fecha" class="form-label">Fecha de Reserva</label>
             <input
               type="date"
               id="fecha"
               class="form-control"
-              name="fecha"
-              [(ngModel)]="reserva.fecha"
-              (ngModelChange)="onDateOrTimeChange()"
+              formControlName="fecha"
+              (change)="onDateOrTimeChange()"
               [min]="today"
-              required
             />
+            <div *ngIf="reservaForm.get('fecha')?.invalid && reservaForm.get('fecha')?.touched" class="text-danger">
+              El campo de fecha es obligatorio.
+            </div>
           </div>
+
           <div class="mb-3">
             <label for="horaEntrada" class="form-label">Hora de Entrada</label>
             <input
               type="time"
               id="horaEntrada"
               class="form-control"
-              name="horaEntrada"
-              [(ngModel)]="reserva.horaEntrada"
-              (ngModelChange)="onDateOrTimeChange()"
-              [min]="reserva.fecha === today ? currentTime : null"
-              required
+              formControlName="horaEntrada"
+              (change)="onDateOrTimeChange()"
+              [min]="reservaForm.get('fecha')?.value === today ? currentTime : null"
             />
+            <div *ngIf="reservaForm.get('horaEntrada')?.invalid && reservaForm.get('horaEntrada')?.touched" class="text-danger">
+              La hora de entrada es obligatoria.
+            </div>
           </div>
+
           <div class="mb-3">
             <label for="horaSalida" class="form-label">Hora de Salida</label>
             <input
               type="time"
               id="horaSalida"
               class="form-control"
-              name="horaSalida"
-              [(ngModel)]="reserva.horaSalida"
-              (ngModelChange)="onDateOrTimeChange()"
-              required
+              formControlName="horaSalida"
+              (change)="onDateOrTimeChange()"
             />
+            <div *ngIf="reservaForm.get('horaSalida')?.invalid && reservaForm.get('horaSalida')?.touched" class="text-danger">
+              La hora de salida es obligatoria.
+            </div>
           </div>
+
           <div class="mb-3">
             <label for="proposito" class="form-label">Propósito de la Reserva</label>
             <textarea
               id="proposito"
               class="form-control"
-              name="proposito"
-              [(ngModel)]="reserva.proposito"
+              formControlName="proposito"
               rows="3"
-              required
             ></textarea>
+            <div *ngIf="reservaForm.get('proposito')?.invalid && reservaForm.get('proposito')?.touched" class="text-danger">
+              El propósito de la reserva es obligatorio.
+            </div>
           </div>
+
           <div class="text-center">
-            <button type="submit" class="btn btn-primary">Enviar Reserva</button>
+            <button type="submit" class="btn btn-primary" [disabled]="reservaForm.invalid">Enviar Reserva</button>
           </div>
         </form>
       </div>
