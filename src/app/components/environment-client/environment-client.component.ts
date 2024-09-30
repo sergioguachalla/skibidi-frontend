@@ -26,11 +26,17 @@ export class EnvironmentClientComponent {
     horaSalida: '',
     proposito: ''
   };
-
+  today: string = "";
+  currentTime: string = '';
   constructor(
     private environmentService: EnvironmentService,
     private keycloakService: KeycloakService
-  ) {}
+  ) {
+    const currentDate = new Date();
+    this.today = currentDate.toISOString().split('T')[0];
+    this.currentTime = currentDate.toTimeString().slice(0, 5);
+  }
+
 
   ngAfterViewInit() {
     const objectElement = this.mapaRef.nativeElement as HTMLObjectElement;
@@ -40,7 +46,21 @@ export class EnvironmentClientComponent {
     };
   }
 
+
+  //TODO: verificar lo del día+1S
   onDateOrTimeChange() {
+
+    if (this.reserva.fecha === this.today) {
+      if (this.reserva.horaEntrada && this.reserva.horaEntrada < this.currentTime) {
+        alert('La hora de entrada no puede ser anterior a la hora actual.');
+        this.reserva.horaEntrada = '';
+      }
+    }
+    if (this.reserva.horaEntrada && this.reserva.horaSalida && this.reserva.horaSalida <= this.reserva.horaEntrada) {
+      alert('La hora de salida debe ser posterior a la hora de entrada.');
+      this.reserva.horaSalida = '';
+    }
+
     if (this.reserva.fecha && this.reserva.horaEntrada && this.reserva.horaSalida) {
       const from = `${this.reserva.fecha}T${this.reserva.horaEntrada}:00`;
       const to = `${this.reserva.fecha}T${this.reserva.horaSalida}:00`;

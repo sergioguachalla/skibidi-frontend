@@ -20,6 +20,7 @@
               name="fecha"
               [(ngModel)]="reserva.fecha"
               (ngModelChange)="onDateOrTimeChange()"
+              [min]="today"
               required
             />
           </div>
@@ -32,6 +33,7 @@
               name="horaEntrada"
               [(ngModel)]="reserva.horaEntrada"
               (ngModelChange)="onDateOrTimeChange()"
+              [min]="reserva.fecha === today ? currentTime : null"
               required
             />
           </div>
