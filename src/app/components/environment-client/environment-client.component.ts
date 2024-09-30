@@ -3,6 +3,7 @@ import {NgIf} from "@angular/common";
 import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {FormsModule} from "@angular/forms";
 import {EnvironmentService} from "../../services/environment.service";
+import {KeycloakService} from "keycloak-angular";
 
 @Component({
   selector: 'app-environment-client',
@@ -26,7 +27,8 @@ export class EnvironmentClientComponent {
   };
 
   constructor(
-    private environmentService: EnvironmentService
+    private environmentService: EnvironmentService,
+    private keycloakService: KeycloakService
   ) {}
 
   ngAfterViewInit() {
@@ -61,12 +63,14 @@ export class EnvironmentClientComponent {
       environments.forEach(env => {
         const sala = svgDoc.getElementById(env.name);
         if (sala) {
-          (sala as HTMLElement).style.fill = env.isAvailable ? '#d4f7de' : 'red';
+          sala.style.fill = env.isAvailable ? '#d4f7de' : 'red';
+          sala.replaceWith(sala.cloneNode(true));
         }
       });
       this.setupClickEvents(svgDoc);
     }
   }
+
 
   setupClickEvents(svgDoc: Document) {
     let previousSala: Element | null = null;
@@ -75,18 +79,30 @@ export class EnvironmentClientComponent {
       const sala = svgDoc.getElementById(`SALA-B${i}`);
       if (sala) {
         sala.addEventListener('click', () => {
-          if (previousSala) {
-            (previousSala as HTMLElement).style.fill = '#d4f7de';
+          if (sala.style.fill === 'rgb(212, 247, 222)' || sala.style.fill === '#d4f7de' || sala.style.fill === 'lightblue') {
+            if (previousSala) {
+              (previousSala as HTMLElement).style.fill = '#d4f7de';
+            }
+            if (previousSala === sala) {
+              (sala as HTMLElement).style.fill = '#d4f7de';
+              this.mensaje = '';
+              previousSala = null;
+            } else {
+              (sala as HTMLElement).style.fill = 'lightblue';
+              this.mensaje = `Sala seleccionada: SALA-B${i}`;
+              previousSala = sala;
+            }
+          } else {
+            alert('Esta sala no está disponible para reservar.');
           }
-          (sala as HTMLElement).style.fill = 'red';
-          this.mensaje = `Sala seleccionada: SALA-B${i}`;
-          previousSala = sala;
         });
       }
     }
   }
 
+
   onSubmit() {
+    console.log('keycloakid:', this.keycloakService.getKeycloakInstance().subject!);
     if (this.mensaje) {
       console.log('Reserva enviada:', {
         sala: this.mensaje,
