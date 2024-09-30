@@ -2,12 +2,10 @@
 
 <div class="container mt-4 p-4" style="background-color: #f8f9fa; border-radius: 8px;">
   <div class="row">
-    <!-- Subtitulo, por favor selecciona una sala -->
     <div class="col-md-6 d-flex justify-content-center align-items-center">
       <object *ngIf="true" type="image/svg+xml" data="assets/sala.svg" #mapa class="mapa-salas"></object>
     </div>
 
-    <!-- Columna para el formulario -->
     <div class="col-md-6">
       <p class="text-center">{{ mensaje }}</p>
       <div>
@@ -21,6 +19,7 @@
               class="form-control"
               name="fecha"
               [(ngModel)]="reserva.fecha"
+              (ngModelChange)="onDateOrTimeChange()"
               required
             />
           </div>
@@ -32,6 +31,7 @@
               class="form-control"
               name="horaEntrada"
               [(ngModel)]="reserva.horaEntrada"
+              (ngModelChange)="onDateOrTimeChange()"
               required
             />
           </div>
@@ -43,6 +43,7 @@
               class="form-control"
               name="horaSalida"
               [(ngModel)]="reserva.horaSalida"
+              (ngModelChange)="onDateOrTimeChange()"
               required
             />
           </div>

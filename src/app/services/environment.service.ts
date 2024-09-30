@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Environment, EnvironmentReservationDto } from '../Model/environment.model';
 import {Development} from "../environments/development";
@@ -29,7 +29,11 @@ export class EnvironmentService {
     return this.http.post(`${this.reservationUrl}/`, reservation);
   }
 
-  getEnvironmentsAvailability(): Observable<EnvironmentResponse> {
-    return this.http.get<EnvironmentResponse>(`${this.environmentsUrl}/availability`);
+  getEnvironmentsAvailability(from: string, to: string): Observable<EnvironmentResponse> {
+    const params = new HttpParams()
+      .set('from', from)
+      .set('to', to);
+
+    return this.http.get<EnvironmentResponse>(`${this.reservationUrl}/availability`, { params });
   }
 }
