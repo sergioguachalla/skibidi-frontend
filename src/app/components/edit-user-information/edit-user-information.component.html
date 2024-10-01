@@ -1,0 +1,102 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="background-shadow">
+        <form [formGroup]="updateForm" novalidate>
+          <h2 class="h2-centered">Regístrate como cliente</h2>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="nombres" class="form-label">Nombres:</label>
+              <input type="text" formControlName="nombres" class="form-control" id="nombres" placeholder="Nombres">
+              <div *ngIf="updateForm.get('nombres')?.invalid && updateForm.get('nombres')?.touched" class="text-danger">
+                Los nombres son requeridos.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="apellidos" class="form-label">Apellidos:</label>
+              <input type="text" formControlName="apellidos" class="form-control" id="apellidos" placeholder="Apellidos">
+              <div *ngIf="updateForm.get('apellidos')?.invalid && updateForm.get('apellidos')?.touched" class="text-danger">
+                Los apellidos son requeridos.
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="ci" class="form-label">C.I.:</label>
+              <input type="number" formControlName="ci" class="form-control" id="ci" placeholder="C.I.">
+              <div *ngIf="updateForm.get('ci')?.invalid && updateForm.get('ci')?.touched" class="text-danger">
+                El C.I. es requerido.
+              </div>
+            </div>
+
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="email" class="form-label">Correo Electrónico:</label>
+              <input type="email" formControlName="email" class="form-control" id="email" placeholder="e-mail">
+              <div *ngIf="updateForm.get('email')?.invalid && updateForm.get('email')?.touched" class="text-danger">
+                Por favor, ingresa un correo electrónico válido.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="celular" class="form-label">Celular:</label>
+              <input type="text" formControlName="celular" class="form-control" id="celular" placeholder="Celular">
+              <div *ngIf="updateForm.get('celular')?.invalid && updateForm.get('celular')?.touched" class="text-danger">
+                Ingresa un número de celular válido.
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="direccion" class="form-label">Dirección:</label>
+              <input type="text" formControlName="direccion" class="form-control" id="direccion" placeholder="Dirección">
+              <div *ngIf="updateForm.get('direccion')?.invalid && updateForm.get('direccion')?.touched" class="text-danger">
+                La dirección es requerida.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="username" class="form-label">Username:</label>
+              <input type="text" formControlName="username" class="form-control" id="username" placeholder="Username">
+              <div *ngIf="updateForm.get('username')?.invalid && updateForm.get('username')?.touched" class="text-danger">
+                Elige un nombre de usuario.
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="password" class="form-label">Contraseña:</label>
+              <input type="password" formControlName="password" class="form-control" id="password" placeholder="Contraseña">
+              <div *ngIf="updateForm.get('password')?.invalid && updateForm.get('password')?.touched" class="text-danger">
+                La contraseña debe tener al menos 6 caracteres.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="confirmPassword" class="form-label">Confirma la contraseña:</label>
+              <input type="password" formControlName="confirmPassword" class="form-control" id="confirmPassword" placeholder="Confirma la contraseña">
+              <div *ngIf="updateForm.hasError('mismatch') && updateForm.get('confirmPassword')?.touched" class="text-danger">
+                Las contraseñas no coinciden.
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3 justify-content-center">
+            <div class="col-md-3">
+              <button type="button" class="btn btn-primary w-100" >Crear una cuenta</button>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-secondary w-100" type="button" >Cancelar</button>
+            </div>
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

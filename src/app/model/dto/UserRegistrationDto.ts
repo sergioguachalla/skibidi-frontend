@@ -1,5 +1,8 @@
+// @ts-ignore
 import {PersonDto} from './PersonDto';
-import {UserDto} from './UserDto';
+// @ts-ignore
+import {UserDto} from "./UserDto";
+
 export interface UserRegistrationDto {
   personDto: PersonDto;
   userDto: UserDto;
