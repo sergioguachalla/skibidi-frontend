@@ -1,10 +1,10 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {NgIf} from "@angular/common";
-import {NavbarComponent} from "../shared/navbar/navbar.component";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { NgIf } from "@angular/common";
+import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EnvironmentService } from "../../services/environment.service";
 import { KeycloakService } from "keycloak-angular";
-import {EnvironmentReservationDto} from "../../Model/environment.model";
+import { EnvironmentReservationDto } from "../../Model/environment.model";
 
 @Component({
   selector: 'app-environment-client',
@@ -37,6 +37,8 @@ export class EnvironmentClientComponent {
       horaEntrada: ['', Validators.required],
       horaSalida: ['', Validators.required],
       proposito: ['', Validators.required]
+    }, {
+      validators: this.validateTimeRange()
     });
   }
 
@@ -49,6 +51,12 @@ export class EnvironmentClientComponent {
 
   onDateOrTimeChange() {
     const { fecha, horaEntrada, horaSalida } = this.reservaForm.value;
+
+    if (fecha === this.today && horaEntrada < this.currentTime) {
+      this.reservaForm.get('horaEntrada')?.setErrors({ invalidTime: true });
+    } else {
+      this.reservaForm.get('horaEntrada')?.setErrors(null);
+    }
 
     if (fecha && horaEntrada && horaSalida) {
       const from = `${fecha}T${horaEntrada}:00`;
@@ -63,6 +71,24 @@ export class EnvironmentClientComponent {
         }
       );
     }
+  }
+
+  validateTimeRange() {
+    return (formGroup: FormGroup) => {
+      const horaEntradaControl = formGroup.get('horaEntrada');
+      const horaSalidaControl = formGroup.get('horaSalida');
+
+      if (horaEntradaControl && horaSalidaControl) {
+        const horaEntrada = horaEntradaControl.value;
+        const horaSalida = horaSalidaControl.value;
+
+        if (horaEntrada && horaSalida && horaEntrada >= horaSalida) {
+          horaSalidaControl.setErrors({ invalidRange: true });
+        } else {
+          horaSalidaControl.setErrors(null);
+        }
+      }
+    };
   }
 
   updateSVG(environments: any[] = []) {
@@ -150,5 +176,4 @@ export class EnvironmentClientComponent {
       alert('Por favor, seleccione una sala disponible antes de enviar la reserva.');
     }
   }
-
 }

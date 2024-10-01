@@ -40,6 +40,9 @@
             <div *ngIf="reservaForm.get('horaEntrada')?.invalid && reservaForm.get('horaEntrada')?.touched" class="text-danger">
               La hora de entrada es obligatoria.
             </div>
+            <div *ngIf="reservaForm.get('horaEntrada')?.errors?.['invalidTime']" class="text-danger">
+              La hora de entrada no puede ser anterior a la hora actual.
+            </div>
           </div>
 
           <div class="mb-3">
@@ -53,6 +56,9 @@
             />
             <div *ngIf="reservaForm.get('horaSalida')?.invalid && reservaForm.get('horaSalida')?.touched" class="text-danger">
               La hora de salida es obligatoria.
+            </div>
+            <div *ngIf="reservaForm.get('horaSalida')?.errors?.['invalidRange']" class="text-danger">
+              La hora de salida debe ser mayor que la hora de entrada.
             </div>
           </div>
 
