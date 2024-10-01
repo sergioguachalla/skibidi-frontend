@@ -8,6 +8,7 @@ import { UserClientService } from '../../services/userclient.service';
 import { UserClient } from '../../Model/userclient.model';
 
 declare var bootstrap: any;
+
 @Component({
   selector: 'app-reservation',
   standalone: true,
@@ -19,10 +20,10 @@ export class ReservationComponent implements OnInit {
   environments: Environment[] = [];
   userClients: UserClient[] = [];
   selectedEnvironmentId: number | null = null;
-  selectedClientId: number | null = null;
+  selectedClientId: string | null = null;
 
   reservation: EnvironmentReservationDto = {
-    clientId: 0,
+    clientId: "",
     environmentId: 0,
     reservationDate: '',
     clockIn: new Date(),
@@ -52,7 +53,7 @@ export class ReservationComponent implements OnInit {
 
   openConfirmationModal(): void {
     if (this.selectedEnvironmentId && this.selectedClientId) {
-      const selectedUser = this.userClients.find(user => user.clientId === this.selectedClientId);
+      const selectedUser = this.userClients.find(user => user.kcUuid === this.selectedClientId);
       const selectedEnvironment = this.environments.find(env => env.environmentId === this.selectedEnvironmentId);
 
       this.selectedUserName = selectedUser ? selectedUser.username : 'Desconocido';

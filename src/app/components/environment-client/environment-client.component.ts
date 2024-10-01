@@ -114,7 +114,7 @@ export class EnvironmentClientComponent {
       const environmentId = parseInt(this.mensaje.split('SALA-B')[1], 10);
       console.log('ID del ambiente seleccionado:', environmentId);
       const reservation: EnvironmentReservationDto = {
-        clientId: 1,
+        clientId: this.keycloakService.getKeycloakInstance().subject!,
         environmentId: environmentId,
         reservationDate: this.reservaForm.get('fecha')?.value,
         clockIn: new Date(`${this.reservaForm.get('fecha')?.value}T${this.reservaForm.get('horaEntrada')?.value}:00`),
