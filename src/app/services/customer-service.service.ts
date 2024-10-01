@@ -1,5 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+// @ts-ignore
 import {UserRegistrationDto} from "../model/dto/UserRegistrationDto";
 import {Observable} from "rxjs";
 import {Development} from "../environments/development";
