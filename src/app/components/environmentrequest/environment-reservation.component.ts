@@ -72,8 +72,14 @@ export class ReservationComponent implements OnInit {
 
   confirmSubmission(): void {
     const reservationDate = this.reservation.reservationDate;
-    this.reservation.clockIn = new Date(`${reservationDate}T${this.reservation.clockIn}:00`);
-    this.reservation.clockOut = new Date(`${reservationDate}T${this.reservation.clockOut}:00`);
+    const clockIn = new Date(`${reservationDate}T${this.reservation.clockIn}:00`);
+    const clockOut = new Date(`${reservationDate}T${this.reservation.clockOut}:00`);
+    const offsetInMs = clockIn.getTimezoneOffset() * 60 * 1000;
+    clockIn.setTime(clockIn.getTime() - offsetInMs);
+    clockOut.setTime(clockOut.getTime() - offsetInMs);
+    this.reservation.clockIn = clockIn;
+    this.reservation.clockOut = clockOut;
+
     this.environmentService.createEnvironmentReservation(this.reservation).subscribe(response => {
       const modalElement = document.getElementById('confirmationModal');
       const modal = bootstrap.Modal.getInstance(modalElement);
@@ -82,4 +88,5 @@ export class ReservationComponent implements OnInit {
       console.error('Error al realizar la reserva:', error);
     });
   }
+
 }

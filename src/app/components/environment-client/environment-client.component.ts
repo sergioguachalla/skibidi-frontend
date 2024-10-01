@@ -113,12 +113,24 @@ export class EnvironmentClientComponent {
     if (this.reservaForm.valid && this.mensaje && this.mensaje.includes('Sala seleccionada:')) {
       const environmentId = parseInt(this.mensaje.split('SALA-B')[1], 10);
       console.log('ID del ambiente seleccionado:', environmentId);
+
+      const fecha = this.reservaForm.get('fecha')?.value;
+      const horaEntrada = this.reservaForm.get('horaEntrada')?.value;
+      const horaSalida = this.reservaForm.get('horaSalida')?.value;
+
+      const clockIn = new Date(`${fecha}T${horaEntrada}:00`);
+      const clockOut = new Date(`${fecha}T${horaSalida}:00`);
+
+      const offsetInMs = clockIn.getTimezoneOffset() * 60 * 1000;
+      clockIn.setTime(clockIn.getTime() - offsetInMs);
+      clockOut.setTime(clockOut.getTime() - offsetInMs);
+
       const reservation: EnvironmentReservationDto = {
         clientId: this.keycloakService.getKeycloakInstance().subject!,
         environmentId: environmentId,
-        reservationDate: this.reservaForm.get('fecha')?.value,
-        clockIn: new Date(`${this.reservaForm.get('fecha')?.value}T${this.reservaForm.get('horaEntrada')?.value}:00`),
-        clockOut: new Date(`${this.reservaForm.get('fecha')?.value}T${this.reservaForm.get('horaSalida')?.value}:00`),
+        reservationDate: fecha,
+        clockIn: clockIn,
+        clockOut: clockOut,
         purpose: this.reservaForm.get('proposito')?.value,
         reservationStatus: true,
         status: 1
@@ -138,4 +150,5 @@ export class EnvironmentClientComponent {
       alert('Por favor, seleccione una sala disponible antes de enviar la reserva.');
     }
   }
+
 }
