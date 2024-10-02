@@ -5,10 +5,10 @@ import { BookDto } from '../Model/book.model';
 
 interface ApiResponse {
   data: {
-    content: BookDto[];
+    content: BookDto[];  // Aquí espera un array de libros en el campo 'content'
     totalPages: number | null;
-    size : number | null;
-    pageable : {
+    size: number | null;
+    pageable: {
       pageNumber: number | null;
       pageSize: number | null;
     }
@@ -49,6 +49,8 @@ export class BookService {
   findBooksByGenre(genreId: number): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${this.apiUrl}?page=0&size=2&genreId=${genreId}`);
   }
-
+  searchBooksByTitle(title: string): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.apiUrl}search?title=${title}`);
+  }
 
 }
