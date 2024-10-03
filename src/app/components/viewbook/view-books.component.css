@@ -123,12 +123,13 @@ input:checked + .slider:before {
   color: #FF5722;
 }
 .no-books-message {
-  background-color: #f8d7da;  
-  color: #721c24;              
-  border: 1px solid #f5c6cb;   
-  border-radius: 5px;          
-  padding: 15px;                
-  text-align: center;           
-  margin: 20px 0;              
-  font-size: 1.2em;             
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  padding: 15px;
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.2em;
+
 }

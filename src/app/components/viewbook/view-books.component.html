@@ -63,6 +63,9 @@
     </div>
   </div>
 
+  <div *ngIf="librosFiltrados.length === 0" class="no-books-message">
+    <p>{{mensaje}}</p>
+  </div>
 
 
   <!-- Pagination -->
