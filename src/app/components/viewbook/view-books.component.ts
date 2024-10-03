@@ -5,6 +5,8 @@ import { BookService } from '../../services/book.service';
 import { BookDto } from '../../Model/book.model';
 import {GenreService} from "../../services/genre.service";
 import {GenreDto} from "../../Model/genre.model";
+import {filter} from "rxjs";
+declare var bootstrap: any;
 
 
 @Component({
@@ -14,6 +16,7 @@ import {GenreDto} from "../../Model/genre.model";
   templateUrl: './view-books.component.html',
   styleUrls: ['./view-books.component.css']
 })
+
 export class ViewBooksComponent implements OnInit {
 
   protected genreService : GenreService = inject(GenreService);
@@ -21,7 +24,7 @@ export class ViewBooksComponent implements OnInit {
   librosFiltrados: BookDto[] = [];
   mensaje: string = '';
   genres: GenreDto[] = [];
-
+  bookStatuses : any[] = [{value: true, label: 'Disponible'}, {value: false, label: 'Ocupado'}];
   pages: number = 0;
   pagesArray: number[] = [];
   searchQuery: string = '';
@@ -65,7 +68,7 @@ export class ViewBooksComponent implements OnInit {
 
   onSearch() {
     const title = this.searchQuery.trim();
-  
+
     if (title === '') {
       // Si no hay título en la búsqueda, cargar todos los libros
       this.loadBooks();
@@ -75,10 +78,10 @@ export class ViewBooksComponent implements OnInit {
         response => {
           if (response.successful) {
             // Verificar si la respuesta tiene 'content' (paginación) o es un arreglo directo
-            this.librosFiltrados = Array.isArray(response.data) 
+            this.librosFiltrados = Array.isArray(response.data)
               ? response.data // Si es un array, lo asignamos directamente
               : response.data.content || []; // Si tiene 'content', asignamos ese campo
-  
+
             // Si no se encuentran libros, mostrar mensaje
             if (this.librosFiltrados.length === 0) {
               this.mensaje = 'No se encontraron libros con ese título.';
@@ -96,12 +99,12 @@ export class ViewBooksComponent implements OnInit {
       );
     }
   }
-  
-  
+
+
   updateSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
     this.searchQuery = input.value;  // Actualiza el valor de búsqueda
-  }  
+  }
 
   toggleAvailability(libro: BookDto) {
     const originalStatus = libro.status;
@@ -109,16 +112,14 @@ export class ViewBooksComponent implements OnInit {
 
     if (confirm(confirmMessage)) {
       libro.status = !originalStatus;
-
-
       const updatedBook = { ...libro };
-
       console.log('ID del libro:', libro.id);
 
       this.bookService.updateBook(libro.id, updatedBook).subscribe(
         response => {
-          console.log('Estado actualizado:', response);
-          this.mensaje = 'Estado del libro actualizado exitosamente!';
+          const modalElement = document.getElementById('successModal');
+          const modal = new bootstrap.Modal(modalElement!);
+          modal.show();
         },
         error => {
           console.error('Error al actualizar el libro:', error);
@@ -165,19 +166,22 @@ export class ViewBooksComponent implements OnInit {
   }
   updateAuthorSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
-    //wait 1 second before searching
     setTimeout(() => {
       this.bookService.findBooksByAuthor(input.value).subscribe(
         response => {
           if (response.successful) {
+            if(response.message === "No se encontraron libros con los filtros seleccionados"){
+              console.log(response.data.content);
+              this.librosFiltrados = [];
+            }
             this.librosFiltrados = response.data.content.map((libro, index) => ({
               ...libro,
               id: index + 1
             }));
-            this.mensaje = 'Libros filtrados por autor exitosamente!';
+
           } else {
             console.error('Error al filtrar los libros por autor:', response.message);
-            this.mensaje = 'No se pudieron filtrar los libros por autor.';
+
           }
         },
         error => {
@@ -185,10 +189,31 @@ export class ViewBooksComponent implements OnInit {
           this.mensaje = 'Ocurrió un error al conectar con el API.';
         }
       );
-    }, 500);
+    }, 750);
 
   }
-
+  filterByAvailability($event: any) {
+    let status = $event.target.value;
+    this.bookService.filterBooksByAvailability(status).subscribe(
+      response => {
+        if (response.data === null) {
+          this.librosFiltrados = [];
+          this.mensaje = 'No se encontraron libros con los filtros seleccionados';
+        }
+        if (response.successful) {
+          this.librosFiltrados = response.data.content.map((libro, index) => ({
+            ...libro,
+            id: index + 1
+          }));
+          this.mensaje = 'Libros filtrados por disponibilidad exitosamente!';
+        }
+      },
+      error => {
+        console.error('Error al conectar con el API:', error);
+        this.mensaje = 'Ocurrió un error al conectar con el API.';
+      }
+    );
+  }
   onPageChange(page: number) {
     this.bookService.getAllBooks2(page-1).subscribe(
       response => {
@@ -209,4 +234,6 @@ export class ViewBooksComponent implements OnInit {
       }
     );
   }
+
+  protected readonly filter = filter;
 }

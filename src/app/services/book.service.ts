@@ -52,4 +52,8 @@ export class BookService {
   findBooksByAuthor(author: string) {
     return this.http.get<ApiResponse>(`${this.apiUrl}search/author?authorName=${author}`);
   }
+
+  filterBooksByAvailability(available: boolean) {
+    return this.http.get<ApiResponse>(`${this.apiUrl}?isAvailable=${available}`);
+  }
 }
