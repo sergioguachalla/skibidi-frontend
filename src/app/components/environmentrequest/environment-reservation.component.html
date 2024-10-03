@@ -7,7 +7,7 @@
   <div>
     <label for="clientId">Usuario:</label>
     <select id="clientId" [(ngModel)]="selectedClientId" name="clientId">
-      <option *ngFor="let user of userClients" [value]="user.clientId">
+      <option *ngFor="let user of userClients" [value]="user.kcUuid">
         {{ user.username }}
       </option>
     </select>

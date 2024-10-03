@@ -1,0 +1,29 @@
+.svg-content {
+  width: 100%;
+  height: auto;
+}
+
+button {
+  margin-top: 10px;
+}
+.mapa-salas {
+  width: 100%; /* Ajustar el ancho al contenedor */
+  height: auto;
+  max-height: 400px; /* Ajustar el tamaño máximo para evitar desbordamiento */
+}
+
+.container {
+  background-color: #f8f9fa; /* Fondo gris claro */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.form-control {
+  max-width: 100%; /* Ajustar el ancho a la columna */
+  margin: 0 auto; /* Centrar los campos si hay espacio */
+}
+
+button {
+  margin-top: 10px;
+}
