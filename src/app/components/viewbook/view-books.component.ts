@@ -132,16 +132,25 @@ export class ViewBooksComponent implements OnInit {
   }
   updateAuthorSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
-    //wait 1 second before searching
     setTimeout(() => {
+      if (input.value === '') {
+        this.loadBooks();
+        return;
+      }
       this.bookService.findBooksByAuthor(input.value).subscribe(
         response => {
           if (response.successful) {
-            this.librosFiltrados = response.data.content.map((libro, index) => ({
-              ...libro,
-              id: index + 1
-            }));
-            this.mensaje = 'Libros filtrados por autor exitosamente!';
+            if(response.data == null){
+              this.librosFiltrados = [];
+              this.mensaje = 'No se encontraron libros con ese autor.';
+            }
+            if(response.data != null) {
+              this.librosFiltrados = response.data.content.map((libro, index) => ({
+                ...libro,
+                id: index + 1
+              }));
+            }
+
           } else {
             console.error('Error al filtrar los libros por autor:', response.message);
             this.mensaje = 'No se pudieron filtrar los libros por autor.';
