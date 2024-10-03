@@ -50,7 +50,7 @@ export class EditUserInformationComponent {
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
-      ci: ['', Validators.required],
+      ci: [{ value: '', disabled: true }, Validators.required],
       departamento: ['', Validators.required]
     }, {
       validator: this.passwordMatchValidator
@@ -88,6 +88,7 @@ export class EditUserInformationComponent {
   onSubmit() {
     const userDto = this.toUserRegistrationDto(this.updateForm.value);
     const userKcId = this.keycloakService.getKeycloakInstance().subject!;
+
     this.userService.updateUserClient(userDto, userKcId).subscribe(
       (response: initialState) => {
         this.state = signal({
@@ -95,6 +96,16 @@ export class EditUserInformationComponent {
           message: response.message,
           successful: response.successful
         });
+        if (userDto.userDto.password && userDto.userDto.password.trim() !== '') {
+          this.keycloakService.logout(window.location.origin).then(() => {
+            this.router.navigate(['/']).then(r => console.log('Logout and redirect successful'));
+          }).catch(err => {
+            console.error('Logout error:', err);
+          });
+        }
+      },
+      error => {
+        console.error('Update error:', error);
       }
     );
   }

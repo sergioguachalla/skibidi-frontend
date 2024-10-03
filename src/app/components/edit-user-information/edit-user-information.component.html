@@ -25,7 +25,8 @@
           <div class="row mb-3">
             <div class="col-md-6">
               <label for="ci" class="form-label">C.I.:</label>
-              <input type="number" formControlName="ci" class="form-control" id="ci" placeholder="C.I.">
+              <!-- TODO: DISABLE INPUT -->
+              <input formControlName="ci" class="form-control" id="ci" placeholder="C.I." [disabled]="true">
               <div *ngIf="updateForm.get('ci')?.invalid && updateForm.get('ci')?.touched" class="text-danger">
                 El C.I. es requerido.
               </div>
@@ -41,13 +42,7 @@
               </div>
             </div>
 
-            <div class="col-md-6">
-              <label for="celular" class="form-label">Celular:</label>
-              <input type="text" formControlName="celular" class="form-control" id="celular" placeholder="Celular">
-              <div *ngIf="updateForm.get('celular')?.invalid && updateForm.get('celular')?.touched" class="text-danger">
-                Ingresa un número de celular válido.
-              </div>
-            </div>
+
           </div>
 
           <div class="row mb-3">
