@@ -24,6 +24,7 @@ export class ViewBooksComponent implements OnInit {
 
   pages: number = 0;
   pagesArray: number[] = [];
+  searchQuery: string = '';
 
 
   constructor(private bookService: BookService) {
@@ -41,6 +42,7 @@ export class ViewBooksComponent implements OnInit {
       response => {
         console.log('Respuesta del API:', response);
         if (response.successful) {
+          // Cuando la respuesta es paginada, extraemos el contenido
           this.pages = response.data.totalPages!;
           this.pagesArray = Array.from({ length: this.pages }, (_, i) => i + 1);
           this.librosFiltrados = response.data.content.map((libro, index) => ({
@@ -61,14 +63,45 @@ export class ViewBooksComponent implements OnInit {
     );
   }
 
+  onSearch() {
+    const title = this.searchQuery.trim();
+  
+    if (title === '') {
+      // Si no hay título en la búsqueda, cargar todos los libros
+      this.loadBooks();
+    } else {
+      // Buscar libros por título sin paginación
+      this.bookService.searchBooksByTitle(title).subscribe(
+        response => {
+          if (response.successful) {
+            // Verificar si la respuesta tiene 'content' (paginación) o es un arreglo directo
+            this.librosFiltrados = Array.isArray(response.data) 
+              ? response.data // Si es un array, lo asignamos directamente
+              : response.data.content || []; // Si tiene 'content', asignamos ese campo
+  
+            // Si no se encuentran libros, mostrar mensaje
+            if (this.librosFiltrados.length === 0) {
+              this.mensaje = 'No se encontraron libros con ese título.';
+            } else {
+              this.mensaje = 'Libros encontrados exitosamente!';
+            }
+          } else {
+            this.mensaje = 'No se encontraron libros.';
+          }
+        },
+        error => {
+          console.error('Error al buscar libros por título:', error);
+          this.mensaje = 'Ocurrió un error al buscar libros.';
+        }
+      );
+    }
+  }
+  
+  
   updateSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
-    console.log('Buscar:', input.value);
-  }
-
-  onSearch() {
-    console.log('Búsqueda en curso...');
-  }
+    this.searchQuery = input.value;  // Actualiza el valor de búsqueda
+  }  
 
   toggleAvailability(libro: BookDto) {
     const originalStatus = libro.status;

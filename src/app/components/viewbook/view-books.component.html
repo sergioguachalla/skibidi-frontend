@@ -27,6 +27,10 @@
       </select>
     </div>
   </div>
+  <!-- Mensaje si no se encontraron libros -->
+  <div *ngIf="librosFiltrados.length === 0" class="no-books-message">
+    <p>No se encontraron libros.</p>
+  </div>
 
   <!-- Filtered books -->
   <div *ngFor="let libro of librosFiltrados" class="book-item">
