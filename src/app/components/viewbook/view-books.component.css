@@ -122,7 +122,6 @@ input:checked + .slider:before {
 .unavailable {
   color: #FF5722;
 }
-
 .no-books-message {
   background-color: #f8d7da;
   color: #721c24;
@@ -132,4 +131,5 @@ input:checked + .slider:before {
   text-align: center;
   margin: 20px 0;
   font-size: 1.2em;
+
 }
