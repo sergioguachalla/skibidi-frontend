@@ -11,11 +11,6 @@
 
     <!-- Search book by author -->
     <input type="text" placeholder="Búsqueda por autor" (input)="updateAuthorSearchQuery($event)">
-    <button (click)="onSearch()">
-      <span>🔍</span>
-    </button>
-
-
 
     <!-- Dropdown Menu for genre -->
     <div class="dropdown-container">
@@ -26,10 +21,22 @@
         </ng-container>
       </select>
     </div>
+    <div class="dropdown-container">
+      <select (change)="filterByAvailability($event)">
+        <option value="">Todos los estados</option>
+        <ng-container *ngFor="let bookStatus of bookStatuses">
+          <option value="{{ bookStatus.value }}">{{ bookStatus.label }}</option>
+        </ng-container>
+      </select>
+    </div>
+
   </div>
+
+
+
   <!-- Mensaje si no se encontraron libros -->
   <div *ngIf="librosFiltrados.length === 0" class="no-books-message">
-    <p>No se encontraron libros.</p>
+    <p>{{mensaje}}</p>
   </div>
 
   <!-- Filtered books -->
@@ -56,9 +63,7 @@
     </div>
   </div>
 
-  <div *ngIf="librosFiltrados.length === 0" class="no-results">
-    <p>No se encontraron resultados</p>
-  </div>
+
 
   <!-- Pagination -->
   <nav aria-label="Page navigation example">

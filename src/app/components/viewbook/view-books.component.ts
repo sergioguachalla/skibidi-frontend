@@ -5,6 +5,7 @@ import { BookService } from '../../services/book.service';
 import { BookDto } from '../../Model/book.model';
 import {GenreService} from "../../services/genre.service";
 import {GenreDto} from "../../Model/genre.model";
+import {filter} from "rxjs";
 declare var bootstrap: any;
 
 
@@ -23,7 +24,7 @@ export class ViewBooksComponent implements OnInit {
   librosFiltrados: BookDto[] = [];
   mensaje: string = '';
   genres: GenreDto[] = [];
-
+  bookStatuses : any[] = [{value: true, label: 'Disponible'}, {value: false, label: 'Ocupado'}];
   pages: number = 0;
   pagesArray: number[] = [];
   searchQuery: string = '';
@@ -165,19 +166,22 @@ export class ViewBooksComponent implements OnInit {
   }
   updateAuthorSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
-    //wait 1 second before searching
     setTimeout(() => {
       this.bookService.findBooksByAuthor(input.value).subscribe(
         response => {
           if (response.successful) {
+            if(response.message === "No se encontraron libros con los filtros seleccionados"){
+              console.log(response.data.content);
+              this.librosFiltrados = [];
+            }
             this.librosFiltrados = response.data.content.map((libro, index) => ({
               ...libro,
               id: index + 1
             }));
-            this.mensaje = 'Libros filtrados por autor exitosamente!';
+
           } else {
             console.error('Error al filtrar los libros por autor:', response.message);
-            this.mensaje = 'No se pudieron filtrar los libros por autor.';
+
           }
         },
         error => {
@@ -185,10 +189,31 @@ export class ViewBooksComponent implements OnInit {
           this.mensaje = 'Ocurrió un error al conectar con el API.';
         }
       );
-    }, 500);
+    }, 750);
 
   }
-
+  filterByAvailability($event: any) {
+    let status = $event.target.value;
+    this.bookService.filterBooksByAvailability(status).subscribe(
+      response => {
+        if (response.data === null) {
+          this.librosFiltrados = [];
+          this.mensaje = 'No se encontraron libros con los filtros seleccionados';
+        }
+        if (response.successful) {
+          this.librosFiltrados = response.data.content.map((libro, index) => ({
+            ...libro,
+            id: index + 1
+          }));
+          this.mensaje = 'Libros filtrados por disponibilidad exitosamente!';
+        }
+      },
+      error => {
+        console.error('Error al conectar con el API:', error);
+        this.mensaje = 'Ocurrió un error al conectar con el API.';
+      }
+    );
+  }
   onPageChange(page: number) {
     this.bookService.getAllBooks2(page-1).subscribe(
       response => {
@@ -209,4 +234,6 @@ export class ViewBooksComponent implements OnInit {
       }
     );
   }
+
+  protected readonly filter = filter;
 }
