@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {UserRegistrationDto} from "../../Model/dto/UserRegistrationDto";
 import {KeycloakService} from "keycloak-angular";
 import {UserClientService} from "../../services/userclient.service";
+import {NavbarComponent} from "../shared/navbar/navbar.component";
 
 export interface initialState {
   data: any | any[] | null;
@@ -22,7 +23,8 @@ export interface initialState {
     FormsModule,
     NgForOf,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NavbarComponent
   ],
   templateUrl: './edit-user-information.component.html',
   styleUrl: './edit-user-information.component.css'
