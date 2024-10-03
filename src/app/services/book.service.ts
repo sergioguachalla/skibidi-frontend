@@ -56,4 +56,19 @@ export class BookService {
   filterBooksByAvailability(available: boolean) {
     return this.http.get<ApiResponse>(`${this.apiUrl}?isAvailable=${available}`);
   }
+  getAllBooksFiltered(page: number, size: number, genreId?: number, from?: string, to?: string, isAvailable?: boolean): Observable<ApiResponse> {
+    let params: any = {
+      page: page,
+      size: size,
+    };
+
+    // Agregar los parámetros opcionales si están presentes
+    if (genreId !== undefined) params.genreId = genreId;
+    if (from) params.from = from;
+    if (to) params.to = to;
+    if (isAvailable !== undefined) params.isAvailable = isAvailable;
+
+    const queryParams = new URLSearchParams(params).toString(); // Convertir los parámetros en query string
+    return this.http.get<ApiResponse>(`${this.apiUrl}?${queryParams}`);
+  }
 }

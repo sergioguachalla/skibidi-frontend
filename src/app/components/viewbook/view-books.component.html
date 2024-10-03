@@ -31,7 +31,26 @@
     </div>
 
   </div>
-
+  <div>
+    <label for="startDate">Fecha de Inicio:</label>
+    <input
+      type="date"
+      id="startDate"
+      [(ngModel)]="startDate"
+      name="startDate"
+    />
+  </div>
+  
+  <div>
+    <label for="endDate">Fecha de Fin:</label>
+    <input
+      type="date"
+      id="endDate"
+      [(ngModel)]="endDate"
+      name="endDate"
+    />
+  </div>
+  <button (click)="searchBooksByDateRange()">Buscar por Fechas</button>
 
 
   <!-- Mensaje si no se encontraron libros -->
