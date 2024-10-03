@@ -50,5 +50,9 @@ export class BookService {
     return this.http.get<ApiResponse>(`${this.apiUrl}?page=0&size=2&genreId=${genreId}`);
   }
 
+  findBooksByAuthor(author: string) {
+    return this.http.get<ApiResponse>(`${this.apiUrl}search/author?authorName=${author}`);
+  }
+
 
 }

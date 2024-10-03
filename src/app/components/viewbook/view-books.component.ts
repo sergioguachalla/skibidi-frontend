@@ -43,10 +43,9 @@ export class ViewBooksComponent implements OnInit {
         if (response.successful) {
           this.pages = response.data.totalPages!;
           this.pagesArray = Array.from({ length: this.pages }, (_, i) => i + 1);
-          // Acceder a response.data.content
           this.librosFiltrados = response.data.content.map((libro, index) => ({
             ...libro,
-            id: index + 1  // Puedes manejar el ID como lo necesites
+            id: index + 1
           }));
           console.log('Libros cargados:', this.librosFiltrados);
           this.mensaje = 'Libros recuperados exitosamente!';
@@ -130,6 +129,31 @@ export class ViewBooksComponent implements OnInit {
         this.mensaje = 'Ocurrió un error al conectar con el API.';
       }
     );
+  }
+  updateAuthorSearchQuery(event: Event) {
+    const input = event.target as HTMLInputElement;
+    //wait 1 second before searching
+    setTimeout(() => {
+      this.bookService.findBooksByAuthor(input.value).subscribe(
+        response => {
+          if (response.successful) {
+            this.librosFiltrados = response.data.content.map((libro, index) => ({
+              ...libro,
+              id: index + 1
+            }));
+            this.mensaje = 'Libros filtrados por autor exitosamente!';
+          } else {
+            console.error('Error al filtrar los libros por autor:', response.message);
+            this.mensaje = 'No se pudieron filtrar los libros por autor.';
+          }
+        },
+        error => {
+          console.error('Error al conectar con el API:', error);
+          this.mensaje = 'Ocurrió un error al conectar con el API.';
+        }
+      );
+    }, 500);
+
   }
 
   onPageChange(page: number) {
