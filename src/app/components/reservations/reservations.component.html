@@ -1,0 +1,27 @@
+<navbar></navbar>
+<div class="container mt-4">
+  <h2 class="mb-3">Reservaciones de Salas de Estudio</h2>
+  <div *ngIf="reservations.length === 0" class="alert alert-info">
+    No hay reservaciones registradas.
+  </div>
+  <div *ngIf="reservations.length !== 0" class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead class="thead-dark">
+      <tr>
+        <th>Nombre de la sala</th>
+        <th>Inicio</th>
+        <th>Final</th>
+        <th>Motivo</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let reservation of reservations">
+        <td>{{ reservation.environmentId }}</td>
+        <td>{{ reservation.clockIn }}</td>
+        <td>{{ reservation.clockOut }}</td>
+        <td>{{ reservation.purpose }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

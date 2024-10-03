@@ -7,6 +7,7 @@ import { ViewBooksComponent } from './components/viewbook/view-books.component';
 
 import { ReservationComponent } from './components/environmentrequest/environment-reservation.component';
 import {EnvironmentClientComponent} from "./components/environment-client/environment-client.component";
+import {ReservationsComponent} from "./components/reservations/reservations.component";
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },
@@ -15,6 +16,7 @@ export const routes: Routes = [
     {path: 'view-book', component: ViewBooksComponent},
     {path: 'ingresar-libro', component: IngresarLibroComponent},
     {path: 'reservation-enviroment', component: ReservationComponent},
-    {path: 'client-environment', component: EnvironmentClientComponent }
+    {path: 'client-environment', component: EnvironmentClientComponent },
+  {path: 'reservations', component: ReservationsComponent}
 
 ];

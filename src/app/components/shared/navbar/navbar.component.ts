@@ -29,6 +29,11 @@ export class NavbarComponent {
   onClickToEnvReservation() {
     this.router.navigate(['/reservation-enviroment']);
   }
+
+  onClickToReservations () {
+    this.router.navigate(['/reservations'])
+  }
+
   onClickToRegisterManual() {
     this.router.navigate(['/ingresar-libro']);
   }
