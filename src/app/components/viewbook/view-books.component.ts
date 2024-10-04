@@ -203,9 +203,9 @@ export class ViewBooksComponent implements OnInit {
 
     // Clear any previous search result when the input is empty
     if (searchTerm === '') {
-      this.librosFiltrados = [];
+
       this.mensaje = '';
-      this.loadBooks(); // Reset to load all books if no author is being searched for
+      this.filterBooks({target: {value: ""}});
       return;
     }
 
