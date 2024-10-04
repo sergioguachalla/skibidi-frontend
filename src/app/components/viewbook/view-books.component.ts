@@ -186,26 +186,25 @@ export class ViewBooksComponent implements OnInit {
   toggleAvailability(libro: BookDto) {
     const originalStatus = libro.status;
     const confirmMessage = libro.status ? '¿Desea marcar este libro como OCUPADO?' : '¿Desea marcar este libro como DISPONIBLE?';
-
+  
     if (confirm(confirmMessage)) {
       libro.status = !originalStatus;
       const updatedBook = {...libro};
-      console.log('ID del libro:', libro.id);
-
-      this.bookService.updateBook(libro.id!, updatedBook).subscribe(
+      console.log('ID del libro:', libro.bookId);  // Ahora usamos 'bookId'
+  
+      // Asegúrate de pasar 'bookId' en lugar de 'id'
+      this.bookService.updateBook(libro.bookId!, updatedBook).subscribe(
         response => {
           const modalElement = document.getElementById('successModal');
           const modal = new bootstrap.Modal(modalElement!);
           modal.show();
         },
         error => {
-          console.error('Error al actualizar el libro:', error);
-          libro.status = originalStatus;
+          console.error('Error al actualizar la disponibilidad:', error);
+          libro.status = originalStatus; // Revertir el cambio si falla
           this.mensaje = 'Error al actualizar el estado del libro.';
         }
       );
-    } else {
-      libro.status = originalStatus;
     }
   }
 
