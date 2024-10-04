@@ -1,11 +1,12 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NavbarComponent } from '../shared/navbar/navbar.component';
-import { BookService } from '../../services/book.service';
-import { BookDto } from '../../Model/book.model';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NavbarComponent} from '../shared/navbar/navbar.component';
+import {BookService} from '../../services/book.service';
+import {BookDto} from '../../Model/book.model';
 import {GenreService} from "../../services/genre.service";
 import {GenreDto} from "../../Model/genre.model";
 import {filter} from "rxjs";
+
 declare var bootstrap: any;
 
 
@@ -20,6 +21,7 @@ declare var bootstrap: any;
 export class ViewBooksComponent implements OnInit {
 
   protected genreService : GenreService = inject(GenreService);
+  searchTimeout: any;
 
   librosFiltrados: BookDto[] = [];
   mensaje: string = '';
@@ -115,7 +117,7 @@ export class ViewBooksComponent implements OnInit {
       const updatedBook = { ...libro };
       console.log('ID del libro:', libro.id);
 
-      this.bookService.updateBook(libro.id, updatedBook).subscribe(
+      this.bookService.updateBook(libro.id!, updatedBook).subscribe(
         response => {
           const modalElement = document.getElementById('successModal');
           const modal = new bootstrap.Modal(modalElement!);
@@ -165,28 +167,33 @@ export class ViewBooksComponent implements OnInit {
     );
   }
   updateAuthorSearchQuery(event: Event) {
+
     const input = event.target as HTMLInputElement;
-    setTimeout(() => {
-      if (input.value === '') {
-        this.loadBooks();
-        return;
-      }
-      this.bookService.findBooksByAuthor(input.value).subscribe(
+    const searchTerm = input.value.trim();
+
+    // Clear any previous search result when the input is empty
+    if (searchTerm === '') {
+      this.librosFiltrados = [];
+      this.mensaje = '';
+      this.loadBooks(); // Reset to load all books if no author is being searched for
+      return;
+    }
+
+    clearTimeout(this.searchTimeout);
+
+    this.searchTimeout = setTimeout(() => {
+      this.bookService.findBooksByAuthor(searchTerm).subscribe(
         response => {
           if (response.successful) {
-            if(response.data == null){
+            if (response.data == null || response.data.length === 0) {
               this.librosFiltrados = [];
               this.mensaje = 'No se encontraron libros con ese autor.';
-            }
-            if(response.data != null) {
-              this.librosFiltrados = response.data.content.map((libro, index) => ({
-                ...libro,
-                id: index + 1
-              }));
+            } else {
+              this.librosFiltrados = response.data;
             }
           } else {
             console.error('Error al filtrar los libros por autor:', response.message);
-
+            this.mensaje = 'Ocurrió un error al buscar libros por autor.';
           }
         },
         error => {
@@ -195,7 +202,6 @@ export class ViewBooksComponent implements OnInit {
         }
       );
     }, 750);
-
   }
   filterByAvailability($event: any) {
     let status = $event.target.value;
