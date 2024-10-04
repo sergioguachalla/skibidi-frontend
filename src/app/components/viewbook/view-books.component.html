@@ -22,7 +22,7 @@
       </select>
     </div>
     <div class="dropdown-container">
-      <select (change)="filterByAvailability($event)">
+      <select (change)="filterBooks($event)">
         <option value="">Todos los estados</option>
         <ng-container *ngFor="let bookStatus of bookStatuses">
           <option value="{{ bookStatus.value }}">{{ bookStatus.label }}</option>
@@ -61,10 +61,6 @@
         {{ libro.status ? 'DISPONIBLE' : 'OCUPADO' }}
       </span>
     </div>
-  </div>
-
-  <div *ngIf="librosFiltrados.length === 0" class="no-books-message">
-    <p>{{mensaje}}</p>
   </div>
 
 

@@ -1,11 +1,12 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NavbarComponent } from '../shared/navbar/navbar.component';
-import { BookService } from '../../services/book.service';
-import { BookDto } from '../../Model/book.model';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NavbarComponent} from '../shared/navbar/navbar.component';
+import {BookService} from '../../services/book.service';
+import {BookDto} from '../../Model/book.model';
 import {GenreService} from "../../services/genre.service";
 import {GenreDto} from "../../Model/genre.model";
 import {filter} from "rxjs";
+
 declare var bootstrap: any;
 
 
@@ -20,6 +21,7 @@ declare var bootstrap: any;
 export class ViewBooksComponent implements OnInit {
 
   protected genreService : GenreService = inject(GenreService);
+  searchTimeout: any;
 
   librosFiltrados: BookDto[] = [];
   mensaje: string = '';
@@ -29,12 +31,15 @@ export class ViewBooksComponent implements OnInit {
   pagesArray: number[] = [];
   searchQuery: string = '';
 
+  //filter criteria
+  availability: boolean | null = null;
+
 
   constructor(private bookService: BookService) {
   }
 
   ngOnInit() {
-    this.loadBooks();
+    this.filterBooks({target: {value: ""}});
     this.findGenres();
 
 
@@ -100,6 +105,33 @@ export class ViewBooksComponent implements OnInit {
     }
   }
 
+  filterBooks($availabilityEvent: any) {
+    const availability = $availabilityEvent.target.value;
+    if ($availabilityEvent.target.value === "") {
+      this.availability = null;
+    }
+    this.availability = availability;
+
+
+    this.bookService.getAllBooks2(0, this.availability).subscribe(
+      response => {
+        if (response.successful) {
+          this.librosFiltrados = response.data.content.map((libro, index) => ({
+            ...libro,
+            id: index + 1
+          }));
+          this.mensaje = 'Libros filtrados por disponibilidad exitosamente!';
+        } else {
+          console.error('Error al cargar los libros:', response.message);
+          this.mensaje = 'No se pudieron recuperar los libros.';
+        }
+      },
+      error => {
+        console.error('Error al conectar con el API:', error);
+        this.mensaje = 'Ocurrió un error al conectar con el API.';
+      }
+    );
+  }
 
   updateSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -115,7 +147,7 @@ export class ViewBooksComponent implements OnInit {
       const updatedBook = { ...libro };
       console.log('ID del libro:', libro.id);
 
-      this.bookService.updateBook(libro.id, updatedBook).subscribe(
+      this.bookService.updateBook(libro.id!, updatedBook).subscribe(
         response => {
           const modalElement = document.getElementById('successModal');
           const modal = new bootstrap.Modal(modalElement!);
@@ -165,28 +197,33 @@ export class ViewBooksComponent implements OnInit {
     );
   }
   updateAuthorSearchQuery(event: Event) {
+
     const input = event.target as HTMLInputElement;
-    setTimeout(() => {
-      if (input.value === '') {
-        this.loadBooks();
-        return;
-      }
-      this.bookService.findBooksByAuthor(input.value).subscribe(
+    const searchTerm = input.value.trim();
+
+    // Clear any previous search result when the input is empty
+    if (searchTerm === '') {
+
+      this.mensaje = '';
+      this.filterBooks({target: {value: ""}});
+      return;
+    }
+
+    clearTimeout(this.searchTimeout);
+
+    this.searchTimeout = setTimeout(() => {
+      this.bookService.findBooksByAuthor(searchTerm).subscribe(
         response => {
           if (response.successful) {
-            if(response.data == null){
+            if (response.data == null || response.data.length === 0) {
               this.librosFiltrados = [];
               this.mensaje = 'No se encontraron libros con ese autor.';
-            }
-            if(response.data != null) {
-              this.librosFiltrados = response.data.content.map((libro, index) => ({
-                ...libro,
-                id: index + 1
-              }));
+            } else {
+              this.librosFiltrados = response.data;
             }
           } else {
             console.error('Error al filtrar los libros por autor:', response.message);
-
+            this.mensaje = 'Ocurrió un error al buscar libros por autor.';
           }
         },
         error => {
@@ -195,7 +232,6 @@ export class ViewBooksComponent implements OnInit {
         }
       );
     }, 750);
-
   }
   filterByAvailability($event: any) {
     let status = $event.target.value;
@@ -220,7 +256,7 @@ export class ViewBooksComponent implements OnInit {
     );
   }
   onPageChange(page: number) {
-    this.bookService.getAllBooks2(page-1).subscribe(
+    this.bookService.getAllBooks2(page-1, null).subscribe(
       response => {
         if (response.successful) {
           this.librosFiltrados = response.data.content.map((libro, index) => ({
@@ -240,5 +276,4 @@ export class ViewBooksComponent implements OnInit {
     );
   }
 
-  protected readonly filter = filter;
 }
