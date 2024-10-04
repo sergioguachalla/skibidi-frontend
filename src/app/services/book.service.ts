@@ -34,7 +34,7 @@ export class BookService {
   }
 
   getAllBooks2(page: number): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${this.apiUrl}?page=${page}&size=1`);
+    return this.http.get<ApiResponse>(`${this.apiUrl}?page=${page}&size=4`);
   }
   getBookByIsbn(isbn: string): Observable<BookDto> {
     return this.http.get<BookDto>(`${this.apiUrl}/${isbn}`);

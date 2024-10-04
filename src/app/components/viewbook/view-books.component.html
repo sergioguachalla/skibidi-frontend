@@ -63,10 +63,6 @@
     </div>
   </div>
 
-  <div *ngIf="librosFiltrados.length === 0" class="no-books-message">
-    <p>{{mensaje}}</p>
-  </div>
-
 <nav aria-label="Page navigation example" class="d-flex justify-content-center">
   <ul class="pagination">
     <li class="page-item" [class.disabled]="currentPage === 1" (click)="goToPreviousPage()">
