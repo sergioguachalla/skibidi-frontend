@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { EnvironmentService } from "../../services/environment.service";
 import { KeycloakService } from "keycloak-angular";
 import { EnvironmentReservationDto } from "../../Model/environment.model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-environment-client',
@@ -23,14 +24,17 @@ export class EnvironmentClientComponent {
   today: string = "";
   currentTime: string = '';
   reservaForm: FormGroup;
+  previousSala: Element | null = null;
 
   constructor(
     private environmentService: EnvironmentService,
     private keycloakService: KeycloakService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {
     const currentDate = new Date();
-    this.today = currentDate.toISOString().split('T')[0];
+    this.today = currentDate.toLocaleDateString('en-CA');;
+    console.log('Fecha actual:', this.today);
     this.currentTime = currentDate.toTimeString().slice(0, 5);
     this.reservaForm = this.formBuilder.group({
       fecha: ['', Validators.required],
@@ -42,14 +46,9 @@ export class EnvironmentClientComponent {
     });
   }
 
-  ngAfterViewInit() {
-    const objectElement = this.mapaRef.nativeElement as HTMLObjectElement;
-    objectElement.onload = () => {
-      this.updateSVG();
-    };
-  }
-
   onDateOrTimeChange() {
+    this.previousSala = null;
+    this.mensaje = '';
     const { fecha, horaEntrada, horaSalida } = this.reservaForm.value;
 
     if (fecha === this.today && horaEntrada < this.currentTime) {
@@ -73,24 +72,6 @@ export class EnvironmentClientComponent {
     }
   }
 
-  validateTimeRange() {
-    return (formGroup: FormGroup) => {
-      const horaEntradaControl = formGroup.get('horaEntrada');
-      const horaSalidaControl = formGroup.get('horaSalida');
-
-      if (horaEntradaControl && horaSalidaControl) {
-        const horaEntrada = horaEntradaControl.value;
-        const horaSalida = horaSalidaControl.value;
-
-        if (horaEntrada && horaSalida && horaEntrada >= horaSalida) {
-          horaSalidaControl.setErrors({ invalidRange: true });
-        } else {
-          horaSalidaControl.setErrors(null);
-        }
-      }
-    };
-  }
-
   updateSVG(environments: any[] = []) {
     const objectElement = this.mapaRef.nativeElement as HTMLObjectElement;
     const svgDoc = objectElement.contentWindow?.document;
@@ -108,27 +89,25 @@ export class EnvironmentClientComponent {
   }
 
   setupClickEvents(svgDoc: Document) {
-    let previousSala: Element | null = null;
-
     for (let i = 1; i <= 6; i++) {
       const sala = svgDoc.getElementById(`SALA-B${i}`);
       if (sala) {
         sala.addEventListener('click', () => {
-          if (sala.style.fill === 'rgb(212, 247, 222)' || sala.style.fill === '#d4f7de' || sala.style.fill === 'lightblue') {
-            if (previousSala) {
-              (previousSala as HTMLElement).style.fill = '#d4f7de';
+          if (this.reservaForm.valid && (sala.style.fill === 'rgb(212, 247, 222)' || sala.style.fill === '#d4f7de' || sala.style.fill === 'lightblue')) {
+            if (this.previousSala) {
+              (this.previousSala as HTMLElement).style.fill = '#d4f7de';
             }
-            if (previousSala === sala) {
+            if (this.previousSala === sala) {
               (sala as HTMLElement).style.fill = '#d4f7de';
               this.mensaje = '';
-              previousSala = null;
+              this.previousSala = null;
             } else {
               (sala as HTMLElement).style.fill = 'lightblue';
               this.mensaje = `Sala seleccionada: SALA-B${i}`;
-              previousSala = sala;
+              this.previousSala = sala;
             }
           } else {
-            alert('Esta sala no está disponible para reservar.');
+            alert('Por favor, complete los campos requeridos antes de seleccionar una sala o esta sala no está disponible.');
           }
         });
       }
@@ -166,6 +145,8 @@ export class EnvironmentClientComponent {
         (response) => {
           console.log('Reserva realizada:', response);
           alert('Reserva realizada con éxito para ' + this.mensaje);
+          this.router.navigate(['/view-book']);
+
         },
         (error) => {
           console.error('Error al registrar la reserva:', error);
@@ -176,4 +157,23 @@ export class EnvironmentClientComponent {
       alert('Por favor, seleccione una sala disponible antes de enviar la reserva.');
     }
   }
+
+  validateTimeRange() {
+    return (formGroup: FormGroup) => {
+      const horaEntradaControl = formGroup.get('horaEntrada');
+      const horaSalidaControl = formGroup.get('horaSalida');
+
+      if (horaEntradaControl && horaSalidaControl) {
+        const horaEntrada = horaEntradaControl.value;
+        const horaSalida = horaSalidaControl.value;
+
+        if (horaEntrada && horaSalida && horaEntrada >= horaSalida) {
+          horaSalidaControl.setErrors({ invalidRange: true });
+        } else {
+          horaSalidaControl.setErrors(null);
+        }
+      }
+    };
+  }
 }
+
