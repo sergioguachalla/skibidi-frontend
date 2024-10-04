@@ -81,17 +81,14 @@ export class ViewBooksComponent implements OnInit {
   
     
   searchBooksByDateRange() {
-    const today = new Date().toISOString().split('T')[0]; // Obtener la fecha de hoy en formato 'YYYY-MM-DD'
-  
-    // Verificar que tanto la fecha de inicio como la fecha de fin estén seleccionadas
+    const today = new Date().toISOString().split('T')[0]; 
     if (this.startDate && this.endDate) {
-      // Realiza la llamada al servicio enviando el rango de fechas
       this.bookService.getAllBooksFiltered(0, 10, undefined, this.startDate, this.endDate, undefined).subscribe(
         (response: any) => {
           if (response.successful) {
             this.librosFiltrados = response.data.content.map((libro: BookDto, index: number) => ({
               ...libro,
-              id: index + 1 // Asignar un ID único a cada libro
+              id: index + 1
             }));
   
             if (this.librosFiltrados.length > 0) {
@@ -100,12 +97,9 @@ export class ViewBooksComponent implements OnInit {
               this.mensaje = 'No se encontraron libros en el rango de fechas proporcionado.';
             }
           } else {
-            // Si no se encuentran libros
             this.librosFiltrados = [];
             this.mensaje = 'No se encontraron libros en el rango de fechas proporcionado.';
           }
-          
-          // Luego de verificar si hay libros, validamos las fechas futuras
           if (this.startDate > today || this.endDate > today) {
             this.mensaje = 'La fecha de inicio o la fecha de fin no pueden ser futuras a la de hoy.';
           }
@@ -115,10 +109,14 @@ export class ViewBooksComponent implements OnInit {
           this.mensaje = 'Ocurrió un error al conectar con el API.';
         }
       );
+    } else if (!this.startDate || !this.endDate) {
+      
+      this.mensaje = 'Por favor, selecciona tanto la fecha de inicio como la fecha de fin para buscar.';
     } else {
       this.mensaje = 'Por favor, selecciona un rango de fechas válido.';
     }
   }
+  
     
   
   onSearch() {
