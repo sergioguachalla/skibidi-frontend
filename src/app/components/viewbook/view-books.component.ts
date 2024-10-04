@@ -75,20 +75,34 @@ export class ViewBooksComponent implements OnInit {
   }
   
     
-  // Modifica esta función para que envíe el rango de fechas
   searchBooksByDateRange() {
+    const today = new Date().toISOString().split('T')[0]; // Obtener la fecha de hoy en formato 'YYYY-MM-DD'
+  
+    // Verificar que tanto la fecha de inicio como la fecha de fin estén seleccionadas
     if (this.startDate && this.endDate) {
-      // Realiza la llamada al servicio con el rango de fechas
+      // Realiza la llamada al servicio enviando el rango de fechas
       this.bookService.getAllBooksFiltered(0, 10, undefined, this.startDate, this.endDate, undefined).subscribe(
         (response: any) => {
           if (response.successful) {
             this.librosFiltrados = response.data.content.map((libro: BookDto, index: number) => ({
               ...libro,
-              id: index + 1
+              id: index + 1 // Asignar un ID único a cada libro
             }));
-            this.mensaje = 'Libros filtrados por rango de fechas!';
+  
+            if (this.librosFiltrados.length > 0) {
+              this.mensaje = `¡Se encontraron ${this.librosFiltrados.length} libros en el rango de fechas!`;
+            } else {
+              this.mensaje = 'No se encontraron libros en el rango de fechas proporcionado.';
+            }
           } else {
+            // Si no se encuentran libros
+            this.librosFiltrados = [];
             this.mensaje = 'No se encontraron libros en el rango de fechas proporcionado.';
+          }
+          
+          // Luego de verificar si hay libros, validamos las fechas futuras
+          if (this.startDate > today || this.endDate > today) {
+            this.mensaje = 'La fecha de inicio o la fecha de fin no pueden ser futuras a la de hoy.';
           }
         },
         (error: any) => {
@@ -100,6 +114,7 @@ export class ViewBooksComponent implements OnInit {
       this.mensaje = 'Por favor, selecciona un rango de fechas válido.';
     }
   }
+    
   
   onSearch() {
     const title = this.searchQuery.trim();

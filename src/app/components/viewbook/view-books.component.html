@@ -5,7 +5,7 @@
   <div class="search-bar">
     <!-- Search book by title -->
     <input type="text" placeholder="Buscar libro" (input)="updateSearchQuery($event)">
-    <button (click)="onSearch()">
+    <button class="search-btn" (click)="onSearch()">
       <span>🔍</span>
     </button>
 
@@ -21,6 +21,8 @@
         </ng-container>
       </select>
     </div>
+
+    <!-- Dropdown Menu for status -->
     <div class="dropdown-container">
       <select (change)="filterByAvailability($event)">
         <option value="">Todos los estados</option>
@@ -29,47 +31,28 @@
         </ng-container>
       </select>
     </div>
-
   </div>
-  <div>
+
+  <div class="date-range">
     <label for="startDate">Fecha de Inicio:</label>
-    <input
-      type="date"
-      id="startDate"
-      [(ngModel)]="startDate"
-      name="startDate"
-    />
-  </div>
-  
-  <div>
+    <input type="date" id="startDate" [(ngModel)]="startDate" name="startDate">
+    
     <label for="endDate">Fecha de Fin:</label>
-    <input
-      type="date"
-      id="endDate"
-      [(ngModel)]="endDate"
-      name="endDate"
-    />
-  </div>
-  <button (click)="searchBooksByDateRange()">Buscar por Fechas</button>
-
-
-  <!-- Mensaje si no se encontraron libros -->
-  <div *ngIf="librosFiltrados.length === 0" class="no-books-message">
-    <p>{{mensaje}}</p>
+    <input type="date" id="endDate" [(ngModel)]="endDate" name="endDate">
+    
+    <button class="date-search-btn" (click)="searchBooksByDateRange()">Buscar por Fechas</button>
   </div>
 
   <!-- Filtered books -->
   <div *ngFor="let libro of librosFiltrados" class="book-item">
     <div class="book-info">
       <img class="book-image" [src]="libro.image_url || 'https://via.placeholder.com/100x120'" alt="Imagen del libro">
-
       <div class="book-details">
         <h3 class="book-title"><a href="#">{{ libro.title }}</a></h3>
         <p class="book-description">{{ libro.registrationDate | date }}</p>
         <a href="#" class="book-link">Más información</a>
       </div>
     </div>
-
 
     <div class="book-status">
       <label class="switch">
@@ -82,10 +65,10 @@
     </div>
   </div>
 
+  <!-- Mensaje si no se encontraron libros -->
   <div *ngIf="librosFiltrados.length === 0" class="no-books-message">
     <p>{{mensaje}}</p>
   </div>
-
 
   <!-- Pagination -->
   <nav aria-label="Page navigation example">
@@ -118,6 +101,24 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para el mensaje de no encontrados -->
+<div class="modal fade" id="noBooksFoundModal" tabindex="-1" aria-labelledby="noBooksFoundModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="noBooksFoundModalLabel">No se encontraron libros</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {{mensaje}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
