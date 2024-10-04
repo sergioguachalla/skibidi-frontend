@@ -40,8 +40,11 @@ export class BookService {
     return this.http.get<PageableApiResponse>(`${this.apiUrl}?page=0&size=1`);
   }
 
-  getAllBooks2(page: number): Observable<PageableApiResponse> {
-    return this.http.get<PageableApiResponse>(`${this.apiUrl}?page=${page}&size=1`);
+  getAllBooks2(page: number,availability: boolean | null): Observable<PageableApiResponse> {
+    if (availability === null) {
+      return this.http.get<PageableApiResponse>(`${this.apiUrl}?page=${page}&size=4`);
+    }
+    return this.http.get<PageableApiResponse>(`${this.apiUrl}?page=${page}&size=4&isAvailable=${availability}`);
   }
   getBookByIsbn(isbn: string): Observable<BookDto> {
     return this.http.get<BookDto>(`${this.apiUrl}/${isbn}`);

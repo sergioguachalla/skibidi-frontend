@@ -31,12 +31,15 @@ export class ViewBooksComponent implements OnInit {
   pagesArray: number[] = [];
   searchQuery: string = '';
 
+  //filter criteria
+  availability: boolean | null = null;
+
 
   constructor(private bookService: BookService) {
   }
 
   ngOnInit() {
-    this.loadBooks();
+    this.filterBooks({target: {value: ""}});
     this.findGenres();
 
 
@@ -102,6 +105,33 @@ export class ViewBooksComponent implements OnInit {
     }
   }
 
+  filterBooks($availabilityEvent: any) {
+    const availability = $availabilityEvent.target.value;
+    if ($availabilityEvent.target.value === "") {
+      this.availability = null;
+    }
+    this.availability = availability;
+
+
+    this.bookService.getAllBooks2(0, this.availability).subscribe(
+      response => {
+        if (response.successful) {
+          this.librosFiltrados = response.data.content.map((libro, index) => ({
+            ...libro,
+            id: index + 1
+          }));
+          this.mensaje = 'Libros filtrados por disponibilidad exitosamente!';
+        } else {
+          console.error('Error al cargar los libros:', response.message);
+          this.mensaje = 'No se pudieron recuperar los libros.';
+        }
+      },
+      error => {
+        console.error('Error al conectar con el API:', error);
+        this.mensaje = 'Ocurrió un error al conectar con el API.';
+      }
+    );
+  }
 
   updateSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -226,7 +256,7 @@ export class ViewBooksComponent implements OnInit {
     );
   }
   onPageChange(page: number) {
-    this.bookService.getAllBooks2(page-1).subscribe(
+    this.bookService.getAllBooks2(page-1, null).subscribe(
       response => {
         if (response.successful) {
           this.librosFiltrados = response.data.content.map((libro, index) => ({
@@ -246,5 +276,4 @@ export class ViewBooksComponent implements OnInit {
     );
   }
 
-  protected readonly filter = filter;
 }
