@@ -42,6 +42,10 @@ export class EditUserInformationComponent {
   userService: UserClientService= inject(UserClientService);
   keycloakService : KeycloakService = inject(KeycloakService);
   constructor(private formBuilder: FormBuilder, private router: Router) {
+    if (!this.keycloakService.isLoggedIn()) {
+      this.router.navigate(['/']).then(r => console.log('Redirect to login'));
+    }
+
     this.findUserByKcId();
     this.updateForm = this.formBuilder.group({
       nombres: ['', Validators.required],
