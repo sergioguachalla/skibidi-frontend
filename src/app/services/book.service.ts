@@ -46,6 +46,11 @@ export class BookService {
     }
     return this.http.get<PageableApiResponse>(`${this.apiUrl}?page=${page}&size=4&isAvailable=${availability}`);
   }
+  findBooks(queryParams: string): Observable<any> {
+    const url = `${this.apiUrl}?${queryParams}`;
+    return this.http.get(url);
+  }
+
   getBookByIsbn(isbn: string): Observable<BookDto> {
     return this.http.get<BookDto>(`${this.apiUrl}/${isbn}`);
   }
