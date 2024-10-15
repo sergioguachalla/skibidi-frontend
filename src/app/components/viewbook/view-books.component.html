@@ -42,6 +42,15 @@
       </ng-container>
     </select>
 
+    <!-- Dropdown Menu for editorials -->
+    <div class="dropdown-container">
+      <select (change)="filterByEditorial($event)">
+        <option value="">Todas las editoriales</option>
+        <ng-container *ngFor="let editorial of editorials">
+          <option value="{{ editorial.id }}">{{ editorial.editorial }}</option>
+        </ng-container>
+      </select>
+
   <div class="date-range">
     <label for="startDate">Fecha de Inicio:</label>
     <input type="date" id="startDate" [max]="endDate"

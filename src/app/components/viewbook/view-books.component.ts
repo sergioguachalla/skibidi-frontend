@@ -1,3 +1,4 @@
+//TODO: refactor filter updates for better readability
 import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NavbarComponent} from '../shared/navbar/navbar.component';
@@ -218,6 +219,17 @@ export class ViewBooksComponent implements OnInit {
     this.buildQueryParams(this.filters().languageId,0);
     this.applyFilters(0);
   }
+  filterByEditorial($event: any) {
+    if ($event.target.value === "") {
+      this.filters().editorialId = null;
+      this.applyFilters(0);
+      return;
+    }
+    this.filters().editorialId = $event.target.value;
+    this.buildQueryParams(this.filters().editorialId,0);
+    this.applyFilters(0);
+  }
+
 
   applyFilters(page:number) {
     const queryParams = this.buildQueryParams(this.filters(), page);
