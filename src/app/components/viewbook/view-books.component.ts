@@ -8,6 +8,8 @@ import {GenreDto} from "../../Model/genre.model";
 import {FormsModule} from "@angular/forms";
 import {LanguagesService} from "../../services/languages.service";
 import {LanguageDto} from "../../Model/dto/languageDto";
+import {EditorialService} from "../../services/editorial.service";
+import {EditorialDto} from "../../Model/dto/EditorialDto";
 
 declare var bootstrap: any;
 interface filtersParams {
@@ -18,6 +20,7 @@ interface filtersParams {
   from: String | null;
   to: String | null;
   languageId: number | null;
+  editorialId: number | null;
 
 }
 
@@ -33,6 +36,8 @@ export class ViewBooksComponent implements OnInit {
 
   protected genreService : GenreService = inject(GenreService);
   private languageService : LanguagesService = inject(LanguagesService);
+  private editorialService : EditorialService = inject(EditorialService);
+
   searchTimeout: any;
   filters: WritableSignal<filtersParams> = signal({
     isAvailable: null,
@@ -41,13 +46,15 @@ export class ViewBooksComponent implements OnInit {
     title: null,
     from: null,
     to: null,
-    languageId: null
+    languageId: null,
+    editorialId: null
   })
 
   librosFiltrados: BookDto[] = [];
   mensaje: string = '';
   genres: GenreDto[] = [];
   languages: LanguageDto[] = [];
+  editorials: EditorialDto[] = [];
   bookStatuses : any[] = [{value: true, label: 'Disponible'}, {value: false, label: 'Ocupado'}];
   pages: number = 0;
   pagesArray: number[] = [];
@@ -66,6 +73,7 @@ export class ViewBooksComponent implements OnInit {
     this.applyFilters(0);
     this.findGenres();
     this.findLanguages();
+    this.findEditorials();
   }
 
   toggleAvailability(libro: BookDto) {
@@ -112,6 +120,16 @@ export class ViewBooksComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error al cargar los idiomas:', error);
+      }
+    );
+  }
+  findEditorials() {
+    this.editorialService.findAllEditorials().subscribe(
+      (response: any) => {
+        this.editorials = response.data;
+      },
+      (error: any) => {
+        console.error('Error al cargar las editoriales:', error);
       }
     );
   }
