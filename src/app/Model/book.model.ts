@@ -1,5 +1,6 @@
 export interface BookDto {
   //TODO: change id
+
   bookId: number | null;
   title: string;
   isbn: string;

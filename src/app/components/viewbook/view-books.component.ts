@@ -5,6 +5,7 @@ import {BookService} from '../../services/book.service';
 import {BookDto} from '../../Model/book.model';
 import {GenreService} from "../../services/genre.service";
 import {GenreDto} from "../../Model/genre.model";
+import {FormsModule} from "@angular/forms";
 
 declare var bootstrap: any;
 interface filtersParams {
@@ -12,12 +13,15 @@ interface filtersParams {
   genreId: number | null;
   authorName: string | null;
   title: string | null;
+  from: String | null;
+  to: String | null;
+
 }
 
 @Component({
   selector: 'app-view-books',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, NavbarComponent, FormsModule],
   templateUrl: './view-books.component.html',
   styleUrls: ['./view-books.component.css']
 })
@@ -30,7 +34,9 @@ export class ViewBooksComponent implements OnInit {
     isAvailable: null,
     genreId: null,
     authorName: null,
-    title: null
+    title: null,
+    from: null,
+    to: null
   })
 
   librosFiltrados: BookDto[] = [];
@@ -43,6 +49,8 @@ export class ViewBooksComponent implements OnInit {
 
   //filter criteria
   availability: boolean | null = null;
+  startDate: string = '';
+  endDate: string = '';
 
 
   constructor(private bookService: BookService) {
@@ -60,9 +68,9 @@ export class ViewBooksComponent implements OnInit {
     if (confirm(confirmMessage)) {
       libro.status = !originalStatus;
       const updatedBook = { ...libro };
-      console.log('ID del libro:', libro.id);
+      console.log('ID del libro:', libro.bookId);
 
-      this.bookService.updateBook(libro.id!, updatedBook).subscribe(
+      this.bookService.updateBook(libro.bookId!, updatedBook).subscribe(
         response => {
           const modalElement = document.getElementById('successModal');
           const modal = new bootstrap.Modal(modalElement!);
@@ -88,6 +96,29 @@ export class ViewBooksComponent implements OnInit {
         console.error('Error al cargar los géneros:', error);
       }
     );
+  }
+
+  searchBooksByDateRange() {
+    const today = new Date().toISOString().split('T')[0];
+
+    if (this.startDate && this.endDate) {
+      const startDate = new Date(this.startDate);
+      const endDate = new Date(this.endDate);
+
+      const formattedStartDate = startDate.toISOString().split('T')[0];
+      const formattedEndDate = endDate.toISOString().split('T')[0];
+
+      if (startDate > endDate) {
+        this.mensaje = 'La fecha de inicio no puede ser mayor a la fecha de fin.';
+        return;
+      }
+
+      this.filters().from = formattedStartDate;
+      this.filters().to = formattedEndDate;
+
+      this.buildQueryParams(this.filters, 0);
+      this.applyFilters(0);
+    }
   }
 
   //filter bl
