@@ -33,6 +33,15 @@
     </div>
   </div>
 
+  <!-- Dropdown Menu for language -->
+  <div class="dropdown-container">
+    <select (change)="filterByLanguage($event)">
+      <option value="">Todos los idiomas</option>
+      <ng-container *ngFor="let language of languages">
+        <option value="{{ language.id }}">{{ language.language }}</option>
+      </ng-container>
+    </select>
+
   <div class="date-range">
     <label for="startDate">Fecha de Inicio:</label>
     <input type="date" id="startDate" [max]="endDate"
