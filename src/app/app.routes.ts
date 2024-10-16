@@ -8,6 +8,7 @@ import { ReservationComponent } from './components/environmentrequest/environmen
 import {EditUserInformationComponent} from "./components/edit-user-information/edit-user-information.component";
 import {EnvironmentClientComponent} from "./components/environment-client/environment-client.component";
 import {ReservationsComponent} from "./components/reservations/reservations.component";
+import{ReservationHistoryComponent} from "./components/reservation-history/reservation-history.component"
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },
@@ -20,4 +21,5 @@ export const routes: Routes = [
     {path: 'reservations', component: ReservationsComponent},
     {path: 'my-information', component: EditUserInformationComponent},
     {path: 'client-environment', component: EnvironmentClientComponent },
+    {path: 'reservation-history', component: ReservationHistoryComponent },
 ];

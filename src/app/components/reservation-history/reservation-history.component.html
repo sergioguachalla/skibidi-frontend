@@ -1,0 +1,27 @@
+<navbar></navbar>
+<div class="reservation-history-container">
+    <h2>Historial de Reservas</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Client ID</th>
+          <th>Environment ID</th>
+          <th>Fecha de Reserva</th>
+          <th>Hora de Inicio</th>
+          <th>Hora de Finalización</th>
+          <th>Motivo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reservation of reservations">
+          <td>{{ reservation.clientId }}</td>
+          <td>{{ reservation.environmentId }}</td>
+          <td>{{ reservation.reservationDate | date:'shortDate' }}</td>
+          <td>{{ reservation.clockIn | date:'shortTime' }}</td>
+          <td>{{ reservation.clockOut | date:'shortTime' }}</td>
+          <td>{{ reservation.purpose }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
