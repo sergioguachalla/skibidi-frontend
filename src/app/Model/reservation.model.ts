@@ -3,4 +3,5 @@ export interface Reservation {
   clockIn: string;
   clockOut: string;
   purpose: string;
+  status: number;
 }

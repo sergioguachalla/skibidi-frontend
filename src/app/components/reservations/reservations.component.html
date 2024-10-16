@@ -20,7 +20,11 @@
         <td>{{ reservation.clockIn }}</td>
         <td>{{ reservation.clockOut }}</td>
         <td>{{ reservation.purpose }}</td>
+        <td>
+          <button *ngIf="reservation.status !== 3" class="btn btn-danger">Cancelar</button>
+        </td>
       </tr>
+      
       </tbody>
     </table>
   </div>
