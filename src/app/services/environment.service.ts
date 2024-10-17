@@ -36,4 +36,6 @@ export class EnvironmentService {
 
     return this.http.get<EnvironmentResponse>(`${this.reservationUrl}/availability`, { params });
   }
+
+  
 }

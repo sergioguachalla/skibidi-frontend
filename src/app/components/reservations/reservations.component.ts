@@ -39,4 +39,22 @@ export class ReservationsComponent implements OnInit{
    // ];
   }
 
+  cancelReservation(reservationId: number): void {
+    const status = 3;  // El número 3 indica que la reservación ha sido cancelada
+    this.studyRoomService.updateEnvironmentReservation(reservationId, status).subscribe(
+      response => {
+        if (response.successful) {
+          alert("Reservación cancelada con éxito.");
+          // Opcional: puedes recargar las reservaciones para reflejar el cambio
+          this.ngOnInit();
+        } else {
+          alert("Hubo un error al cancelar la reservación.\n" + response.message);
+        }
+      },
+      error => {
+        alert("Error en la solicitud: " + error.message);
+      }
+    );
+  }
+
 }
