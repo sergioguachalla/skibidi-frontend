@@ -16,7 +16,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let reservation of reservations">
+        <tr *ngFor="let reservation of reservations" [ngClass]="{
+            'table-danger': reservation.status === 3,
+            'table-success': reservation.status === 2,
+            'table-warning': reservation.status === 1
+          }">
           <td>{{ reservation.environmentId }}</td>
           <td>{{ reservation.clockIn }}</td>
           <td>{{ reservation.clockOut }}</td>

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {Reservation} from "../../Model/reservation.model";
-import {NgForOf, NgIf} from "@angular/common";
+import {CommonModule, NgForOf, NgIf} from "@angular/common";
 import {KeycloakService} from "keycloak-angular";
 import {StudyRoomService} from "../../services/study-room.service";
 
@@ -11,7 +11,8 @@ import {StudyRoomService} from "../../services/study-room.service";
   imports: [
     NavbarComponent,
     NgForOf,
-    NgIf
+    NgIf,
+    CommonModule  // Importa CommonModule para usar ngClass
   ],
   templateUrl: './reservations.component.html',
   styleUrl: './reservations.component.css'

@@ -1,0 +1,12 @@
+.table-danger {
+    background-color: #f8d7da !important; /* Rojo suave */
+  }
+  
+  .table-success {
+    background-color: #d4edda !important; /* Verde suave */
+  }
+  
+  .table-warning {
+    background-color: #fff3cd !important; /* Amarillo suave */
+  }
+  
