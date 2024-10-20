@@ -20,6 +20,9 @@ import {StudyRoomService} from "../../services/study-room.service";
 export class ReservationsComponent implements OnInit{
 
   reservations: Reservation[] = [];
+  isModalOpen = false;  // Para controlar la visibilidad del modal
+  reservationIdToCancel: number | null = null;  // Para guardar el ID de la reservación a cancelar
+
 
   constructor(private kcService: KeycloakService, private studyRoomService: StudyRoomService) {
   }
@@ -57,5 +60,23 @@ export class ReservationsComponent implements OnInit{
       }
     );
   }
+
+  openModal(reservationId: number): void {
+    this.reservationIdToCancel = reservationId; // Guarda el ID de la reservación
+    this.isModalOpen = true; // Abre el modal
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false; // Cierra el modal
+    this.reservationIdToCancel = null; // Reinicia el ID
+  }
+
+  confirmCancel(): void {
+    if (this.reservationIdToCancel !== null) {
+      this.cancelReservation(this.reservationIdToCancel);
+    }
+    this.closeModal(); // Cierra el modal
+  }
+
 
 }
