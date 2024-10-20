@@ -18,9 +18,11 @@ export class NavbarComponent {
     this.keycloakService.login();
   }
   logout() {
-    this.keycloakService.logout();
-    this.router.navigate(['']);
+    this.router.navigate(['/'], { queryParams: { logout: 'true' } });
+
   }
+
+
 
   onClickToHome() {
     this.router.navigate(['/view-book']);
@@ -28,6 +30,9 @@ export class NavbarComponent {
 
   onClickToEnvReservation() {
     this.router.navigate(['/reservation-enviroment']);
+  }
+  onClickToEnvReservationClient() {
+    this.router.navigate(['/client-environment']);
   }
 
   onClickToReservations () {
