@@ -25,7 +25,6 @@ export class ReservationsComponent implements OnInit{
   ngOnInit(): void {
     const kcId= this.kcService.getKeycloakInstance().subject!;
 
-    console.log("SEXOOOO")
     this.studyRoomService.getReservations(kcId).subscribe(
       response => {
         this.reservations = response.data;

@@ -99,3 +99,44 @@
     </div>
   </div>
 </div>
+
+
+<!-- Modal de Confirmación -->
+<div
+  class="modal fade"
+  id="confirmationModal"
+  tabindex="-1"
+  aria-labelledby="confirmationModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">
+          Confirma tu información
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Fecha de Reserva:</strong> {{ reservaForm.get('fecha')?.value }}</p>
+        <p><strong>Hora de Entrada:</strong> {{ reservaForm.get('horaEntrada')?.value }}</p>
+        <p><strong>Hora de Salida:</strong> {{ reservaForm.get('horaSalida')?.value }}</p>
+        <p><strong>Propósito:</strong> {{ reservaForm.get('proposito')?.value }}</p>
+        <p><strong>Sala Seleccionada:</strong> {{ mensaje }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Editar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="confirmSubmission()">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
