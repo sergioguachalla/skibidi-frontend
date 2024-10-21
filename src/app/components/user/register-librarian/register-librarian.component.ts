@@ -110,7 +110,9 @@ export class RegisterLibrarianComponent {
 
             setTimeout(() => {
               modal.hide();
+              this.router.navigate(['/']);
             }, 2000);
+
           },
           error => {
             this.loading$.next(false);

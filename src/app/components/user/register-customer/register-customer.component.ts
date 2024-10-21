@@ -104,6 +104,7 @@ export class RegisterCustomerComponent {
 
             setTimeout(() => {
               modal.hide();
+              this.router.navigate(['/']);
             }, 2000);
           },
           error => {

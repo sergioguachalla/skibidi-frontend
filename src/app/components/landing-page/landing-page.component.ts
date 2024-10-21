@@ -1,29 +1,56 @@
-import {Component, inject, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
-import {KeycloakService} from "keycloak-angular";
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
   imports: [],
   templateUrl: './landing-page.component.html',
-  styleUrl: './landing-page.component.css',
+  styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent implements OnInit {
   private keycloakService: KeycloakService = inject(KeycloakService);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.checkForLogout();
     this.checkAuthentication();
   }
 
-  checkAuthentication(): void {
-    const isLoggedIn: boolean = this.keycloakService.isLoggedIn();
-    if (isLoggedIn) {
-      this.router.navigate(['/view-book']);
+  private checkForLogout(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['logout'] === 'true') {
+        this.performLogout();
+      }
+    });
+  }
+
+  private performLogout(): void {
+    this.keycloakService.logout(window.location.origin).then(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+      this.router.navigate(['/']);
+      console.log('Sesión cerrada correctamente');
+    }).catch((error) => {
+      console.error('Error al cerrar sesión:', error);
+    });
+  }
+
+  async checkAuthentication(): Promise<void> {
+    try {
+      const isLoggedIn = await this.keycloakService.isLoggedIn();
+      const currentUrl = this.router.url;
+      if (isLoggedIn && currentUrl === '/') {
+        console.log('Usuario autenticado, redirigiendo a /view-book');
+        this.router.navigate(['/view-book']);
+      }
+    } catch (error) {
+      console.error('Error al verificar autenticación:', error);
     }
   }
+
 
   onLogin(): void {
     this.keycloakService.login().then(() => {
@@ -66,11 +93,8 @@ export class LandingPageComponent implements OnInit {
   }
 
   submitIsbn(): void {
-    const isbn = (document.getElementById('isbnInput') as HTMLInputElement)
-      .value;
-
+    const isbn = (document.getElementById('isbnInput') as HTMLInputElement).value;
     console.log(`ISBN ingresado: ${isbn}`);
-
     (window as any).bootstrap.Modal.getInstance(
       document.getElementById('registerIsbnModal'),
     ).hide();
