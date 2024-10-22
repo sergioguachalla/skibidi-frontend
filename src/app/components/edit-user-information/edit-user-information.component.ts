@@ -99,8 +99,12 @@ export class EditUserInformationComponent {
   }
 
   updatePassword(){
-
     window.alert("Revisa la bandeja de tu correo para actualizar tu contraseña.")
+    const email =  this.updateForm.get('email')?.value;
+
+    console.log("EMAIL: ", email );
+
+    this.userService.forgotPassword(email).subscribe();
   }
 
   onSubmit() {
