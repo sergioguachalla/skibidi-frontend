@@ -91,6 +91,18 @@ export class EditUserInformationComponent {
     });
   }
 
+  openConfirmationAlert() {
+    const confirmed = window.confirm("¿Estás seguro que deseas actualizar tu contraseña?")
+
+    if (confirmed) this.updatePassword()
+    else window.alert("Actualización de la contraseña cancelada.")
+  }
+
+  updatePassword(){
+
+    window.alert("Revisa la bandeja de tu correo para actualizar tu contraseña.")
+  }
+
   onSubmit() {
     const userDto = this.toUserRegistrationDto(this.updateForm.value);
     const userKcId = this.keycloakService.getKeycloakInstance().subject!;
