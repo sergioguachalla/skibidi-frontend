@@ -26,5 +26,13 @@ export class UserClientService {
     return this.http.put<ResponseDto<String>>(`${this.apiUrl}?kcId=${kcId}`, userClient);
   }
 
+  forgotPassword(email: String) {
+    return this.http.get(`http://localhost:8091/api/v1/users/forgotPassword?email=${email}`);
+  }
+
+  updatePassword(passwordResetToken: string, newPassword: string): Observable<any>{
+    return this.http.put(`http://localhost:8091/api/v1/users/changePassword?passwordResetToken=${passwordResetToken}&newPassword=${newPassword}`, {passwordResetToken, newPassword});
+  }
+
 
 }
