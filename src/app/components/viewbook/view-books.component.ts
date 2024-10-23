@@ -61,6 +61,7 @@ export class ViewBooksComponent implements OnInit {
   pages: number = 0;
   pagesArray: number[] = [];
   pageNumber = 0;
+
   searchQuery: string = '';
   private activeRoute: ActivatedRoute = inject(ActivatedRoute);
 
@@ -207,9 +208,9 @@ export class ViewBooksComponent implements OnInit {
   }
 
   onPageChange(page: number) {
-
-    this.pageNumber = page-1;
-    this.applyFilters(page-1);
+    console.log('Page:', this.pageNumber);
+    this.pageNumber = page - 1;
+    this.applyFilters(this.pageNumber);
     //update the url query params based on page
 
 
