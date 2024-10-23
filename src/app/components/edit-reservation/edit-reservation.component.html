@@ -1,0 +1,118 @@
+<navbar></navbar>
+
+<div class="reservation-form">
+  <h2>Reserva de ambiente</h2>
+  
+
+  <!-- Selección de ambiente -->
+  <div>
+    <label for="environmentId">Ambiente:</label>
+    <select
+      id="environmentId"
+      [(ngModel)]="selectedEnvironmentId"
+      name="environmentId"
+    >
+      <option
+        *ngFor="let environment of environments"
+        [value]="environment.environmentId"
+      >
+        {{ environment.name }} (Capacidad: {{ environment.capacity }})
+      </option>
+    </select>
+  </div>
+
+  <!-- Fecha de reserva -->
+  <div>
+    <label for="reservationDate">Fecha de Reserva:</label>
+    <input
+      type="date"
+      id="reservationDate"
+      [(ngModel)]="reservation.reservationDate"
+      name="reservationDate"
+    />
+  </div>
+
+  <!-- Hora de entrada -->
+  <div>
+    <label for="clockIn">Hora de Entrada:</label>
+    <input
+      type="time"
+      id="clockIn"
+      [(ngModel)]="formattedClockIn"
+      (ngModelChange)="updateClockIn($event)"
+      name="clockIn"
+    />
+  </div>
+
+  <!-- Hora de salida -->
+  <div>
+    <label for="clockOut">Hora de Salida:</label>
+    <input
+      type="time"
+      id="clockOut"
+      [(ngModel)]="formattedClockOut"
+      (ngModelChange)="updateClockOut($event)"
+      name="clockOut"
+    />
+  </div>
+
+  <!-- Propósito de la reserva -->
+  <div>
+    <label for="purpose">Propósito:</label>
+    <textarea
+      id="purpose"
+      [(ngModel)]="reservation.purpose"
+      name="purpose"
+      placeholder="Describa el propósito aquí"
+    ></textarea>
+  </div>
+
+  <!-- Botón de reservar -->
+  <button type="button" (click)="openConfirmationModal()">Reservar</button>
+</div>
+
+<div
+  class="modal fade"
+  id="confirmationModal"
+  tabindex="-1"
+  aria-labelledby="confirmationModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">
+          Confirma tu información
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Usuario:</strong> {{ selectedUserName }}</p>
+        <p><strong>Ambiente:</strong> {{ selectedEnvironmentName }}</p>
+        <p>
+          <strong>Fecha de Reserva:</strong> {{ reservation.reservationDate }}
+        </p>
+        <p><strong>Hora de Entrada:</strong> {{ formattedClockIn }}</p>
+        <p><strong>Hora de Salida:</strong> {{ formattedClockOut }}</p>
+        <p><strong>Propósito:</strong> {{ reservation.purpose }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Editar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="confirmSubmission()"
+        >
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -29,6 +29,13 @@ export class EnvironmentService {
     return this.http.post(`${this.reservationUrl}/`, reservation);
   }
 
+  getEnvironmentReservationById(id: number): Observable<EnvironmentReservationDto> {
+    return this.http.get<EnvironmentReservationDto>(`${this.reservationUrl}/${id}`);
+  }
+  updateEnvironmentReservation(id: number, reservation: EnvironmentReservationDto): Observable<any> {
+    return this.http.put<any>(`${this.reservationUrl}/${id}`, reservation);
+  }
+
   getEnvironmentsAvailability(from: string, to: string): Observable<EnvironmentResponse> {
     const params = new HttpParams()
       .set('from', from)
@@ -37,5 +44,5 @@ export class EnvironmentService {
     return this.http.get<EnvironmentResponse>(`${this.reservationUrl}/availability`, { params });
   }
 
-  
+
 }

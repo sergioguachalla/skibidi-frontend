@@ -149,7 +149,7 @@ export class EnvironmentClientComponent {
         const modal = bootstrap.Modal.getInstance(modalElement);
         modal.hide();
 
-        alert('Reserva realizada con éxito para ' + this.mensaje);
+        alert('Reserva realizada con éxito para ' + this.mensaje + "Espera que un bibliotecario acepte tu solicitud");
         this.router.navigate(['/view-book']);
       },
       (error) => {

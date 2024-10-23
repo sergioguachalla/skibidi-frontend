@@ -1,0 +1,23 @@
+.reservation-form {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input, select, textarea, button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+}
+

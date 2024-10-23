@@ -14,4 +14,5 @@ export class ReservationHistoryService {
     const url = `${this.apiUrl}?page=${page}&size=${size}`;
     return this.http.get<any>(url);
   }
+
 }

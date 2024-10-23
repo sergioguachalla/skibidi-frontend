@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { ReservationHistoryService } from '../../services/reservation-history.service';
 import { Router } from "@angular/router";
+import {StudyRoomService} from "../../services/study-room.service";
 
 @Component({
   selector: 'app-reservation-history',
@@ -22,8 +23,9 @@ export class ReservationHistoryComponent implements OnInit {
 
   constructor(
     private reservationHistoryService: ReservationHistoryService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private studyRoomService: StudyRoomService
+  ) {}
 
   ngOnInit(): void {
     this.getReservationHistory(this.currentPage);
@@ -59,10 +61,49 @@ export class ReservationHistoryComponent implements OnInit {
   }
 
   editReservation(reservation: any): void {
-    this.router.navigate(['/client-environment/edit', reservation.id]);
+    this.router.navigate(['/client-environment/edit', reservation.reservationId]);
   }
 
-  deleteReservation(reservation: any): void {
-    this.router.navigate(['/client-environment/edit', reservation.id]);
+
+  confirmReservation(reservation: any): void {
+    if (confirm('¿Estás seguro de que deseas aceptar esta reserva?')) {
+      this.studyRoomService.updateEnvironmentReservation(reservation.reservationId, 2).subscribe(
+        (response) => {
+          console.log("Reserva aceptar exitosamente:", response);
+          this.getReservationHistory(this.currentPage);
+        },
+        (error) => {
+          console.error("Error al aceptar la reserva:", error);
+        }
+      );
+    }
+  }
+
+  cancelReservation(reservation: any): void {
+    if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
+      this.studyRoomService.updateEnvironmentReservation(reservation.reservationId, 3).subscribe(
+        (response) => {
+          console.log("Reserva cancelada exitosamente:", response);
+          this.getReservationHistory(this.currentPage);
+        },
+        (error) => {
+          console.error("Error al cancelar la reserva:", error);
+        }
+      );
+    }
+  }
+
+  // Nueva función para traducir el estado
+  getStatusText(status: number): string {
+    switch (status) {
+      case 1:
+        return 'Pendiente';
+      case 2:
+        return 'Aceptado';
+      case 3:
+        return 'Rechazado';
+      default:
+        return 'Desconocido';
+    }
   }
 }
