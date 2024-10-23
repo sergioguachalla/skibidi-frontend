@@ -1,76 +1,92 @@
 <navbar></navbar>
 
-<div class="reservation-form">
-  <h2>Reserva de ambiente</h2>
-  
+<div class="container mt-4 p-4" style="background-color: #f8f9fa; border-radius: 8px;">
+  <div class="row">
+    <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+      <div class="text-center mb-3">
+        <p class="fw-bold">Selecciona una sala de ambiente para editar la reserva</p>
+        <div class="d-flex justify-content-center">
+          <div class="d-flex align-items-center mx-2">
+            <div style="width: 20px; height: 20px; background-color: lightblue; border: 1px solid #000;"></div>
+            <span class="ms-2">Sala Seleccionada</span>
+          </div>
+          <div class="d-flex align-items-center mx-2">
+            <div style="width: 20px; height: 20px; background-color: red; border: 1px solid #000;"></div>
+            <span class="ms-2">Sala Ocupada</span>
+          </div>
+          <div class="d-flex align-items-center mx-2">
+            <div style="width: 20px; height: 20px; background-color: #d4f7de; border: 1px solid #000;"></div>
+            <span class="ms-2">Sala Disponible</span>
+          </div>
+        </div>
+      </div>
+      <object *ngIf="true" type="image/svg+xml" data="assets/sala.svg" #mapa class="mapa-salas"></object>
+    </div>
 
-  <!-- Selección de ambiente -->
-  <div>
-    <label for="environmentId">Ambiente:</label>
-    <select
-      id="environmentId"
-      [(ngModel)]="selectedEnvironmentId"
-      name="environmentId"
-    >
-      <option
-        *ngFor="let environment of environments"
-        [value]="environment.environmentId"
-      >
-        {{ environment.name }} (Capacidad: {{ environment.capacity }})
-      </option>
-    </select>
+    <div class="col-md-6">
+      <p class="text-center">{{ mensaje }}</p>
+      <div>
+        <h5 class="text-center">Formulario de Edición de Reserva</h5>
+        <form [formGroup]="reservaForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha de Reserva</label>
+            <input
+              type="date"
+              id="fecha"
+              class="form-control"
+              formControlName="fecha"
+              [value]="reservation.reservationDate"
+              (change)="onDateOrTimeChange()"
+              [min]="today"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="horaEntrada" class="form-label">Hora de Entrada</label>
+            <input
+              type="time"
+              id="horaEntrada"
+              class="form-control"
+              formControlName="horaEntrada"
+              [value]="formattedClockIn"
+              (change)="onDateOrTimeChange()"
+              [min]="reservaForm.get('fecha')?.value === today ? currentTime : null"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="horaSalida" class="form-label">Hora de Salida</label>
+            <input
+              type="time"
+              id="horaSalida"
+              class="form-control"
+              formControlName="horaSalida"
+              [value]="formattedClockOut"
+              (change)="onDateOrTimeChange()"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="proposito" class="form-label">Propósito de la Reserva</label>
+            <textarea
+              id="proposito"
+              class="form-control"
+              formControlName="proposito"
+              rows="3"
+              [value]="reservation.purpose"
+            ></textarea>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary" [disabled]="reservaForm.invalid">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-
-  <!-- Fecha de reserva -->
-  <div>
-    <label for="reservationDate">Fecha de Reserva:</label>
-    <input
-      type="date"
-      id="reservationDate"
-      [(ngModel)]="reservation.reservationDate"
-      name="reservationDate"
-    />
-  </div>
-
-  <!-- Hora de entrada -->
-  <div>
-    <label for="clockIn">Hora de Entrada:</label>
-    <input
-      type="time"
-      id="clockIn"
-      [(ngModel)]="formattedClockIn"
-      (ngModelChange)="updateClockIn($event)"
-      name="clockIn"
-    />
-  </div>
-
-  <!-- Hora de salida -->
-  <div>
-    <label for="clockOut">Hora de Salida:</label>
-    <input
-      type="time"
-      id="clockOut"
-      [(ngModel)]="formattedClockOut"
-      (ngModelChange)="updateClockOut($event)"
-      name="clockOut"
-    />
-  </div>
-
-  <!-- Propósito de la reserva -->
-  <div>
-    <label for="purpose">Propósito:</label>
-    <textarea
-      id="purpose"
-      [(ngModel)]="reservation.purpose"
-      name="purpose"
-      placeholder="Describa el propósito aquí"
-    ></textarea>
-  </div>
-
-  <!-- Botón de reservar -->
-  <button type="button" (click)="openConfirmationModal()">Reservar</button>
 </div>
 
+<!-- Modal de Confirmación -->
 <div
   class="modal fade"
   id="confirmationModal"
@@ -92,24 +108,17 @@
         ></button>
       </div>
       <div class="modal-body">
-        <p><strong>Usuario:</strong> {{ selectedUserName }}</p>
-        <p><strong>Ambiente:</strong> {{ selectedEnvironmentName }}</p>
-        <p>
-          <strong>Fecha de Reserva:</strong> {{ reservation.reservationDate }}
-        </p>
-        <p><strong>Hora de Entrada:</strong> {{ formattedClockIn }}</p>
-        <p><strong>Hora de Salida:</strong> {{ formattedClockOut }}</p>
-        <p><strong>Propósito:</strong> {{ reservation.purpose }}</p>
+        <p><strong>Fecha de Reserva:</strong> {{ reservaForm.get('fecha')?.value }}</p>
+        <p><strong>Hora de Entrada:</strong> {{ reservaForm.get('horaEntrada')?.value }}</p>
+        <p><strong>Hora de Salida:</strong> {{ reservaForm.get('horaSalida')?.value }}</p>
+        <p><strong>Propósito:</strong> {{ reservaForm.get('proposito')?.value }}</p>
+        <p><strong>Sala Seleccionada:</strong> {{ mensaje }}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Editar
         </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="confirmSubmission()"
-        >
+        <button type="button" class="btn btn-primary" (click)="confirmSubmission()">
           Confirmar
         </button>
       </div>
