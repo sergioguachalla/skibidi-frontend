@@ -1,3 +1,4 @@
+//TODO: refactor filter updates for better readability
 import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NavbarComponent} from '../shared/navbar/navbar.component';
@@ -6,6 +7,10 @@ import {BookDto} from '../../Model/book.model';
 import {GenreService} from "../../services/genre.service";
 import {GenreDto} from "../../Model/genre.model";
 import {FormsModule} from "@angular/forms";
+import {LanguagesService} from "../../services/languages.service";
+import {LanguageDto} from "../../Model/dto/languageDto";
+import {EditorialService} from "../../services/editorial.service";
+import {EditorialDto} from "../../Model/dto/EditorialDto";
 
 declare var bootstrap: any;
 interface filtersParams {
@@ -15,6 +20,8 @@ interface filtersParams {
   title: string | null;
   from: String | null;
   to: String | null;
+  languageId: number | null;
+  editorialId: number | null;
 
 }
 
@@ -29,6 +36,9 @@ interface filtersParams {
 export class ViewBooksComponent implements OnInit {
 
   protected genreService : GenreService = inject(GenreService);
+  private languageService : LanguagesService = inject(LanguagesService);
+  private editorialService : EditorialService = inject(EditorialService);
+
   searchTimeout: any;
   filters: WritableSignal<filtersParams> = signal({
     isAvailable: null,
@@ -36,12 +46,16 @@ export class ViewBooksComponent implements OnInit {
     authorName: null,
     title: null,
     from: null,
-    to: null
+    to: null,
+    languageId: null,
+    editorialId: null
   })
 
   librosFiltrados: BookDto[] = [];
   mensaje: string = '';
   genres: GenreDto[] = [];
+  languages: LanguageDto[] = [];
+  editorials: EditorialDto[] = [];
   bookStatuses : any[] = [{value: true, label: 'Disponible'}, {value: false, label: 'Ocupado'}];
   pages: number = 0;
   pagesArray: number[] = [];
@@ -59,6 +73,8 @@ export class ViewBooksComponent implements OnInit {
   ngOnInit() {
     this.applyFilters(0);
     this.findGenres();
+    this.findLanguages();
+    this.findEditorials();
   }
 
   toggleAvailability(libro: BookDto) {
@@ -94,6 +110,27 @@ export class ViewBooksComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error al cargar los géneros:', error);
+      }
+    );
+  }
+  findLanguages() {
+    this.languageService.findAllLanguages().subscribe(
+      (response: any) => {
+        console.log(response);
+        this.languages = response.data;
+      },
+      (error: any) => {
+        console.error('Error al cargar los idiomas:', error);
+      }
+    );
+  }
+  findEditorials() {
+    this.editorialService.findAllEditorials().subscribe(
+      (response: any) => {
+        this.editorials = response.data;
+      },
+      (error: any) => {
+        console.error('Error al cargar las editoriales:', error);
       }
     );
   }
@@ -171,6 +208,28 @@ export class ViewBooksComponent implements OnInit {
     this.buildQueryParams(this.filters,0);
     this.applyFilters(0);
   }
+
+  filterByLanguage($event: any) {
+    if ($event.target.value === "") {
+      this.filters().languageId = null;
+      this.applyFilters(0);
+      return;
+    }
+    this.filters().languageId = $event.target.value;
+    this.buildQueryParams(this.filters().languageId,0);
+    this.applyFilters(0);
+  }
+  filterByEditorial($event: any) {
+    if ($event.target.value === "") {
+      this.filters().editorialId = null;
+      this.applyFilters(0);
+      return;
+    }
+    this.filters().editorialId = $event.target.value;
+    this.buildQueryParams(this.filters().editorialId,0);
+    this.applyFilters(0);
+  }
+
 
   applyFilters(page:number) {
     const queryParams = this.buildQueryParams(this.filters(), page);
