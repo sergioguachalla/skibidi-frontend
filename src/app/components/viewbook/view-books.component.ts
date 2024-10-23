@@ -11,6 +11,7 @@ import {LanguagesService} from "../../services/languages.service";
 import {LanguageDto} from "../../Model/dto/languageDto";
 import {EditorialService} from "../../services/editorial.service";
 import {EditorialDto} from "../../Model/dto/EditorialDto";
+import {ActivatedRoute, Router} from "@angular/router";
 
 declare var bootstrap: any;
 interface filtersParams {
@@ -59,7 +60,10 @@ export class ViewBooksComponent implements OnInit {
   bookStatuses : any[] = [{value: true, label: 'Disponible'}, {value: false, label: 'Ocupado'}];
   pages: number = 0;
   pagesArray: number[] = [];
+  pageNumber = 0;
+
   searchQuery: string = '';
+  private activeRoute: ActivatedRoute = inject(ActivatedRoute);
 
   //filter criteria
   availability: boolean | null = null;
@@ -67,7 +71,7 @@ export class ViewBooksComponent implements OnInit {
   endDate: string = '';
 
 
-  constructor(private bookService: BookService) {
+  constructor(private bookService: BookService, private router: Router) {
   }
 
   ngOnInit() {
@@ -75,6 +79,14 @@ export class ViewBooksComponent implements OnInit {
     this.findGenres();
     this.findLanguages();
     this.findEditorials();
+      // Check if there's a page query parameter, if not, set it to 0
+      this.activeRoute.queryParams.subscribe(params => {
+        const page = +params['page'] || 0; // Default to page 0
+        this.pageNumber = page;
+        this.applyFilters(page);
+      });
+
+
   }
 
   toggleAvailability(libro: BookDto) {
@@ -196,7 +208,12 @@ export class ViewBooksComponent implements OnInit {
   }
 
   onPageChange(page: number) {
-    this.applyFilters(page-1);
+    console.log('Page:', this.pageNumber);
+    this.pageNumber = page - 1;
+    this.applyFilters(this.pageNumber);
+    //update the url query params based on page
+
+
   }
 
   filterBooks($availabilityEvent: any) {
@@ -230,8 +247,13 @@ export class ViewBooksComponent implements OnInit {
     this.applyFilters(0);
   }
 
-
   applyFilters(page:number) {
+    this.router.navigate([], {
+      relativeTo: this.activeRoute,
+      queryParams: { page},
+      queryParamsHandling: 'merge', // Keeps other query parameters
+    });
+
     const queryParams = this.buildQueryParams(this.filters(), page);
     this.bookService.findBooks(queryParams).subscribe(
       response => {
@@ -242,7 +264,7 @@ export class ViewBooksComponent implements OnInit {
           } else {
             this.librosFiltrados = response.data.content;
             this.pages = response.data.totalPages!;
-            this.pagesArray = Array.from({ length: this.pages }, (_, i) => i + 1);
+            this.pagesArray = this.getPagesSubset(page, this.pages);
           }
 
         } else {
@@ -255,6 +277,28 @@ export class ViewBooksComponent implements OnInit {
     );
   }
 
+  getPagesSubset(currentPage: number, totalPages: number): number[] {
+    let startPage: number;
+    let endPage: number;
+
+    if (totalPages <= 5) {
+      startPage = 1;
+      endPage = totalPages;
+    } else {
+      if (currentPage <= 3) {
+        startPage = 1;
+        endPage = 5;
+      } else if (currentPage + 2 >= totalPages) {
+        startPage = totalPages - 4;
+        endPage = totalPages;
+      } else {
+        startPage = currentPage - 1;
+        endPage = currentPage + 3;
+      }
+    }
+
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  }
   buildQueryParams(filters: any, page: number): string {
     const paginationParams = `page=${page}&size=4`;
     const filterParams = Object.keys(filters)
