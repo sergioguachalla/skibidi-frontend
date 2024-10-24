@@ -23,29 +23,35 @@ export class ReservationsComponent implements OnInit{
   reservations: Reservation[] = [];
   isModalOpen = false;  // Para controlar la visibilidad del modal
   reservationIdToCancel: number | null = null;  // Para guardar el ID de la reservación a cancelar
-
+  currentPage: number = 0;
+  totalPages: number = 0;
+  pageSize: number = 7;
 
   constructor(
-    private kcService: KeycloakService, 
+    private kcService: KeycloakService,
     private studyRoomService: StudyRoomService,
     private router: Router
   ) {
   }
   ngOnInit(): void {
-    const kcId= this.kcService.getKeycloakInstance().subject!;
 
-    this.studyRoomService.getReservations(kcId).subscribe(
-      response => {
-        this.reservations = response.data;
+    this.getReservations(this.currentPage);
+  }
+
+  getReservations(page: number): void{
+    const kcId= this.kcService.getKeycloakInstance().subject!;
+    this.studyRoomService.getReservations(kcId,page, 5).subscribe(
+      (response) => {
+        this.reservations = response.data.content || [];
+        this.currentPage = response.data.number;
+        this.totalPages = response.data.totalPages;
+      },
+      (error) => {
+        console.error('Error al obtener el historial de reservas:', error);
       }
     );
-
-   // this.reservations = [
-     // { id: 1, roomName: 'Room A', reservedBy: 'John Doe', reservationDate: '2024-10-02', timeSlot: '10:00 AM - 12:00 PM' },
-     // { id: 2, roomName: 'Room B', reservedBy: 'Jane Smith', reservationDate: '2024-10-03', timeSlot: '1:00 PM - 3:00 PM' },
-     // { id: 3, roomName: 'Room C', reservedBy: 'Alice Johnson', reservationDate: '2024-10-04', timeSlot: '9:00 AM - 11:00 AM' }
-   // ];
   }
+
 
   cancelReservation(reservationId: number): void {
     const status = 3;  // El número 3 indica que la reservación ha sido cancelada
@@ -65,6 +71,17 @@ export class ReservationsComponent implements OnInit{
     );
   }
 
+  nextPage(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.getReservations(this.currentPage + 1);
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.getReservations(this.currentPage - 1);
+    }
+  }
   openModal(reservationId: number): void {
     this.reservationIdToCancel = reservationId; // Guarda el ID de la reservación
     this.isModalOpen = true; // Abre el modal

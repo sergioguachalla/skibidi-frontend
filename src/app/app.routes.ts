@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: '', component: LandingPageComponent },
     {path: 'register-customer', component: RegisterCustomerComponent},
     {path: 'register-librarian', component: RegisterLibrarianComponent},
-    {path: 'books', component: ViewBooksComponent},
+    {path: 'view-book', component: ViewBooksComponent},
     {path: 'ingresar-libro', component: IngresarLibroComponent},
     {path: 'reservation-enviroment', component: ReservationComponent},
     {path: 'client-environment', component: EnvironmentClientComponent },
@@ -24,6 +24,6 @@ export const routes: Routes = [
     {path: 'my-information', component: EditUserInformationComponent},
     {path: 'client-environment', component: EnvironmentClientComponent },
     {path: 'reservation-history', component: ReservationHistoryComponent },
-    {path: 'client-environment/edit/:id', component: EditReservationComponent}
+    {path: 'client-environment/edit/:id', component: EditReservationComponent},
     {path: 'update-password', component: UpdatePasswordComponent},
 ];

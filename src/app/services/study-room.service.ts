@@ -14,9 +14,11 @@ export class StudyRoomService {
 
   private API_URL = Development.API_URL + '/environment/';
 
-  getReservations(kcId: string | undefined) {
-    return this.http.get<any>(this.API_URL + kcId + '/reservations');
+  getReservations(kcId: string | undefined,page: number=0, size: number =2): Observable<any> {
+    return this.http.get<any>(this.API_URL + kcId + `/reservations?page=${page}&size=${size}`);
   }
+
+
 
   updateEnvironmentReservation(reservationId: number, status: number): Observable<ResponseDto<string>> {
     return this.http.put<ResponseDto<string>>(this.API_URL + 'reservations/' + reservationId + '/status/' + status,{});
