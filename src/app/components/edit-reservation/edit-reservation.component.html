@@ -1,76 +1,102 @@
 <navbar></navbar>
 
-<div class="reservation-form">
-  <h2>Reserva de ambiente</h2>
+<div class="container mt-5">
+  <div class="reservation-form bg-light p-4 rounded shadow mx-auto" style="max-width: 600px;">
+    <h2 class="text-center mb-4">Modificar Reserva</h2>
 
-
-  <!-- Selección de ambiente -->
-  <div>
-    <label for="environmentId">Ambiente:</label>
-    <select
-      id="environmentId"
-      [(ngModel)]="selectedEnvironmentId"
-      name="environmentId"
-    >
-      <option
-        *ngFor="let environment of environments"
-        [value]="environment.environmentId"
+    <div class="mb-3">
+      <label for="environmentId" class="form-label">Ambiente:</label>
+      <select
+        id="environmentId"
+        [(ngModel)]="selectedEnvironmentId"
+        name="environmentId"
+        class="form-select"
       >
-        {{ environment.name }} (Capacidad: {{ environment.capacity }})
-      </option>
-    </select>
-  </div>
+        <option *ngFor="let environment of availableEnvironments" [value]="environment.environmentId">
+          {{ environment.name }} (Capacidad: {{ environment.capacity }})
+        </option>
+      </select>
+      <div *ngIf="!selectedEnvironmentId" class="text-danger">
+        Por favor, seleccione un ambiente.
+      </div>
+    </div>
 
-  <!-- Fecha de reserva -->
-  <div>
-    <label for="reservationDate">Fecha de Reserva:</label>
-    <input
-      type="date"
-      id="reservationDate"
-      [(ngModel)]="reservation.reservationDate"
-      name="reservationDate"
-    />
-  </div>
 
-  <!-- Hora de entrada -->
-  <div>
-    <label for="clockIn">Hora de Entrada:</label>
-    <input
-      type="time"
-      id="clockIn"
-      [(ngModel)]="formattedClockIn"
-      (ngModelChange)="updateClockIn($event)"
-      name="clockIn"
-    />
-  </div>
+    <!-- Fecha de reserva -->
+    <div class="mb-3">
+      <label for="reservationDate" class="form-label">Fecha de Reserva:</label>
+      <input
+        type="date"
+        id="reservationDate"
+        [(ngModel)]="reservation.reservationDate"
+        name="reservationDate"
+        class="form-control"
+        [min]="minReservationDate"
+      />
+    </div>
+    <div *ngIf="dateErrorMessage" class="alert alert-danger">
+      {{ dateErrorMessage }}
+    </div>
 
-  <!-- Hora de salida -->
-  <div>
-    <label for="clockOut">Hora de Salida:</label>
-    <input
-      type="time"
-      id="clockOut"
-      [(ngModel)]="formattedClockOut"
-      (ngModelChange)="updateClockOut($event)"
-      name="clockOut"
-    />
-  </div>
+    <!-- Hora de entrada -->
+    <div class="mb-3">
+      <label for="clockIn" class="form-label">Hora de Entrada:</label>
+      <input
+        type="time"
+        id="clockIn"
+        [(ngModel)]="clockInTime"
+        (ngModelChange)="updateClockIn($event)"
+        name="clockIn"
+        class="form-control"
+      />
+    </div>
 
-  <!-- Propósito de la reserva -->
-  <div>
-    <label for="purpose">Propósito:</label>
-    <textarea
-      id="purpose"
-      [(ngModel)]="reservation.purpose"
-      name="purpose"
-      placeholder="Describa el propósito aquí"
-    ></textarea>
-  </div>
+    <!-- Hora de salida -->
+    <div class="mb-3">
+      <label for="clockOut" class="form-label">Hora de Salida:</label>
+      <input
+        type="time"
+        id="clockOut"
+        [(ngModel)]="clockOutTime"
+        (ngModelChange)="updateClockOut($event)"
+        name="clockOut"
+        class="form-control"
+      />
+    </div>
 
-  <!-- Botón de reservar -->
-  <button type="button" (click)="openConfirmationModal()">Reservar</button>
+    <!-- Mensaje de error de validación -->
+    <div *ngIf="timeErrorMessage" class="alert alert-danger">
+      {{ timeErrorMessage }}
+    </div>
+
+    <!-- Propósito de la reserva -->
+    <div class="mb-3">
+      <label for="purpose" class="form-label">Propósito:</label>
+      <textarea
+        id="purpose"
+        [(ngModel)]="reservation.purpose"
+        name="purpose"
+        class="form-control"
+        placeholder="Describa el propósito aquí"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <!-- Botón de reservar -->
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="openConfirmationModal()"
+        [disabled]="!isFormValid()"
+      >
+        Modificar
+      </button>
+    </div>
+  </div>
 </div>
 
+<!-- Modal de confirmación -->
 <div
   class="modal fade"
   id="confirmationModal"
@@ -94,11 +120,9 @@
       <div class="modal-body">
         <p><strong>Usuario:</strong> {{ selectedUserName }}</p>
         <p><strong>Ambiente:</strong> {{ selectedEnvironmentName }}</p>
-        <p>
-          <strong>Fecha de Reserva:</strong> {{ reservation.reservationDate }}
-        </p>
-        <p><strong>Hora de Entrada:</strong> {{ formattedClockIn }}</p>
-        <p><strong>Hora de Salida:</strong> {{ formattedClockOut }}</p>
+        <p><strong>Fecha de Reserva:</strong> {{ reservation.reservationDate }}</p>
+        <p><strong>Hora de Entrada:</strong> {{ clockInTime }}</p>
+        <p><strong>Hora de Salida:</strong> {{ clockOutTime }}</p>
         <p><strong>Propósito:</strong> {{ reservation.purpose }}</p>
       </div>
       <div class="modal-footer">
