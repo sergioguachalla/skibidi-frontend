@@ -18,7 +18,6 @@ export class StudyRoomService {
     return this.http.get<any>(this.API_URL + kcId + '/reservations');
   }
 
-  // actualizar estado de la reserva
   updateEnvironmentReservation(reservationId: number, status: number): Observable<ResponseDto<string>> {
     return this.http.put<ResponseDto<string>>(this.API_URL + 'reservations/' + reservationId + '/status/' + status,{});
   }

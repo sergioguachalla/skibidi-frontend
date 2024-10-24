@@ -9,6 +9,7 @@ import {EditUserInformationComponent} from "./components/edit-user-information/e
 import {EnvironmentClientComponent} from "./components/environment-client/environment-client.component";
 import {ReservationsComponent} from "./components/reservations/reservations.component";
 import{ReservationHistoryComponent} from "./components/reservation-history/reservation-history.component"
+import {EditReservationComponent} from "./components/edit-reservation/edit-reservation.component";
 import {UpdatePasswordComponent} from "./components/update-password/update-password.component";
 
 export const routes: Routes = [
@@ -23,5 +24,6 @@ export const routes: Routes = [
     {path: 'my-information', component: EditUserInformationComponent},
     {path: 'client-environment', component: EnvironmentClientComponent },
     {path: 'reservation-history', component: ReservationHistoryComponent },
+    {path: 'client-environment/edit/:id', component: EditReservationComponent}
     {path: 'update-password', component: UpdatePasswordComponent},
 ];

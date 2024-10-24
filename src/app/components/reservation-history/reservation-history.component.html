@@ -1,27 +1,54 @@
 <navbar></navbar>
+
 <div class="reservation-history-container">
-    <h2>Historial de Reservas</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Client ID</th>
-          <th>Environment ID</th>
-          <th>Fecha de Reserva</th>
-          <th>Hora de Inicio</th>
-          <th>Hora de Finalización</th>
-          <th>Motivo</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let reservation of reservations">
-          <td>{{ reservation.clientId }}</td>
-          <td>{{ reservation.environmentId }}</td>
-          <td>{{ reservation.reservationDate | date:'shortDate' }}</td>
-          <td>{{ reservation.clockIn | date:'shortTime' }}</td>
-          <td>{{ reservation.clockOut | date:'shortTime' }}</td>
-          <td>{{ reservation.purpose }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <h2>Historial de Reservas</h2>
+  <table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+      <th>Cliente</th>
+      <th>Sala</th>
+      <th>Fecha de Reserva</th>
+      <th>Hora de Inicio</th>
+      <th>Hora de Finalización</th>
+      <th>Motivo</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let reservation of reservations">
+      <td>{{ reservation.clientId }}</td>
+      <td>SALA B-{{ reservation.environmentId }}</td>
+      <td>{{ reservation.reservationDate | date:'shortDate' }}</td>
+      <td>{{ reservation.clockIn | date:'shortTime' }}</td>
+      <td>{{ reservation.clockOut | date:'shortTime' }}</td>
+      <td>{{ reservation.purpose }}</td>
+      <td>{{ getStatusText(reservation.status) }}</td>
+      <td>
+        <div class="d-flex flex-column">
+          <!-- Mostrar botones según el estado -->
+          <button *ngIf="reservation.status === 1" (click)="confirmReservation(reservation)" class="btn btn-success btn-sm mb-1">
+            Aceptar <i class="bi bi-check-circle"></i>
+          </button>
+          <button *ngIf="reservation.status === 1 || reservation.status === 2" (click)="editReservation(reservation)" class="btn btn-warning btn-sm mb-1">
+            Editar <i class="bi bi-pencil-square"></i>
+          </button>
+          <button *ngIf="reservation.status === 1 || reservation.status === 2" (click)="cancelReservation(reservation)" class="btn btn-danger btn-sm">
+            Cancelar <i class="bi bi-x-circle"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination-controls d-flex justify-content-center align-items-center mt-3">
+    <button (click)="previousPage()" class="btn btn-outline-secondary me-2" [disabled]="currentPage === 0">
+      Anterior
+    </button>
+    <span class="mx-3">Página {{currentPage + 1}} de {{totalPages}}</span>
+    <button (click)="nextPage()" class="btn btn-outline-secondary ms-2" [disabled]="currentPage === totalPages - 1">
+      Siguiente
+    </button>
   </div>
-  
+</div>

@@ -38,7 +38,10 @@ export class NavbarComponent {
   onClickToReservations () {
     this.router.navigate(['/reservations'])
   }
+  onClickToReservationsLibrarian(){
+    this.router.navigate(['/reservation-history'])
 
+  }
   onClickToRegisterManual() {
     this.router.navigate(['/ingresar-libro']);
   }

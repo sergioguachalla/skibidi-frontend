@@ -20,7 +20,13 @@ export class EnvironmentService {
   private reservationUrl = this.apiUrl+'/environments';
 
   constructor(private http: HttpClient) {}
+  getEnvironmentsAvailability(from: string, to: string): Observable<EnvironmentResponse> {
+    const params = new HttpParams()
+      .set('from', from)
+      .set('to', to);
 
+    return this.http.get<EnvironmentResponse>(`${this.reservationUrl}/availability`, { params });
+  }
   getAllEnvironments(): Observable<EnvironmentResponse> {
     return this.http.get<EnvironmentResponse>(this.environmentsUrl);
   }
@@ -29,13 +35,14 @@ export class EnvironmentService {
     return this.http.post(`${this.reservationUrl}/`, reservation);
   }
 
-  getEnvironmentsAvailability(from: string, to: string): Observable<EnvironmentResponse> {
-    const params = new HttpParams()
-      .set('from', from)
-      .set('to', to);
-
-    return this.http.get<EnvironmentResponse>(`${this.reservationUrl}/availability`, { params });
+  getEnvironmentReservationById(id: number): Observable<EnvironmentReservationDto> {
+    return this.http.get<EnvironmentReservationDto>(`${this.reservationUrl}/${id}`);
+  }
+  updateEnvironmentReservation(id: number, reservation: EnvironmentReservationDto): Observable<any> {
+    return this.http.put<any>(`${this.reservationUrl}/${id}`, reservation);
   }
 
-  
+
+
+
 }
