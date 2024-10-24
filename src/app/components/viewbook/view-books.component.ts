@@ -48,7 +48,7 @@ verMasInformacion(bookId: number | null): void {
   if (bookId !== null) {
     this.bookService.getBookById(bookId).subscribe(
       response => {
-        console.log('Detalles del libro:', response);
+        //console.log('Detalles del libro:', response);
         this.selectedBook = response.data; 
         const modalElement = document.getElementById('bookModal'); 
         const modal = new bootstrap.Modal(modalElement!); 

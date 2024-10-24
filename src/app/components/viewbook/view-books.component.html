@@ -54,7 +54,10 @@
           <p><strong>ISBN:</strong> {{ selectedBook?.isbn }}</p>
           <p><strong>Fecha de Registro:</strong> {{ selectedBook?.registrationDate | date }}</p>
           <p><strong>Género:</strong> {{ selectedBook?.genre }}</p>
-          <p><strong>Estado:</strong> {{ selectedBook?.status ? 'Disponible' : 'No Disponible' }}</p>
+          <strong>Estado:</strong>
+            <span [ngClass]="{'available': selectedBook?.status, 'not-available': !selectedBook?.status}">
+              {{ selectedBook?.status ? 'Disponible' : 'No Disponible' }}
+            </span>
           <p><strong>Autores:</strong> {{ selectedBook?.authors ? selectedBook.authors.join(', ') : 'No hay autores' }}</p>
           <p><strong>Editorial:</strong> {{ selectedBook?.editorialName }}</p> 
           <p><strong>Language:</strong> {{ selectedBook?.languageName }}</p> 
@@ -65,7 +68,7 @@
       </div>
     </div>
   </div>  
-  
+
 
   <!-- Filtered books -->
   <div *ngFor="let libro of librosFiltrados" class="book-item">
