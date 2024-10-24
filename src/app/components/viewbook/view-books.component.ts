@@ -5,6 +5,7 @@ import {BookService} from '../../services/book.service';
 import {BookDto} from '../../Model/book.model';
 import {GenreService} from "../../services/genre.service";
 import {GenreDto} from "../../Model/genre.model";
+import {BookDetailsDto} from "../../Model/bookDetailsModal.modal"
 import {FormsModule} from "@angular/forms";
 
 declare var bootstrap: any;
@@ -29,11 +30,11 @@ interface filtersParams {
 export class ViewBooksComponent implements OnInit {
   selectedBook: any = null; 
 
-  openModal(libro: BookDto) {
+  openModal(libro: BookDetailsDto) {
     this.bookService.getBookById(libro.bookId as number).subscribe(
       (response: any) => {
         this.selectedBook = response.data; 
-        const modalElement = document.getElementById('bookModal'); 
+        const modalElement = document.getElementById('bookDetailsModal'); 
         const modal = new bootstrap.Modal(modalElement!); 
         modal.show();
       },
@@ -47,6 +48,7 @@ verMasInformacion(bookId: number | null): void {
   if (bookId !== null) {
     this.bookService.getBookById(bookId).subscribe(
       response => {
+        console.log('Detalles del libro:', response);
         this.selectedBook = response.data; 
         const modalElement = document.getElementById('bookModal'); 
         const modal = new bootstrap.Modal(modalElement!); 

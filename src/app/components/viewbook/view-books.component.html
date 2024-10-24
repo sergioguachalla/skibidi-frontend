@@ -56,8 +56,8 @@
           <p><strong>Género:</strong> {{ selectedBook?.genre }}</p>
           <p><strong>Estado:</strong> {{ selectedBook?.status ? 'Disponible' : 'No Disponible' }}</p>
           <p><strong>Autores:</strong> {{ selectedBook?.authors ? selectedBook.authors.join(', ') : 'No hay autores' }}</p>
-          <p><strong>Editoriales:</strong> {{ selectedBook?.editorialId}}</p>
-          <p><strong>Lenguaje:</strong> {{ selectedBook?.idLanguage}}</p>
+          <p><strong>Editorial:</strong> {{ selectedBook?.editorialName }}</p> 
+          <p><strong>Language:</strong> {{ selectedBook?.languageName }}</p> 
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
