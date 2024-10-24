@@ -23,6 +23,7 @@ interface filtersParams {
   to: String | null;
   languageId: number | null;
   editorialId: number | null;
+  titleSort: string | null;
 
 }
 
@@ -49,7 +50,8 @@ export class ViewBooksComponent implements OnInit {
     from: null,
     to: null,
     languageId: null,
-    editorialId: null
+    editorialId: null,
+    titleSort: "asc"
   })
 
   librosFiltrados: BookDto[] = [];
@@ -173,15 +175,21 @@ export class ViewBooksComponent implements OnInit {
   //filter bl
   updateSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.searchQuery = input.value;
+    const searchTerm = input.value.trim();
+    if (searchTerm === '') {
+      this.filters().title = null;
+      this.applyFilters(0);
+      return;
+    }
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.filters().title = searchTerm;
+      this.applyFilters(0);
+    }, 500);
   }
 
   onSearch() {
-    const title = this.searchQuery.trim();
-    if (title === '') {
-      this.applyFilters(0);
-    }
-    this.filters().title = title;
+
     this.buildQueryParams(this.filters,0);
     this.applyFilters(0);
   }
@@ -204,7 +212,7 @@ export class ViewBooksComponent implements OnInit {
     this.searchTimeout = setTimeout(() => {
       this.filters().authorName = searchTerm;
       this.applyFilters(0);
-    }, 750);
+    }, 500);
   }
 
   onPageChange(page: number) {
@@ -307,5 +315,15 @@ export class ViewBooksComponent implements OnInit {
       .join('&');
 
     return filterParams ? `${paginationParams}&${filterParams}` : paginationParams;
+  }
+
+  toggleSort(){
+    if(this.filters().titleSort === 'asc'){
+      this.filters().titleSort = 'desc';
+    } else {
+      this.filters().titleSort = 'asc';
+    }
+    this.buildQueryParams(this.filters,0);
+    this.applyFilters(0);
   }
 }
