@@ -24,6 +24,6 @@ export const routes: Routes = [
     {path: 'my-information', component: EditUserInformationComponent},
     {path: 'client-environment', component: EnvironmentClientComponent },
     {path: 'reservation-history', component: ReservationHistoryComponent },
-    {path: 'client-environment/edit/:id', component: EditReservationComponent}
+    {path: 'client-environment/edit/:id', component: EditReservationComponent},
     {path: 'update-password', component: UpdatePasswordComponent},
 ];
