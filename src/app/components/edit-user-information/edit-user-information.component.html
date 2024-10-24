@@ -65,31 +65,18 @@
             </div>
           </div>
 
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="password" class="form-label">Contraseña:</label>
-              <input type="password" formControlName="password" class="form-control" id="password" placeholder="Contraseña">
-              <div *ngIf="updateForm.get('password')?.invalid && updateForm.get('password')?.touched" class="text-danger">
-                La contraseña debe tener al menos 6 caracteres.
-              </div>
-            </div>
 
+          <div class="row mb-3 justify-content-center">
             <div class="col-md-6">
-              <label for="confirmPassword" class="form-label">Confirma la contraseña:</label>
-              <input type="password" formControlName="confirmPassword" class="form-control" id="confirmPassword" placeholder="Confirma la contraseña">
-              <div *ngIf="updateForm.hasError('mismatch') && updateForm.get('confirmPassword')?.touched" class="text-danger">
-                Las contraseñas no coinciden.
-              </div>
+              <button type="button" class="btn btn-primary w-100" (click)="onSubmit()">Actualizar Información </button>
+            </div>
+            <div class="col-md-6">
+              <button class="btn btn-secondary w-100" type="button" >Cancelar</button>
             </div>
           </div>
 
           <div class="row mb-3 justify-content-center">
-            <div class="col-md-3">
-              <button type="button" class="btn btn-primary w-100" (click)="onSubmit()">Actualizar </button>
-            </div>
-            <div class="col-md-3">
-              <button class="btn btn-secondary w-100" type="button" >Cancelar</button>
-            </div>
+            <button class="btn btn-warning w-100" (click)="openConfirmationAlert()">Actualizar contraseña</button>
           </div>
           </div>
         </form>
