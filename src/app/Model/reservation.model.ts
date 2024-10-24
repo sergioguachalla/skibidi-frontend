@@ -1,8 +1,11 @@
 export interface Reservation {
-  environmentId: number;
+  clientId: string;
   reservationId: number;
-  clockIn: string;
-  clockOut: string;
+  environmentId: number;
+  reservationDate: string;
+  clockIn: Date;
+  clockOut: Date;
   purpose: string;
+  reservationStatus: boolean;
   status: number;
 }

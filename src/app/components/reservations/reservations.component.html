@@ -24,31 +24,37 @@
 </div>
 
 
-  <div *ngIf="reservations.length !== 0" class="table-responsive">
+  <div *ngIf="reservations.length !== 0" class="reservation-history-container">
     <table class="table table-striped table-bordered">
       <thead class="thead-dark">
         <tr>
-          <th>Nombre de la sala</th>
-          <th>Inicio</th>
-          <th>Final</th>
+          <th>Sala</th>
+          <th>Fecha de Reserva</th>
+          <th>Hora de Inicio</th>
+          <th>Hora de Finalización</th>
           <th>Motivo</th>
+          <th>Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let reservation of reservations" [ngClass]="{
-            'table-danger': reservation.status === 3,
-            'table-success': reservation.status === 2,
-            'table-warning': reservation.status === 1
-          }">
-          <td>{{ reservation.environmentId }}</td>
-          <td>{{ reservation.clockIn }}</td>
-          <td>{{ reservation.clockOut }}</td>
-          <td>{{ reservation.purpose }}</td>
+        <tr *ngFor="let reservation of reservations">
+          <td>SALA B-{{ reservation.environmentId }}</td>
+            <td>{{ reservation.reservationDate | date:'shortDate' }}</td>
+            <td>{{ reservation.clockIn | date:'shortTime' }}</td>
+            <td>{{ reservation.clockOut | date:'shortTime' }}</td>
+            <td>{{ reservation.purpose }}</td>
+            <td>{{ getStatusText(reservation.status) }}</td>
           <td>
-            <button *ngIf="reservation.status !== 3" class="btn btn-danger" (click)="openModal(reservation.reservationId)">
-              Cancelar
-            </button>
+            <div class="d-flex flex-column">
+              <!-- Mostrar botones según el estado -->
+              <button *ngIf="reservation.status === 1 || reservation.status === 2" (click)="editReservation(reservation)" class="btn btn-warning btn-sm mb-1">
+                Editar <i class="bi bi-pencil-square"></i>
+              </button>
+              <button *ngIf="reservation.status === 1 || reservation.status === 2" (click)="openModal(reservation.reservationId)" class="btn btn-danger btn-sm">
+                Cancelar <i class="bi bi-x-circle"></i>
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>

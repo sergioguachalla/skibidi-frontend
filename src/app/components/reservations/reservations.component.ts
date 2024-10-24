@@ -4,6 +4,7 @@ import {Reservation} from "../../Model/reservation.model";
 import {CommonModule, NgForOf, NgIf} from "@angular/common";
 import {KeycloakService} from "keycloak-angular";
 import {StudyRoomService} from "../../services/study-room.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-reservations',
@@ -24,7 +25,11 @@ export class ReservationsComponent implements OnInit{
   reservationIdToCancel: number | null = null;  // Para guardar el ID de la reservación a cancelar
 
 
-  constructor(private kcService: KeycloakService, private studyRoomService: StudyRoomService) {
+  constructor(
+    private kcService: KeycloakService, 
+    private studyRoomService: StudyRoomService,
+    private router: Router
+  ) {
   }
   ngOnInit(): void {
     const kcId= this.kcService.getKeycloakInstance().subject!;
@@ -78,4 +83,21 @@ export class ReservationsComponent implements OnInit{
   }
 
 
+  // Nueva función para traducir el estado
+  getStatusText(status: number): string {
+    switch (status) {
+      case 1:
+        return 'Pendiente';
+      case 2:
+        return 'Aceptado';
+      case 3:
+        return 'Rechazado';
+      default:
+        return 'Desconocido';
+    }
+  }
+
+  editReservation(reservation: any): void {
+    this.router.navigate(['/client-environment/edit', reservation.reservationId]);
+  }
 }
