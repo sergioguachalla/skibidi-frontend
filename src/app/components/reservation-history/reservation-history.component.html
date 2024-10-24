@@ -1,6 +1,9 @@
 <navbar></navbar>
 <div class="reservation-history-container">
     <h2>Historial de Reservas</h2>
+    <div *ngIf="reservations.length === 0">
+      <p>Aun no existen reservaciones</p>
+  </div>
     <table>
       <thead>
         <tr>
