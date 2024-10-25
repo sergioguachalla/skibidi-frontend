@@ -82,8 +82,16 @@ export class ViewBooksComponent implements OnInit {
     this.findLanguages();
     this.findEditorials();
     this.activeRoute.queryParams.subscribe(params => {
-        const page = +params['page'] || 0;
+        let page = +params['page'] || 0;
+        if (page < 0) {
+          console.warn('Invalid page number. Defaulting to 0.');
+          page = 0;
+        }
         this.filters().titleSort = params['titleSort'] || 'asc';
+        if (this.filters().titleSort !== 'asc' && this.filters().titleSort !== 'desc') {
+          this.filters().titleSort = 'asc';
+        console.warn('Invalid sort order. Defaulting to "asc".');
+      }
         this.buildQueryParams(this.filters, page);
         this.pageNumber = page;
         this.applyFilters(page);
