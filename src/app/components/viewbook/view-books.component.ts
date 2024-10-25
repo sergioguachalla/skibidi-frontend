@@ -24,6 +24,7 @@ interface filtersParams {
   to: String | null;
   languageId: number | null;
   editorialId: number | null;
+  titleSort: string | null;
 
 }
 
@@ -91,7 +92,8 @@ closeModal() {
     from: null,
     to: null,
     languageId: null,
-    editorialId: null
+    editorialId: null,
+    titleSort: "asc"
   })
 
   librosFiltrados: BookDto[] = [];
@@ -121,12 +123,22 @@ closeModal() {
     this.findGenres();
     this.findLanguages();
     this.findEditorials();
-      // Check if there's a page query parameter, if not, set it to 0
-      this.activeRoute.queryParams.subscribe(params => {
-        const page = +params['page'] || 0; // Default to page 0
+    this.activeRoute.queryParams.subscribe(params => {
+        let page = +params['page'] || 0;
+        if (page < 0) {
+          console.warn('Invalid page number. Defaulting to 0.');
+          page = 0;
+        }
+        this.filters().titleSort = params['titleSort'] || 'asc';
+        if (this.filters().titleSort !== 'asc' && this.filters().titleSort !== 'desc') {
+          this.filters().titleSort = 'asc';
+        console.warn('Invalid sort order. Defaulting to "asc".');
+      }
+        this.buildQueryParams(this.filters, page);
         this.pageNumber = page;
         this.applyFilters(page);
-      });
+
+    });
 
 
   }
@@ -215,15 +227,21 @@ closeModal() {
   //filter bl
   updateSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.searchQuery = input.value;
+    const searchTerm = input.value.trim();
+    if (searchTerm === '') {
+      this.filters().title = null;
+      this.applyFilters(0);
+      return;
+    }
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.filters().title = searchTerm;
+      this.applyFilters(0);
+    }, 500);
   }
 
   onSearch() {
-    const title = this.searchQuery.trim();
-    if (title === '') {
-      this.applyFilters(0);
-    }
-    this.filters().title = title;
+
     this.buildQueryParams(this.filters,0);
     this.applyFilters(0);
   }
@@ -246,7 +264,7 @@ closeModal() {
     this.searchTimeout = setTimeout(() => {
       this.filters().authorName = searchTerm;
       this.applyFilters(0);
-    }, 750);
+    }, 500);
   }
 
   onPageChange(page: number) {
@@ -292,7 +310,7 @@ closeModal() {
   applyFilters(page:number) {
     this.router.navigate([], {
       relativeTo: this.activeRoute,
-      queryParams: { page},
+      queryParams: { page, titleSort: this.filters().titleSort },
       queryParamsHandling: 'merge', // Keeps other query parameters
     });
 
@@ -349,5 +367,15 @@ closeModal() {
       .join('&');
 
     return filterParams ? `${paginationParams}&${filterParams}` : paginationParams;
+  }
+
+  toggleSort(){
+    if(this.filters().titleSort === 'asc'){
+      this.filters().titleSort = 'desc';
+    } else {
+      this.filters().titleSort = 'asc';
+    }
+    this.buildQueryParams(this.filters,0);
+    this.applyFilters(0);
   }
 }
