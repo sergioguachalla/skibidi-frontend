@@ -6,9 +6,9 @@ import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import {CustomerServiceService} from "../../../services/customer-service.service";
 import {BehaviorSubject} from "rxjs";
 import {Router} from "@angular/router";
+import {UserClientService} from "../../../services/userclient.service";
 
 declare var bootstrap: any;
 
@@ -34,8 +34,11 @@ export class RegisterCustomerComponent {
   ];
   loading$ = new BehaviorSubject<boolean>(false);
   success$ = new BehaviorSubject<boolean | null>(null);
-  customerService: CustomerServiceService= inject(CustomerServiceService);
-  constructor(private formBuilder: FormBuilder, private router: Router) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private userClientService: UserClientService
+    ) {
     this.registerForm = this.formBuilder.group({
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
@@ -97,7 +100,7 @@ export class RegisterCustomerComponent {
         userDto: userDto
       };
       setTimeout(() => {
-        this.customerService.registerCustomer(userRegistrationDto).subscribe(
+        this.userClientService.registerCustomer(userRegistrationDto).subscribe(
           response => {
             this.loading$.next(false);
             this.success$.next(true);

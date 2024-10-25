@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Environment, EnvironmentReservationDto } from '../Model/environment.model';
 import {Development} from "../environments/development";
+import {ResponseDto} from "../Model/common/responseDto";
 
 interface EnvironmentResponse {
   data: Environment[];
@@ -16,10 +17,11 @@ interface EnvironmentResponse {
 export class EnvironmentService {
   private apiUrl = Development.API_URL;
 
-  private environmentsUrl = this.apiUrl+'/environment/';
-  private reservationUrl = this.apiUrl+'/environments';
+  private environmentsUrl = this.apiUrl+'/environments/';
+  private reservationUrl = this.apiUrl+'/reservations';
 
   constructor(private http: HttpClient) {}
+
   getEnvironmentsAvailability(from: string, to: string): Observable<EnvironmentResponse> {
     const params = new HttpParams()
       .set('from', from)
@@ -32,7 +34,7 @@ export class EnvironmentService {
   }
 
   createEnvironmentReservation(reservation: EnvironmentReservationDto): Observable<any> {
-    return this.http.post(`${this.reservationUrl}/`, reservation);
+    return this.http.post(`${this.reservationUrl}`, reservation);
   }
 
   getEnvironmentReservationById(id: number): Observable<EnvironmentReservationDto> {
@@ -42,7 +44,10 @@ export class EnvironmentService {
     return this.http.put<any>(`${this.reservationUrl}/${id}`, reservation);
   }
 
-
+  updateEnvironmentReservationStatus(reservationId: number, status: number): Observable<ResponseDto<string>> {
+    const params = new HttpParams().set('status', status.toString());
+    return this.http.put<ResponseDto<string>>(`${this.reservationUrl}/${reservationId}/status`, {}, { params });
+  }
 
 
 }

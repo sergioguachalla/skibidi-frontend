@@ -60,4 +60,13 @@
       </tbody>
     </table>
   </div>
+  <div class="pagination-controls d-flex justify-content-center align-items-center mt-3">
+    <button (click)="previousPage()" class="btn btn-outline-secondary me-2" [disabled]="currentPage === 0">
+      Anterior
+    </button>
+    <span class="mx-3">Página {{currentPage + 1}} de {{totalPages}}</span>
+    <button (click)="nextPage()" class="btn btn-outline-secondary ms-2" [disabled]="currentPage === totalPages - 1">
+      Siguiente
+    </button>
+  </div>
 </div>

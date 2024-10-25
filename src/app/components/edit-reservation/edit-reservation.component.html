@@ -23,12 +23,14 @@
 
 
     <!-- Fecha de reserva -->
+    <!-- Fecha de reserva -->
     <div class="mb-3">
       <label for="reservationDate" class="form-label">Fecha de Reserva:</label>
       <input
         type="date"
         id="reservationDate"
         [(ngModel)]="reservation.reservationDate"
+        (ngModelChange)="updateReservationDate($event)"
         name="reservationDate"
         class="form-control"
         [min]="minReservationDate"
@@ -37,6 +39,7 @@
     <div *ngIf="dateErrorMessage" class="alert alert-danger">
       {{ dateErrorMessage }}
     </div>
+
 
     <!-- Hora de entrada -->
     <div class="mb-3">

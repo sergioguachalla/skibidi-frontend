@@ -4,6 +4,7 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { ReservationHistoryService } from '../../services/reservation-history.service';
 import { Router } from "@angular/router";
 import {StudyRoomService} from "../../services/study-room.service";
+import {EnvironmentService} from "../../services/environment.service";
 
 @Component({
   selector: 'app-reservation-history',
@@ -24,7 +25,8 @@ export class ReservationHistoryComponent implements OnInit {
   constructor(
     private reservationHistoryService: ReservationHistoryService,
     private router: Router,
-    private studyRoomService: StudyRoomService
+    private studyRoomService: StudyRoomService,
+    private environmentService: EnvironmentService
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +69,7 @@ export class ReservationHistoryComponent implements OnInit {
 
   confirmReservation(reservation: any): void {
     if (confirm('¿Estás seguro de que deseas aceptar esta reserva?')) {
-      this.studyRoomService.updateEnvironmentReservation(reservation.reservationId, 2).subscribe(
+      this.environmentService.updateEnvironmentReservationStatus(reservation.reservationId, 2).subscribe(
         (response) => {
           console.log("Reserva aceptar exitosamente:", response);
           this.getReservationHistory(this.currentPage);
@@ -81,7 +83,7 @@ export class ReservationHistoryComponent implements OnInit {
 
   cancelReservation(reservation: any): void {
     if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
-      this.studyRoomService.updateEnvironmentReservation(reservation.reservationId, 3).subscribe(
+      this.environmentService.updateEnvironmentReservationStatus(reservation.reservationId, 3).subscribe(
         (response) => {
           console.log("Reserva cancelada exitosamente:", response);
           this.getReservationHistory(this.currentPage);
