@@ -104,6 +104,8 @@ export class ReservationHistoryComponent implements OnInit {
         return 'Aceptado';
       case 3:
         return 'Rechazado';
+      case 4:
+        return 'Finalizado';
       default:
         return 'Desconocido';
     }
