@@ -214,7 +214,14 @@ export class EditReservationComponent implements OnInit {
     if (!this.selectedEnvironmentId) {
       return false;
     }
-
+    if (this.clockInTime < "08:00") {
+      this.timeErrorMessage = "Las salas están disponibles a partir de las 8:00 AM.";
+      return false;
+    }
+    if (this.clockOutTime > "20:00") {
+      this.timeErrorMessage = "Las salas están disponibles hasta las 8:00 PM.";
+      return false;
+    }
     if (!this.reservation.reservationDate || new Date(this.reservation.reservationDate) < new Date(this.minReservationDate)) {
       this.dateErrorMessage = "La fecha de reserva debe ser mayor o igual a la fecha actual.";
       return false;
