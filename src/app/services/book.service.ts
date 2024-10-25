@@ -86,4 +86,7 @@ export class BookService {
     const queryParams = new URLSearchParams(params).toString(); // Convertir los parámetros en query string
     return this.http.get<ApiResponse>(`${this.apiUrl}?${queryParams}`);
   }
+  getBookById(id: number): Observable<ApiResponse> {
+    return this.http.get<ApiResponse>(`${this.apiUrl}modal/${id}`);
+  }
 }
