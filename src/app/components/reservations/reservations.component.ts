@@ -5,6 +5,7 @@ import {CommonModule, NgForOf, NgIf} from "@angular/common";
 import {KeycloakService} from "keycloak-angular";
 import {StudyRoomService} from "../../services/study-room.service";
 import { Router } from "@angular/router";
+import {EnvironmentService} from "../../services/environment.service";
 
 @Component({
   selector: 'app-reservations',
@@ -25,12 +26,13 @@ export class ReservationsComponent implements OnInit{
   reservationIdToCancel: number | null = null;  // Para guardar el ID de la reservación a cancelar
   currentPage: number = 0;
   totalPages: number = 0;
-  pageSize: number = 7;
+  pageSize: number = 2;
 
   constructor(
     private kcService: KeycloakService,
     private studyRoomService: StudyRoomService,
-    private router: Router
+    private router: Router,
+    private environmentService: EnvironmentService
   ) {
   }
   ngOnInit(): void {
@@ -40,7 +42,7 @@ export class ReservationsComponent implements OnInit{
 
   getReservations(page: number): void{
     const kcId= this.kcService.getKeycloakInstance().subject!;
-    this.studyRoomService.getReservations(kcId,page, 5).subscribe(
+    this.studyRoomService.getReservations(kcId,page, 2).subscribe(
       (response) => {
         this.reservations = response.data.content || [];
         this.currentPage = response.data.number;
@@ -54,10 +56,9 @@ export class ReservationsComponent implements OnInit{
 
 
   cancelReservation(reservationId: number): void {
-    const status = 3;  // El número 3 indica que la reservación ha sido cancelada
-    this.studyRoomService.updateEnvironmentReservation(reservationId, status).subscribe(
+    const status = 3;
+    this.environmentService.updateEnvironmentReservationStatus(reservationId, status).subscribe(
       response => {
-        console.log("aaa"+response)
         if (response.successful) {
           alert("Reservación cancelada con éxito.");
           this.ngOnInit();

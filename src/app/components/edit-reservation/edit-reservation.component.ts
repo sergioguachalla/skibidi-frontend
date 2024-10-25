@@ -6,7 +6,7 @@ import { Environment, EnvironmentReservationDto } from "../../Model/environment.
 import { UserClient } from "../../Model/userclient.model";
 import { EnvironmentService } from "../../services/environment.service";
 import { UserClientService } from "../../services/userclient.service";
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
 declare var bootstrap: any;
@@ -56,7 +56,8 @@ export class EditReservationComponent implements OnInit {
     private environmentService: EnvironmentService,
     private userClientService: UserClientService,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -124,7 +125,7 @@ export class EditReservationComponent implements OnInit {
     const clockInTimeParts = this.clockInTime.split(":");
     const clockOutTimeParts = this.clockOutTime.split(":");
 
-    let clockInDate = new Date(`${reservationDate}T00:00:00`); // inicializa a medianoche
+    let clockInDate = new Date(`${reservationDate}T00:00:00`);
     clockInDate.setHours(parseInt(clockInTimeParts[0]), parseInt(clockInTimeParts[1]), 0);
 
     let clockOutDate = new Date(`${reservationDate}T00:00:00`);
@@ -135,11 +136,15 @@ export class EditReservationComponent implements OnInit {
 
     this.reservation.clockIn = clockInDate;
     this.reservation.clockOut = clockOutDate;
+    this.reservation.status=1;
 
     this.environmentService.updateEnvironmentReservation(this.reservationId, this.reservation).subscribe(response => {
       const modalElement = document.getElementById('confirmationModal');
       const modal = bootstrap.Modal.getInstance(modalElement);
       modal.hide();
+      alert('Reserva modificada exitosamente.');
+
+      this.router.navigate(['/view-book']);
     }, error => {
       console.error('Error al actualizar la reserva:', error);
     });
@@ -154,10 +159,50 @@ export class EditReservationComponent implements OnInit {
       const to = `${reservationDate}T${this.clockOutTime}:00`;
 
       this.environmentService.getEnvironmentsAvailability(from, to).subscribe(response => {
-        this.availableEnvironments = response.data.filter(env => env.isAvailable || env.environmentId === this.selectedEnvironmentId);
+        this.availableEnvironments = response.data.filter(env => {
+          const isSelectedEnvironment = env.environmentId === this.reservation.environmentId;
+          const isSameReservation = this.isCurrentReservationSameTime();
+
+          return env.isAvailable || (isSelectedEnvironment && isSameReservation);
+        });
+
+        const selectedEnvExists = this.availableEnvironments.some(
+          env => env.environmentId === this.selectedEnvironmentId
+        );
+
+        if (!selectedEnvExists && this.availableEnvironments.length > 0) {
+          this.selectedEnvironmentId = this.availableEnvironments[0].environmentId;
+        }
       });
     }
   }
+
+
+
+  isCurrentReservationSameTime(): boolean {
+    const reservationDateTimeIn = new Date(this.reservation.reservationDate + 'T' + this.clockInTime);
+    const reservationDateTimeOut = new Date(this.reservation.reservationDate + 'T' + this.clockOutTime);
+
+    const originalReservationIn = new Date(this.reservation.clockIn);
+    const originalReservationOut = new Date(this.reservation.clockOut);
+
+    return (
+      reservationDateTimeIn.getTime() === originalReservationIn.getTime() &&
+      reservationDateTimeOut.getTime() === originalReservationOut.getTime()
+    );
+  }
+
+
+  updateReservationDate(date: string): void {
+    if (date) {
+      this.reservation.reservationDate = date;
+      this.loadAvailableEnvironments();
+    }
+  }
+
+
+
+
   loadReservation(id: number): void {
     this.environmentService.getEnvironmentReservationById(id).subscribe((response: any) => {
       if (response && response.data) {

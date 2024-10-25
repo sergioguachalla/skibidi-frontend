@@ -14,6 +14,6 @@ export class EditorialService {
   constructor() { }
 
   findAllEditorials() {
-    return this.http.get<ResponseDto<EditorialDto>>(`${this.API_URL}/all`);
+    return this.http.get<ResponseDto<EditorialDto>>(`${this.API_URL}`);
   }
 }

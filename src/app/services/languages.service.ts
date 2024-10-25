@@ -8,7 +8,7 @@ import {LanguageDto} from "../Model/dto/languageDto";
   providedIn: 'root'
 })
 export class LanguagesService {
-  private API_URL = `${Development.API_URL}/languages/all`;
+  private API_URL = `${Development.API_URL}/languages`;
   private http : HttpClient = inject(HttpClient);
   constructor() { }
 

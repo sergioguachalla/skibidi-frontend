@@ -29,7 +29,7 @@ export class UpdatePasswordComponent implements OnInit{
     private userService: UserClientService
   ) {
     this.updatePasswordForm = this.formBuilder.group({
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, { validator: this.passwordMatchValidator })
   }

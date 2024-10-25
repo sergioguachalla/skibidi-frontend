@@ -1,7 +1,6 @@
 import {Component, inject, signal, Signal, WritableSignal} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
-import {CustomerServiceService} from "../../services/customer-service.service";
 import {Router} from "@angular/router";
 // @ts-ignore
 import {UserRegistrationDto} from "../../Model/dto/UserRegistrationDto";
