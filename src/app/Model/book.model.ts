@@ -9,4 +9,6 @@ export interface BookDto {
   image_url: string;
   genreId: number;
   authors: string[];
+  editorialId: number | null;
+  idLanguage: number | null;
 }

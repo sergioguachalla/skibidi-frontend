@@ -6,6 +6,7 @@ import {BookService} from '../../services/book.service';
 import {BookDto} from '../../Model/book.model';
 import {GenreService} from "../../services/genre.service";
 import {GenreDto} from "../../Model/genre.model";
+import {BookDetailsDto} from "../../Model/bookDetailsModal.modal"
 import {FormsModule} from "@angular/forms";
 import {LanguagesService} from "../../services/languages.service";
 import {LanguageDto} from "../../Model/dto/languageDto";
@@ -23,6 +24,7 @@ interface filtersParams {
   to: String | null;
   languageId: number | null;
   editorialId: number | null;
+  titleSort: string | null;
 
 }
 
@@ -35,6 +37,47 @@ interface filtersParams {
 })
 
 export class ViewBooksComponent implements OnInit {
+  selectedBook: any = null; 
+
+  openModal(libro: BookDetailsDto) {
+    this.bookService.getBookById(libro.bookId as number).subscribe(
+      (response: any) => {
+        this.selectedBook = response.data; 
+        const modalElement = document.getElementById('bookDetailsModal'); 
+        const modal = new bootstrap.Modal(modalElement!); 
+        modal.show();
+      },
+      error => {
+        console.error('Error al obtener detalles del libro:', error);
+      }
+    );
+  }
+  
+verMasInformacion(bookId: number | null): void {
+  if (bookId !== null) {
+    this.bookService.getBookById(bookId).subscribe(
+      response => {
+        //console.log('Detalles del libro:', response);
+        this.selectedBook = response.data; 
+        const modalElement = document.getElementById('bookModal'); 
+        const modal = new bootstrap.Modal(modalElement!); 
+        modal.show();
+      },
+      error => {
+        console.error('Error al obtener los detalles del libro:', error);
+      }
+    );
+  } else {
+    console.error('El libro no tiene un ID válido');
+  }
+}
+
+closeModal() {
+  const modalElement = document.getElementById('bookModal');
+  const modal = bootstrap.Modal.getInstance(modalElement!); 
+  modal.hide(); 
+  this.selectedBook = null; 
+}
 
   protected genreService : GenreService = inject(GenreService);
   private languageService : LanguagesService = inject(LanguagesService);
@@ -49,7 +92,8 @@ export class ViewBooksComponent implements OnInit {
     from: null,
     to: null,
     languageId: null,
-    editorialId: null
+    editorialId: null,
+    titleSort: "asc"
   })
 
   librosFiltrados: BookDto[] = [];
@@ -79,12 +123,22 @@ export class ViewBooksComponent implements OnInit {
     this.findGenres();
     this.findLanguages();
     this.findEditorials();
-      // Check if there's a page query parameter, if not, set it to 0
-      this.activeRoute.queryParams.subscribe(params => {
-        const page = +params['page'] || 0; // Default to page 0
+    this.activeRoute.queryParams.subscribe(params => {
+        let page = +params['page'] || 0;
+        if (page < 0) {
+          console.warn('Invalid page number. Defaulting to 0.');
+          page = 0;
+        }
+        this.filters().titleSort = params['titleSort'] || 'asc';
+        if (this.filters().titleSort !== 'asc' && this.filters().titleSort !== 'desc') {
+          this.filters().titleSort = 'asc';
+        console.warn('Invalid sort order. Defaulting to "asc".');
+      }
+        this.buildQueryParams(this.filters, page);
         this.pageNumber = page;
         this.applyFilters(page);
-      });
+
+    });
 
 
   }
@@ -173,15 +227,21 @@ export class ViewBooksComponent implements OnInit {
   //filter bl
   updateSearchQuery(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.searchQuery = input.value;
+    const searchTerm = input.value.trim();
+    if (searchTerm === '') {
+      this.filters().title = null;
+      this.applyFilters(0);
+      return;
+    }
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.filters().title = searchTerm;
+      this.applyFilters(0);
+    }, 500);
   }
 
   onSearch() {
-    const title = this.searchQuery.trim();
-    if (title === '') {
-      this.applyFilters(0);
-    }
-    this.filters().title = title;
+
     this.buildQueryParams(this.filters,0);
     this.applyFilters(0);
   }
@@ -204,7 +264,7 @@ export class ViewBooksComponent implements OnInit {
     this.searchTimeout = setTimeout(() => {
       this.filters().authorName = searchTerm;
       this.applyFilters(0);
-    }, 750);
+    }, 500);
   }
 
   onPageChange(page: number) {
@@ -250,7 +310,7 @@ export class ViewBooksComponent implements OnInit {
   applyFilters(page:number) {
     this.router.navigate([], {
       relativeTo: this.activeRoute,
-      queryParams: { page},
+      queryParams: { page, titleSort: this.filters().titleSort },
       queryParamsHandling: 'merge', // Keeps other query parameters
     });
 
@@ -307,5 +367,15 @@ export class ViewBooksComponent implements OnInit {
       .join('&');
 
     return filterParams ? `${paginationParams}&${filterParams}` : paginationParams;
+  }
+
+  toggleSort(){
+    if(this.filters().titleSort === 'asc'){
+      this.filters().titleSort = 'desc';
+    } else {
+      this.filters().titleSort = 'asc';
+    }
+    this.buildQueryParams(this.filters,0);
+    this.applyFilters(0);
   }
 }

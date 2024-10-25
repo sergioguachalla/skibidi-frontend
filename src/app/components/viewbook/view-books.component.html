@@ -3,73 +3,136 @@
   <h2>BUSQUEDA DE LIBRO</h2>
 
   <div class="search-bar">
-    <!-- Search book by title -->
-    <input type="text" placeholder="Buscar libro" (input)="updateSearchQuery($event)">
-    <button class="search-btn" (click)="onSearch()">
-      <span>🔍</span>
-    </button>
+    <div class="search-fields">
+      <div class="row">
+        <!-- Columna 1: búsqueda por título y autor -->
+        <div class="col">
+          <!-- Buscar libro por título -->
+          <div class="input-container">
+            <label for="search-title">Buscar libro por título:</label>
+            <input id="search-title" type="text" placeholder="Buscar libro" (input)="updateSearchQuery($event)">
+          </div>
 
-    <!-- Search book by author -->
-    <input type="text" placeholder="Búsqueda por autor" (input)="updateAuthorSearchQuery($event)">
+          <!-- Buscar libro por autor -->
+          <div class="input-container">
+            <label for="search-author">Buscar libro por autor:</label>
+            <input id="search-author" type="text" placeholder="Búsqueda por autor" (input)="updateAuthorSearchQuery($event)">
+          </div>
+        </div>
 
-    <!-- Dropdown Menu for genre -->
-    <div class="dropdown-container">
-      <select (change)="filterByGenreId($event)">
-        <option value="">Todos los géneros</option>
-        <ng-container *ngFor="let genre of genres">
-          <option value="{{ genre.genreId }}">{{ genre.genreName }}</option>
-        </ng-container>
-      </select>
-    </div>
+        <!-- Columna 2: Filtros -->
+        <div class="col">
+          <!-- Género -->
+          <div class="dropdown-container">
+            <label for="genre">Género:</label>
+            <select id="genre" (change)="filterByGenreId($event)">
+              <option value="">Todos los géneros</option>
+              <ng-container *ngFor="let genre of genres">
+                <option value="{{ genre.genreId }}">{{ genre.genreName }}</option>
+              </ng-container>
+            </select>
+          </div>
 
-    <!-- Dropdown Menu for status -->
-    <div class="dropdown-container">
-      <select (change)="filterBooks($event)">
-        <option value="">Todos los estados</option>
-        <ng-container *ngFor="let bookStatus of bookStatuses">
-          <option value="{{ bookStatus.value }}">{{ bookStatus.label }}</option>
-        </ng-container>
-      </select>
+          <!-- Estado -->
+          <div class="dropdown-container">
+            <label for="status">Estado:</label>
+            <select id="status" (change)="filterBooks($event)">
+              <option value="">Todos los estados</option>
+              <ng-container *ngFor="let bookStatus of bookStatuses">
+                <option value="{{ bookStatus.value }}">{{ bookStatus.label }}</option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+
+        <!-- Columna 3: más filtros -->
+        <div class="col">
+          <!-- Idioma -->
+          <div class="dropdown-container">
+            <label for="language">Idioma:</label>
+            <select id="language" (change)="filterByLanguage($event)">
+              <option value="">Todos los idiomas</option>
+              <ng-container *ngFor="let language of languages">
+                <option value="{{ language.id }}">{{ language.language }}</option>
+              </ng-container>
+            </select>
+          </div>
+
+          <!-- Editorial -->
+          <div class="dropdown-container">
+            <label for="editorial">Editorial:</label>
+            <select id="editorial" (change)="filterByEditorial($event)">
+              <option value="">Todas las editoriales</option>
+              <ng-container *ngFor="let editorial of editorials">
+                <option value="{{ editorial.id }}">{{ editorial.editorial }}</option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros adicionales: fechas y sorting -->
+      <div class="row">
+        <!-- Date range search -->
+        <div class="col">
+          <div class="date-range">
+            <label for="startDate">Fecha de Inicio:</label>
+            <input type="date" id="startDate" [max]="endDate" [(ngModel)]="startDate" name="startDate">
+
+            <label for="endDate">Fecha de Fin:</label>
+            <input type="date" id="endDate" [(ngModel)]="endDate" name="endDate" [min]="startDate">
+
+            <button class="date-search-btn" (click)="searchBooksByDateRange()">Buscar por Fechas</button>
+          </div>
+        </div>
+
+        <!-- Sorting button -->
+        <div class="col">
+          <button (click)="toggleSort()">
+            Ordenar por título: {{ filters().titleSort === 'asc' ? 'Descendente' : 'Ascendente' }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Dropdown Menu for language -->
-  <div class="dropdown-container">
-    <select (change)="filterByLanguage($event)">
-      <option value="">Todos los idiomas</option>
-      <ng-container *ngFor="let language of languages">
-        <option value="{{ language.id }}">{{ language.language }}</option>
-      </ng-container>
-    </select>
-
-    <!-- Dropdown Menu for editorials -->
-    <div class="dropdown-container">
-      <select (change)="filterByEditorial($event)">
-        <option value="">Todas las editoriales</option>
-        <ng-container *ngFor="let editorial of editorials">
-          <option value="{{ editorial.id }}">{{ editorial.editorial }}</option>
-        </ng-container>
-      </select>
-
-  <div class="date-range">
-    <label for="startDate">Fecha de Inicio:</label>
-    <input type="date" id="startDate" [max]="endDate"
-      [(ngModel)]="startDate" name="startDate">
-
-    <label for="endDate">Fecha de Fin:</label>
-    <input type="date" id="endDate" [(ngModel)]="endDate" name="endDate" [min]="startDate">
-
-    <button class="date-search-btn" (click)="searchBooksByDateRange()">Buscar por Fechas</button>
   </div>
+  <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookModalLabel">{{ selectedBook?.title }}</h5>
+          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>ISBN:</strong> {{ selectedBook?.isbn }}</p>
+          <p><strong>Fecha de Registro:</strong> {{ selectedBook?.registrationDate | date }}</p>
+          <p><strong>Género:</strong> {{ selectedBook?.genre }}</p>
+          <strong>Estado:</strong>
+            <span [ngClass]="{'available': selectedBook?.status, 'not-available': !selectedBook?.status}">
+              {{ selectedBook?.status ? 'Disponible' : 'No Disponible' }}
+            </span>
+          <p><strong>Autores:</strong> {{ selectedBook?.authors ? selectedBook.authors.join(', ') : 'No hay autores' }}</p>
+          <p><strong>Editorial:</strong> {{ selectedBook?.editorialName }}</p> 
+          <p><strong>Language:</strong> {{ selectedBook?.languageName }}</p> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>  
+
 
   <!-- Filtered books -->
   <div *ngFor="let libro of librosFiltrados" class="book-item">
     <div class="book-info">
       <img class="book-image" [src]="libro.image_url || 'https://via.placeholder.com/100x120'" alt="Imagen del libro">
       <div class="book-details">
-        <h3 class="book-title"><a href="#">{{ libro.title }}</a></h3>
-        <p class="book-description">{{ libro.registrationDate | date }}</p>
-        <a href="#" class="book-link">Más información</a>
+        <h3 class="book-title"><a (click)="verMasInformacion(libro.bookId)">{{ libro.title }}</a></h3>
+        <p class="book-description">Fecha de Publicacion: {{ libro.registrationDate | date }}</p>
+        <p class="book-author">Autor: {{ libro.authors.join(', ') }}</p>
+        <a class="book-link" (click)="verMasInformacion(libro.bookId)">Más información</a>
       </div>
     </div>
 
@@ -94,7 +157,7 @@
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-end">
           <!-- Previous button -->
-          <li class="page-item" [class.disabled]="pageNumber === 0" (click)="pageNumber > 1 && onPageChange(pageNumber - 1)">
+          <li class="page-item" [class.disabled]="pageNumber === 0" (click)="pageNumber >= 1 && onPageChange(pageNumber )">
             <a class="page-link">Anterior</a>
           </li>
 

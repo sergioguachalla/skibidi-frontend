@@ -44,7 +44,7 @@ export class LandingPageComponent implements OnInit {
       const currentUrl = this.router.url;
       if (isLoggedIn && currentUrl === '/') {
         console.log('Usuario autenticado, redirigiendo a /view-book');
-        this.router.navigate(['/view-book']);
+        this.router.navigate(['/books'], { queryParams: { page: 0 } });
       }
     } catch (error) {
       console.error('Error al verificar autenticación:', error);
