@@ -113,15 +113,15 @@
               {{ selectedBook?.status ? 'Disponible' : 'No Disponible' }}
             </span>
           <p><strong>Autores:</strong> {{ selectedBook?.authors ? selectedBook.authors.join(', ') : 'No hay autores' }}</p>
-          <p><strong>Editorial:</strong> {{ selectedBook?.editorialName }}</p> 
-          <p><strong>Language:</strong> {{ selectedBook?.languageName }}</p> 
+          <p><strong>Editorial:</strong> {{ selectedBook?.editorialName }}</p>
+          <p><strong>Language:</strong> {{ selectedBook?.languageName }}</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
         </div>
       </div>
     </div>
-  </div>  
+  </div>
 
 
   <!-- Filtered books -->
@@ -174,7 +174,6 @@
           </li>
         </ul>
       </nav>
-    </div>
 
 
 <!-- Success Modal -->
