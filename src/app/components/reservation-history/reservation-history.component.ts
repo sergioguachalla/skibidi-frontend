@@ -17,6 +17,9 @@ import {EnvironmentService} from "../../services/environment.service";
   styleUrls: ['./reservation-history.component.css']
 })
 export class ReservationHistoryComponent implements OnInit {
+  isModalOpen = false;
+  reservationIdToCancel: number | null = null;
+
   reservations: any[] = [];
   currentPage: number = 0;
   totalPages: number = 0;
@@ -81,12 +84,17 @@ export class ReservationHistoryComponent implements OnInit {
     }
   }
 
+  //TODO: refactor
   cancelReservation(reservation: any): void {
     if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
       this.environmentService.updateEnvironmentReservationStatus(reservation.reservationId, 3).subscribe(
         (response) => {
           console.log("Reserva cancelada exitosamente:", response);
+          if(!response.successful){
+            alert("Hubo un error al cancelar la reservación.\n" + response.message);
+          }
           this.getReservationHistory(this.currentPage);
+
         },
         (error) => {
           console.error("Error al cancelar la reserva:", error);
@@ -96,6 +104,7 @@ export class ReservationHistoryComponent implements OnInit {
   }
 
   // Nueva función para traducir el estado
+
   getStatusText(status: number): string {
     switch (status) {
       case 1:
@@ -109,5 +118,17 @@ export class ReservationHistoryComponent implements OnInit {
       default:
         return 'Desconocido';
     }
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false; // Cierra el modal
+    this.reservationIdToCancel = null; // Reinicia el ID
+  }
+
+  confirmCancel(): void {
+    if (this.reservationIdToCancel !== null) {
+      this.cancelReservation(this.reservationIdToCancel);
+    }
+    this.closeModal(); // Cierra el modal
   }
 }
