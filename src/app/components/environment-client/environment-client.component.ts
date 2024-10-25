@@ -6,6 +6,7 @@ import { EnvironmentService } from "../../services/environment.service";
 import { KeycloakService } from "keycloak-angular";
 import { EnvironmentReservationDto } from "../../Model/environment.model";
 import {Router} from "@angular/router";
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-environment-client',
@@ -25,6 +26,9 @@ export class EnvironmentClientComponent {
   currentTime: string = '';
   reservaForm: FormGroup;
   previousSala: Element | null = null;
+  selectedUserName: string = '';
+  selectedEnvironmentName: string = '';
+
 
   constructor(
     private environmentService: EnvironmentService,
@@ -114,49 +118,48 @@ export class EnvironmentClientComponent {
     }
   }
 
-  onSubmit() {
-    if (this.reservaForm.valid && this.mensaje && this.mensaje.includes('Sala seleccionada:')) {
-      const environmentId = parseInt(this.mensaje.split('SALA-B')[1], 10);
-      console.log('ID del ambiente seleccionado:', environmentId);
+  confirmSubmission(): void {
+    const environmentId = parseInt(this.mensaje.split('SALA-B')[1], 10);
 
-      const fecha = this.reservaForm.get('fecha')?.value;
-      const horaEntrada = this.reservaForm.get('horaEntrada')?.value;
-      const horaSalida = this.reservaForm.get('horaSalida')?.value;
+    const fecha = this.reservaForm.get('fecha')?.value;
+    const horaEntrada = this.reservaForm.get('horaEntrada')?.value;
+    const horaSalida = this.reservaForm.get('horaSalida')?.value;
 
-      const clockIn = new Date(`${fecha}T${horaEntrada}:00`);
-      const clockOut = new Date(`${fecha}T${horaSalida}:00`);
+    const clockIn = new Date(`${fecha}T${horaEntrada}:00`);
+    const clockOut = new Date(`${fecha}T${horaSalida}:00`);
 
-      const offsetInMs = clockIn.getTimezoneOffset() * 60 * 1000;
-      clockIn.setTime(clockIn.getTime() - offsetInMs);
-      clockOut.setTime(clockOut.getTime() - offsetInMs);
+    const offsetInMs = clockIn.getTimezoneOffset() * 60 * 1000;
+    clockIn.setTime(clockIn.getTime() - offsetInMs);
+    clockOut.setTime(clockOut.getTime() - offsetInMs);
 
-      const reservation: EnvironmentReservationDto = {
-        clientId: this.keycloakService.getKeycloakInstance().subject!,
-        environmentId: environmentId,
-        reservationDate: fecha,
-        clockIn: clockIn,
-        clockOut: clockOut,
-        purpose: this.reservaForm.get('proposito')?.value,
-        reservationStatus: true,
-        status: 1
-      };
+    const reservation: EnvironmentReservationDto = {
+      clientId: this.keycloakService.getKeycloakInstance().subject!,
+      environmentId: environmentId,
+      reservationDate: fecha,
+      clockIn: clockIn,
+      clockOut: clockOut,
+      purpose: this.reservaForm.get('proposito')?.value,
+      reservationStatus: true,
+      status: 1
+    };
 
-      this.environmentService.createEnvironmentReservation(reservation).subscribe(
-        (response) => {
-          console.log('Reserva realizada:', response);
-          alert('Reserva realizada con éxito para ' + this.mensaje);
-          this.router.navigate(['/view-book']);
+    this.environmentService.createEnvironmentReservation(reservation).subscribe(
+      (response) => {
+        const modalElement = document.getElementById('confirmationModal');
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        modal.hide();
 
-        },
-        (error) => {
-          console.error('Error al registrar la reserva:', error);
-          alert('Hubo un error al realizar la reserva.');
-        }
-      );
-    } else {
-      alert('Por favor, seleccione una sala disponible antes de enviar la reserva.');
-    }
+        alert('Reserva realizada con éxito para ' + this.mensaje + "Espera que un bibliotecario acepte tu solicitud" +
+          "");
+        this.router.navigate(['/view-book']);
+      },
+      (error) => {
+        console.error('Error al registrar la reserva:', error);
+        alert('Hubo un error al realizar la reserva.');
+      }
+    );
   }
+
 
   validateTimeRange() {
     return (formGroup: FormGroup) => {
@@ -175,5 +178,25 @@ export class EnvironmentClientComponent {
       }
     };
   }
+
+  openConfirmationModal(): void {
+    if (this.reservaForm.valid && this.mensaje.includes('Sala seleccionada:')) {
+      const modalElement = document.getElementById('confirmationModal');
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    } else {
+      alert('Por favor, complete el formulario y seleccione una sala antes de confirmar la reserva.');
+    }
+  }
+
+  onSubmit() {
+    if (this.reservaForm.valid && this.mensaje && this.mensaje.includes('Sala seleccionada:')) {
+      this.openConfirmationModal();
+    } else {
+      alert('Por favor, seleccione una sala disponible antes de enviar la reserva.');
+    }
+  }
+
+
 }
 

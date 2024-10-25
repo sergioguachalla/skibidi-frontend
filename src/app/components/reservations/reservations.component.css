@@ -1,0 +1,151 @@
+.table-danger {
+    background-color: #f8d7da !important; /* Rojo suave */
+  }
+  
+  .table-success {
+    background-color: #d4edda !important; /* Verde suave */
+  }
+  
+  .table-warning {
+    background-color: #fff3cd !important; /* Amarillo suave */
+  }
+  
+  .modal {
+    display: block; /* Mostrar el modal */
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente más oscuro */
+  }
+  
+  .modal-dialog {
+    max-width: 90%; /* Ancho máximo del modal */
+    width: auto; /* Ancho automático */
+    margin: 1.75rem auto; /* Centrar el modal verticalmente */
+  }
+  
+  .modal-content {
+    border-radius: 0.5rem; /* Bordes redondeados */
+    border: none; /* Sin borde */
+    background: #fff; /* Fondo blanco para el contenido */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  }
+  
+  .modal-header {
+    border-bottom: none; /* Sin borde inferior */
+    text-align: center; /* Centrar el texto */
+  }
+  
+  .modal-title {
+    font-size: 1.5rem; /* Tamaño de fuente del título */
+    font-weight: bold; /* Negrita */
+    color: #333; /* Color del texto del título */
+  }
+  
+  .modal-body {
+    padding: 20px; /* Espaciado interno */
+    text-align: center; /* Centrar el texto */
+  }
+  
+  .modal-footer {
+    border-top: none; /* Sin borde superior */
+    justify-content: center; /* Centrar los botones */
+  }
+  
+  .btn {
+    padding: 10px 20px; /* Espaciado de los botones */
+    font-size: 1rem; /* Tamaño de fuente de los botones */
+    border-radius: 0.3rem; /* Bordes redondeados en los botones */
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d; /* Color de fondo para botón "No" */
+    border: none; /* Sin borde */
+    color: #fff; /* Color de texto blanco */
+  }
+  
+  .btn-danger {
+    background-color: #dc3545; /* Color de fondo para botón "Sí" */
+    border: none; /* Sin borde */
+    color: #fff; /* Color de texto blanco */
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 576px) {
+    .modal-title {
+      font-size: 1.25rem; /* Tamaño de fuente más pequeño en pantallas pequeñas */
+    }
+  
+    .btn {
+      width: 100%; /* Botones ocupan el ancho completo en pantallas pequeñas */
+      margin-top: 5px; /* Espaciado superior entre botones */
+    }
+  }
+  
+  .reservation-history-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  
+  h2 {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Arial', sans-serif;
+    text-align: left;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+  }
+  
+  th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+  
+  td {
+    background-color: #f9f9f9;
+  }
+  
+  tr:nth-child(even) td {
+    background-color: #e9ecef;
+  }
+  
+  tr:hover td {
+    background-color: #d6eaff;
+    cursor: pointer;
+  }
+  
+  tr:first-child th:first-child {
+    border-top-left-radius: 8px;
+  }
+  
+  tr:first-child th:last-child {
+    border-top-right-radius: 8px;
+  }
+  
+  tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+  }
+  
+  tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+  }
+    

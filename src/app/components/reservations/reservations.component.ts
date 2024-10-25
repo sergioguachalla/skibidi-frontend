@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {Reservation} from "../../Model/reservation.model";
-import {NgForOf, NgIf} from "@angular/common";
+import {CommonModule, NgForOf, NgIf} from "@angular/common";
 import {KeycloakService} from "keycloak-angular";
 import {StudyRoomService} from "../../services/study-room.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-reservations',
@@ -11,7 +12,8 @@ import {StudyRoomService} from "../../services/study-room.service";
   imports: [
     NavbarComponent,
     NgForOf,
-    NgIf
+    NgIf,
+    CommonModule  // Importa CommonModule para usar ngClass
   ],
   templateUrl: './reservations.component.html',
   styleUrl: './reservations.component.css'
@@ -19,13 +21,19 @@ import {StudyRoomService} from "../../services/study-room.service";
 export class ReservationsComponent implements OnInit{
 
   reservations: Reservation[] = [];
+  isModalOpen = false;  // Para controlar la visibilidad del modal
+  reservationIdToCancel: number | null = null;  // Para guardar el ID de la reservación a cancelar
 
-  constructor(private kcService: KeycloakService, private studyRoomService: StudyRoomService) {
+
+  constructor(
+    private kcService: KeycloakService, 
+    private studyRoomService: StudyRoomService,
+    private router: Router
+  ) {
   }
   ngOnInit(): void {
     const kcId= this.kcService.getKeycloakInstance().subject!;
 
-    console.log("SEXOOOO")
     this.studyRoomService.getReservations(kcId).subscribe(
       response => {
         this.reservations = response.data;
@@ -39,4 +47,57 @@ export class ReservationsComponent implements OnInit{
    // ];
   }
 
+  cancelReservation(reservationId: number): void {
+    const status = 3;  // El número 3 indica que la reservación ha sido cancelada
+    this.studyRoomService.updateEnvironmentReservation(reservationId, status).subscribe(
+      response => {
+        console.log("aaa"+response)
+        if (response.successful) {
+          alert("Reservación cancelada con éxito.");
+          this.ngOnInit();
+        } else {
+          alert("Hubo un error al cancelar la reservación.\n" + response.message);
+        }
+      },
+      error => {
+        alert("Error en la solicitud: " + error.message);
+      }
+    );
+  }
+
+  openModal(reservationId: number): void {
+    this.reservationIdToCancel = reservationId; // Guarda el ID de la reservación
+    this.isModalOpen = true; // Abre el modal
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false; // Cierra el modal
+    this.reservationIdToCancel = null; // Reinicia el ID
+  }
+
+  confirmCancel(): void {
+    if (this.reservationIdToCancel !== null) {
+      this.cancelReservation(this.reservationIdToCancel);
+    }
+    this.closeModal(); // Cierra el modal
+  }
+
+
+  // Nueva función para traducir el estado
+  getStatusText(status: number): string {
+    switch (status) {
+      case 1:
+        return 'Pendiente';
+      case 2:
+        return 'Aceptado';
+      case 3:
+        return 'Rechazado';
+      default:
+        return 'Desconocido';
+    }
+  }
+
+  editReservation(reservation: any): void {
+    this.router.navigate(['/client-environment/edit', reservation.reservationId]);
+  }
 }

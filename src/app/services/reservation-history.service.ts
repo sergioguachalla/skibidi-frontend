@@ -10,7 +10,9 @@ export class ReservationHistoryService {
 
   constructor(private http: HttpClient) { }
 
-  getReservationHistory(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+  getReservationHistory(page: number = 0, size: number = 2): Observable<any> {
+    const url = `${this.apiUrl}?page=${page}&size=${size}`;
+    return this.http.get<any>(url);
   }
+
 }

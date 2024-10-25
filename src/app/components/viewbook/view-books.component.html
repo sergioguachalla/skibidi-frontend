@@ -33,6 +33,24 @@
     </div>
   </div>
 
+  <!-- Dropdown Menu for language -->
+  <div class="dropdown-container">
+    <select (change)="filterByLanguage($event)">
+      <option value="">Todos los idiomas</option>
+      <ng-container *ngFor="let language of languages">
+        <option value="{{ language.id }}">{{ language.language }}</option>
+      </ng-container>
+    </select>
+
+    <!-- Dropdown Menu for editorials -->
+    <div class="dropdown-container">
+      <select (change)="filterByEditorial($event)">
+        <option value="">Todas las editoriales</option>
+        <ng-container *ngFor="let editorial of editorials">
+          <option value="{{ editorial.id }}">{{ editorial.editorial }}</option>
+        </ng-container>
+      </select>
+
   <div class="date-range">
     <label for="startDate">Fecha de Inicio:</label>
     <input type="date" id="startDate" [max]="endDate"
@@ -99,22 +117,29 @@
 
 
   <!-- Pagination -->
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-end">
-      <li class="page-item disabled">
-        <a class="page-link">Anterior</a>
-      </li>
-      <ng-container *ngFor="let page of pagesArray">
-        <li class="page-item" (click)="onPageChange(page)">
-          <a class="page-link">{{ page }}</a>
-        </li>
-      </ng-container>
-      <li class="page-item">
-        <a class="page-link">Siguiente</a>
-      </li>
-    </ul>
-  </nav>
-</div>
+      <!-- Pagination -->
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+          <!-- Previous button -->
+          <li class="page-item" [class.disabled]="pageNumber === 0" (click)="pageNumber > 1 && onPageChange(pageNumber - 1)">
+            <a class="page-link">Anterior</a>
+          </li>
+
+          <!-- Page numbers -->
+          <ng-container *ngFor="let page of pagesArray">
+            <li class="page-item"  (click)="onPageChange(page)">
+              <a class="page-link">{{ page }}</a>
+            </li>
+          </ng-container>
+
+          <!-- Next button -->
+          <li class="page-item" [class.disabled]="pageNumber === pages" (click)="pageNumber < pages && onPageChange(pageNumber + 2)">
+            <a class="page-link">Siguiente</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
 
 <!-- Success Modal -->
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">

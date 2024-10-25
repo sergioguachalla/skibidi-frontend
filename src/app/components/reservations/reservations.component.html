@@ -4,23 +4,59 @@
   <div *ngIf="reservations.length === 0" class="alert alert-info">
     No hay reservaciones registradas.
   </div>
-  <div *ngIf="reservations.length !== 0" class="table-responsive">
+
+  <!-- Modal -->
+<div class="modal" *ngIf="isModalOpen" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Confirmación de Cancelación</h5>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas cancelar la reservación?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">No, volver</button>
+        <button type="button" class="btn btn-danger" (click)="confirmCancel()">Sí, cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div *ngIf="reservations.length !== 0" class="reservation-history-container">
     <table class="table table-striped table-bordered">
       <thead class="thead-dark">
-      <tr>
-        <th>Nombre de la sala</th>
-        <th>Inicio</th>
-        <th>Final</th>
-        <th>Motivo</th>
-      </tr>
+        <tr>
+          <th>Sala</th>
+          <th>Fecha de Reserva</th>
+          <th>Hora de Inicio</th>
+          <th>Hora de Finalización</th>
+          <th>Motivo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let reservation of reservations">
-        <td>{{ reservation.environmentId }}</td>
-        <td>{{ reservation.clockIn }}</td>
-        <td>{{ reservation.clockOut }}</td>
-        <td>{{ reservation.purpose }}</td>
-      </tr>
+        <tr *ngFor="let reservation of reservations">
+          <td>SALA B-{{ reservation.environmentId }}</td>
+            <td>{{ reservation.reservationDate | date:'shortDate' }}</td>
+            <td>{{ reservation.clockIn | date:'shortTime' }}</td>
+            <td>{{ reservation.clockOut | date:'shortTime' }}</td>
+            <td>{{ reservation.purpose }}</td>
+            <td>{{ getStatusText(reservation.status) }}</td>
+          <td>
+            <div class="d-flex flex-column">
+              <!-- Mostrar botones según el estado -->
+              <button *ngIf="reservation.status === 1 || reservation.status === 2" (click)="editReservation(reservation)" class="btn btn-warning btn-sm mb-1">
+                Editar <i class="bi bi-pencil-square"></i>
+              </button>
+              <button *ngIf="reservation.status === 1 || reservation.status === 2" (click)="openModal(reservation.reservationId)" class="btn btn-danger btn-sm">
+                Cancelar <i class="bi bi-x-circle"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
