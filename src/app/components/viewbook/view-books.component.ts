@@ -6,6 +6,7 @@ import {BookService} from '../../services/book.service';
 import {BookDto} from '../../Model/book.model';
 import {GenreService} from "../../services/genre.service";
 import {GenreDto} from "../../Model/genre.model";
+import {BookDetailsDto} from "../../Model/bookDetailsModal.modal"
 import {FormsModule} from "@angular/forms";
 import {LanguagesService} from "../../services/languages.service";
 import {LanguageDto} from "../../Model/dto/languageDto";
@@ -35,6 +36,47 @@ interface filtersParams {
 })
 
 export class ViewBooksComponent implements OnInit {
+  selectedBook: any = null; 
+
+  openModal(libro: BookDetailsDto) {
+    this.bookService.getBookById(libro.bookId as number).subscribe(
+      (response: any) => {
+        this.selectedBook = response.data; 
+        const modalElement = document.getElementById('bookDetailsModal'); 
+        const modal = new bootstrap.Modal(modalElement!); 
+        modal.show();
+      },
+      error => {
+        console.error('Error al obtener detalles del libro:', error);
+      }
+    );
+  }
+  
+verMasInformacion(bookId: number | null): void {
+  if (bookId !== null) {
+    this.bookService.getBookById(bookId).subscribe(
+      response => {
+        //console.log('Detalles del libro:', response);
+        this.selectedBook = response.data; 
+        const modalElement = document.getElementById('bookModal'); 
+        const modal = new bootstrap.Modal(modalElement!); 
+        modal.show();
+      },
+      error => {
+        console.error('Error al obtener los detalles del libro:', error);
+      }
+    );
+  } else {
+    console.error('El libro no tiene un ID válido');
+  }
+}
+
+closeModal() {
+  const modalElement = document.getElementById('bookModal');
+  const modal = bootstrap.Modal.getInstance(modalElement!); 
+  modal.hide(); 
+  this.selectedBook = null; 
+}
 
   protected genreService : GenreService = inject(GenreService);
   private languageService : LanguagesService = inject(LanguagesService);

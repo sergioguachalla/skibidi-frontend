@@ -1,3 +1,94 @@
+/* Modal Styles */
+.modal {
+  display: none; /* El modal estará oculto por defecto */
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: none; /* No permite interactuar con el fondo */
+}
+
+.modal.active {
+  display: flex; /* Mostrar el modal cuando tenga la clase active */
+  pointer-events: all; /* Habilitar la interacción cuando el modal esté activo */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  position: relative;
+}
+.custom-modal-content {
+  background-color: #f9f9f9; /* Fondo claro */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  padding: 20px;
+}
+
+.modal-header {
+  background-color: #007bff; /* Color de fondo azul para el encabezado */
+  color: white; /* Texto blanco */
+  border-bottom: 1px solid #007bff; /* Línea inferior */
+}
+
+.modal-title {
+  font-weight: bold;
+  font-size: 1.5rem; /* Tamaño del título */
+}
+
+.modal-body {
+  padding: 40px; /* Espaciado interno */
+}
+
+.book-info p {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.book-info strong {
+  color: #343a40; /* Color oscuro para el texto fuerte */
+}
+
+.available {
+  color: green; /* Color verde para libros disponibles */
+  font-weight: bold;
+}
+
+.not-available {
+  color: red; /* Color rojo para libros no disponibles */
+  font-weight: bold;
+}
+
+.modal-footer {
+  background-color: #f1f1f1; /* Fondo gris claro en el pie */
+  padding: 15px;
+}
+
+.modal-footer button {
+  border-radius: 5px; /* Botones redondeados */
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: red;
+}
+
 .view-books-container {
   margin: 20px;
   font-family: Arial, sans-serif;
