@@ -53,6 +53,9 @@ export class NavbarComponent {
     );
     modal.show();
   }
+  goToMyInformation() {
+    this.router.navigate(['/my-information']);
+  }
 
   submitIsbn(): void {
     const isbn = (document.getElementById('isbnInput') as HTMLInputElement)
