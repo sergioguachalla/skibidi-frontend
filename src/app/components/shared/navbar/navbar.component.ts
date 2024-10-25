@@ -25,7 +25,7 @@ export class NavbarComponent {
 
 
   onClickToHome() {
-    this.router.navigate(['/view-book']);
+    this.router.navigate(['/books'], { queryParams: { page: 0 } });
   }
 
   onClickToEnvReservation() {

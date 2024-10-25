@@ -89,7 +89,7 @@
         <!-- Sorting button -->
         <div class="col">
           <button (click)="toggleSort()">
-            Ordenar por título: {{ filters().titleSort === 'asc' ? 'Ascendente' : 'Descendente' }}
+            Ordenar por título: {{ filters().titleSort === 'asc' ? 'Descendente' : 'Ascendente' }}
           </button>
         </div>
       </div>
@@ -129,7 +129,7 @@
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-end">
           <!-- Previous button -->
-          <li class="page-item" [class.disabled]="pageNumber === 0" (click)="pageNumber > 1 && onPageChange(pageNumber - 1)">
+          <li class="page-item" [class.disabled]="pageNumber === 0" (click)="pageNumber >= 1 && onPageChange(pageNumber )">
             <a class="page-link">Anterior</a>
           </li>
 

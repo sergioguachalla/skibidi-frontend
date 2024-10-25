@@ -81,12 +81,14 @@ export class ViewBooksComponent implements OnInit {
     this.findGenres();
     this.findLanguages();
     this.findEditorials();
-      // Check if there's a page query parameter, if not, set it to 0
-      this.activeRoute.queryParams.subscribe(params => {
-        const page = +params['page'] || 0; // Default to page 0
+    this.activeRoute.queryParams.subscribe(params => {
+        const page = +params['page'] || 0;
+        this.filters().titleSort = params['titleSort'] || 'asc';
+        this.buildQueryParams(this.filters, page);
         this.pageNumber = page;
         this.applyFilters(page);
-      });
+
+    });
 
 
   }
@@ -258,7 +260,7 @@ export class ViewBooksComponent implements OnInit {
   applyFilters(page:number) {
     this.router.navigate([], {
       relativeTo: this.activeRoute,
-      queryParams: { page},
+      queryParams: { page, titleSort: this.filters().titleSort },
       queryParamsHandling: 'merge', // Keeps other query parameters
     });
 
