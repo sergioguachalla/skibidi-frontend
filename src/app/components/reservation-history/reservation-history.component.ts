@@ -112,7 +112,7 @@ export class ReservationHistoryComponent implements OnInit {
       case 2:
         return 'Aceptado';
       case 3:
-        return 'Rechazado';
+        return 'Cancelado';
       case 4:
         return 'Finalizado';
       default:
