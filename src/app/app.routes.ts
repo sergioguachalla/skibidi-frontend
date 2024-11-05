@@ -11,6 +11,7 @@ import {ReservationsComponent} from "./components/reservations/reservations.comp
 import{ReservationHistoryComponent} from "./components/reservation-history/reservation-history.component"
 import {EditReservationComponent} from "./components/edit-reservation/edit-reservation.component";
 import {UpdatePasswordComponent} from "./components/update-password/update-password.component";
+import { LendBooksComponent } from './components/lend-books/lend-books.component';
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },
@@ -26,4 +27,5 @@ export const routes: Routes = [
     {path: 'reservation-history', component: ReservationHistoryComponent },
     {path: 'client-environment/edit/:id', component: EditReservationComponent},
     {path: 'update-password', component: UpdatePasswordComponent},
+    { path: 'lend-history', component: LendBooksComponent },
 ];

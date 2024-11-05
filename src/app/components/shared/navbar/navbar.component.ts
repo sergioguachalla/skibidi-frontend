@@ -46,6 +46,10 @@ export class NavbarComponent {
     this.router.navigate(['/ingresar-libro']);
   }
 
+  onClickToLendHistory() {
+    this.router.navigate(['/lend-history']); // Asegúrate de que esta sea la ruta correcta
+  }
+
 
   openIsbnModal(): void {
     const modal = new (window as any).bootstrap.Modal(

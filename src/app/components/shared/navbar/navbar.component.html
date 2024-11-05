@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg" style="background-color: #4f75ff">
   <div class="container-fluid">
-    <a class="navbar-brand" (click)="onClickToHome()" role="button" >Skibidi Library</a>
+    <a class="navbar-brand" (click)="onClickToHome()" role="button">Skibidi Library</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -20,8 +20,7 @@
             aria-current="page"
             role="button"
             (click)="onClickToHome()"
-          >Libros</a
-          >
+          >Libros</a>
         </li>
 
         <li class="nav-item dropdown">
@@ -34,10 +33,10 @@
             Ambientes de estudio
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" (click)="onClickToEnvReservation()" role="button" >Reservar ambiente (Bibliotecario)</a></li>
-            <li><a class="dropdown-item" (click)="onClickToEnvReservationClient()" role="button" >Reservar ambiente (Cliente)</a></li>
+            <li><a class="dropdown-item" (click)="onClickToEnvReservation()" role="button">Reservar ambiente (Bibliotecario)</a></li>
+            <li><a class="dropdown-item" (click)="onClickToEnvReservationClient()" role="button">Reservar ambiente (Cliente)</a></li>
             <li><a class="dropdown-item" (click)="onClickToReservations()" role="button">Ver mis reservaciones</a></li>
-            <li><a class="dropdown-item" (click)="onClickToReservationsLibrarian()" role="button">Ver reservaciones(bibliotecario)</a></li>
+            <li><a class="dropdown-item" (click)="onClickToReservationsLibrarian()" role="button">Ver reservaciones (bibliotecario)</a></li>
           </ul>
         </li>
 
@@ -52,7 +51,7 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" (click)="openIsbnModal()" role="button">Registrar por ISBN</a></li>
-            <li><a class="dropdown-item" (click)="onClickToRegisterManual()" role="button" >Registro manual</a></li>
+            <li><a class="dropdown-item" (click)="onClickToRegisterManual()" role="button">Registro manual</a></li>
           </ul>
         </li>
 
@@ -62,13 +61,19 @@
             aria-current="page"
             role="button"
             (click)="goToMyInformation()"
-          >Mi informacion</a
-          >
+          >Mi información</a>
         </li>
 
+        <!-- Nueva opción en el navbar para ver historial de reservas -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            role="button"
+            (click)="onClickToLendHistory()"
+          >Historial de Reservas</a>
+        </li>
       </ul>
       <form class="d-flex" role="search" style="background-color: azure">
-
         <button class="btn btn-outline-success" (click)="logout()">
           Salir
         </button>
@@ -76,46 +81,3 @@
     </div>
   </div>
 </nav>
-
-
-
-<div
-  class="modal fade"
-  id="registerIsbnModal"
-  tabindex="-1"
-  aria-labelledby="registerIsbnModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="registerIsbnModalLabel">
-          Registrar Libro por ISBN
-        </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="isbnInput" class="form-label">ISBN</label>
-            <input
-              type="text"
-              class="form-control"
-              id="isbnInput"
-              placeholder="Ingresa el ISBN del libro"
-            />
-          </div>
-          <button type="button" class="btn btn-primary" (click)="submitIsbn()">
-            Subir Datos
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
