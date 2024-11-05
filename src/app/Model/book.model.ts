@@ -1,10 +1,14 @@
 export interface BookDto {
-  id: number;
+  //TODO: change id
+
+  bookId: number | null;
   title: string;
   isbn: string;
   registrationDate: Date;
   status: boolean;
   image_url: string;
   genreId: number;
-  authors: string[];  
+  authors: string[];
+  editorialId: number | null;
+  idLanguage: number | null;
 }

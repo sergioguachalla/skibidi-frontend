@@ -6,12 +6,12 @@ export interface Environment {
 }
 
 export interface EnvironmentReservationDto {
-  clientId: number;
+  clientId: string;
   environmentId: number;
-  reservationDate: string; 
-  clockIn: Date;  
-  clockOut: Date; 
+  reservationDate: string;
+  clockIn: Date;
+  clockOut: Date;
   purpose: string;
-  reservationStatus: boolean;  
-  status: number;  
+  reservationStatus: boolean;
+  status: number;
 }

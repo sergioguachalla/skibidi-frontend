@@ -1,33 +1,181 @@
+/* Modal Styles */
+.modal {
+  display: none; /* El modal estará oculto por defecto */
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: none; /* No permite interactuar con el fondo */
+}
+
+.modal.active {
+  display: flex; /* Mostrar el modal cuando tenga la clase active */
+  pointer-events: all; /* Habilitar la interacción cuando el modal esté activo */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  position: relative;
+}
+.custom-modal-content {
+  background-color: #f9f9f9; /* Fondo claro */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  padding: 20px;
+}
+
+.modal-header {
+  background-color: #007bff; /* Color de fondo azul para el encabezado */
+  color: white; /* Texto blanco */
+  border-bottom: 1px solid #007bff; /* Línea inferior */
+}
+
+.modal-title {
+  font-weight: bold;
+  font-size: 1.5rem; /* Tamaño del título */
+}
+
+.modal-body {
+  padding: 40px; /* Espaciado interno */
+}
+
+.book-info p {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.book-info strong {
+  color: #343a40; /* Color oscuro para el texto fuerte */
+}
+
+.available {
+  color: green; /* Color verde para libros disponibles */
+  font-weight: bold;
+}
+
+.not-available {
+  color: red; /* Color rojo para libros no disponibles */
+  font-weight: bold;
+}
+
+.modal-footer {
+  background-color: #f1f1f1; /* Fondo gris claro en el pie */
+  padding: 15px;
+}
+
+.modal-footer button {
+  border-radius: 5px; /* Botones redondeados */
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: red;
+}
+
 .view-books-container {
   margin: 20px;
+  font-family: Arial, sans-serif;
 }
 
 .search-bar {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   margin-bottom: 20px;
 }
 
 .search-bar input {
   padding: 10px;
-  width: 300px;
+  width: 250px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-right: 10px;
+  transition: border 0.3s ease;
+}
+
+.search-bar input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.search-btn, .date-search-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-btn:hover, .date-search-btn:hover {
+  background-color: #0056b3;
+}
+
+.dropdown-container select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+.dropdown-container select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.date-range {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.date-range label {
+  font-weight: bold;
+}
+
+.date-range input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .book-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 10px;
+  padding: 15px;
   margin-bottom: 10px;
+  transition: box-shadow 0.3s ease;
+}
+
+.book-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .book-info {
   display: flex;
+  align-items: center;
 }
 
 .book-image {
@@ -35,6 +183,12 @@
   height: 120px;
   object-fit: cover;
   margin-right: 15px;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+.book-image:hover {
+  transform: scale(1.05);
 }
 
 .book-details {
@@ -42,8 +196,14 @@
 }
 
 .book-title a {
-  color: blue;
+  color: #007bff;
   text-decoration: none;
+  font-size: 1.2em;
+  transition: color 0.3s ease;
+}
+
+.book-title a:hover {
+  color: #0056b3;
 }
 
 .book-author {
@@ -53,11 +213,16 @@
 
 .book-description {
   margin: 5px 0;
+  color: #666;
 }
 
 .book-link {
   text-decoration: underline;
-  color: #0000EE;
+  color: #007bff;
+}
+
+.book-link:hover {
+  color: #0056b3;
 }
 
 .book-status {
@@ -68,8 +233,8 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 34px;
-  height: 20px;
+  width: 40px;
+  height: 24px;
   margin-right: 10px;
 }
 
@@ -87,38 +252,104 @@
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  border-radius: 34px;
+  border-radius: 24px;
+  transition: background-color 0.4s;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 14px;
-  width: 14px;
+  height: 18px;
+  width: 18px;
   border-radius: 50%;
-  left: 3px;
-  bottom: 3px;
   background-color: white;
-  transition: 0.4s;
+  bottom: 3px;
+  left: 3px;
+  transition: transform 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #4CAF50;
+  background-color: #007bff;
 }
 
 input:checked + .slider:before {
-  transform: translateX(14px);
+  transform: translateX(16px);
 }
 
 .availability {
   font-weight: bold;
-  padding-left: 10px;
+  padding: 5px;
+  border-radius: 4px;
 }
 
 .available {
-  color: #4CAF50;
+  color: green;
 }
 
 .unavailable {
-  color: #FF5722;
+  color: red;
 }
+
+.pagination {
+  margin-top: 20px;
+}
+
+.page-link {
+  color: #007bff;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.page-item.disabled .page-link {
+  color: #ccc;
+}
+.no-books-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  padding: 15px;
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.2em;
+
+}
+
+.search-fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+input, select, button {
+  margin-bottom: 5px;
+  padding: 6px;
+  font-size: 14px;
+}
+
+.date-range, .sorting-container {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.date-search-btn {
+  margin-left: 10px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+

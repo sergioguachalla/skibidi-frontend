@@ -23,10 +23,24 @@
           >Libros</a
           >
         </li>
-        <li class="nav-item">
-          <a class="nav-link" role="button"
-            (click)="onClickToEnvReservation()">Reservar Sala de Ambiente</a>
+
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Ambientes de estudio
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="onClickToEnvReservation()" role="button" >Reservar ambiente (Bibliotecario)</a></li>
+            <li><a class="dropdown-item" (click)="onClickToEnvReservationClient()" role="button" >Reservar ambiente (Cliente)</a></li>
+            <li><a class="dropdown-item" (click)="onClickToReservations()" role="button">Ver mis reservaciones</a></li>
+            <li><a class="dropdown-item" (click)="onClickToReservationsLibrarian()" role="button">Ver reservaciones(bibliotecario)</a></li>
+          </ul>
         </li>
+
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
@@ -40,6 +54,16 @@
             <li><a class="dropdown-item" (click)="openIsbnModal()" role="button">Registrar por ISBN</a></li>
             <li><a class="dropdown-item" (click)="onClickToRegisterManual()" role="button" >Registro manual</a></li>
           </ul>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            aria-current="page"
+            role="button"
+            (click)="goToMyInformation()"
+          >Mi informacion</a
+          >
         </li>
 
       </ul>

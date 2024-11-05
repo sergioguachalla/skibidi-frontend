@@ -1,6 +1,7 @@
 export interface UserClient {
     clientId: number;
     username: string;
+    kcUuid: string;
   }
 
 export interface UserResponse {

@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import {NgIf} from "@angular/common";
 import { CommonModule } from '@angular/common';
-import {CustomerServiceService} from "../../../services/customer-service.service";
 import {PersonDto} from "../../../model/dto/PersonDto";
 import {UserDto} from "../../../model/dto/UserDto";
 import {UserRegistrationDto} from "../../../model/dto/UserRegistrationDto";
@@ -110,7 +109,9 @@ export class RegisterLibrarianComponent {
 
             setTimeout(() => {
               modal.hide();
+              this.router.navigate(['/']);
             }, 2000);
+
           },
           error => {
             this.loading$.next(false);
