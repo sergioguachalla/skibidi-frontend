@@ -16,14 +16,33 @@ export class LendBookService {
     kcUuid: string,
     page: number = 0,
     size: number = 10,
+    sortOrder: string = 'asc',
+    sortField: string = 'lendDate'
+  ): Observable<LendBookPageResponse> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortOrder', sortOrder)
+      .set('sortField', sortField);  // Nuevo parámetro para el campo de orden
+
+    const url = `${this.baseUrl}/${kcUuid}`;
+    return this.http.get<LendBookPageResponse>(url, { params });
+  }
+
+  getLendBooks(
+    page: number = 0,
+    size: number = 10,
+    sortField: string = 'lendDate',
     sortOrder: string = 'asc'
   ): Observable<LendBookPageResponse> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
+      .set('sortField', sortField)
       .set('sortOrder', sortOrder);
-
-    const url = `${this.baseUrl}/${kcUuid}`;
+  
+    const url = `${this.baseUrl}`;
     return this.http.get<LendBookPageResponse>(url, { params });
   }
+  
 }

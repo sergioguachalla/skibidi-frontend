@@ -22,6 +22,7 @@
   <table class="table table-striped">
     <thead class="thead-dark">
       <tr>
+        <th>Cliente</th>
         <th>Título</th>
         <th>Autores</th>
         <th>Fecha de Préstamo</th>
@@ -31,6 +32,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let book of lendBooks">
+        <td>{{book.clientName}}</td>
         <td>{{ book.title }}</td>
         <td>{{ book.authors }}</td>
         <td>{{ book.lendDate | date: 'shortDate' }}</td>

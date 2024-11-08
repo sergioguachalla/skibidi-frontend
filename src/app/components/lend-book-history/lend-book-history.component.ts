@@ -3,35 +3,48 @@ import { LendBookService } from '../../services/lend-book.service';
 import { LendBookDto, LendBookPageResponse } from '../../Model/lend-book.model';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
-import { KeycloakService } from "keycloak-angular";
 import { FormsModule } from '@angular/forms'; // Import FormsModule here
+
 @Component({
-  selector: 'app-lend-books',
-  templateUrl: './lend-books.component.html',
+  selector: 'app-lend-book-history',
   standalone: true,
   imports: [
     NavbarComponent,
     CommonModule,
     FormsModule
   ],
-  styleUrls: ['./lend-books.component.css'],
+  templateUrl: './lend-book-history.component.html',
+  styleUrls: ['./lend-book-history.component.css']
 })
-export class LendBooksComponent implements OnInit {
+export class LendBookHistoryComponent implements OnInit {
   lendBooks: LendBookDto[] = [];
   page: number = 0;
   size: number = 5;
-  sortOrder: string = 'asc';
-  sortField: string = 'lendDate';  // Campo de orden inicial
+  sortField: string = 'lendDate'; // Campo de ordenamiento inicial
+  sortOrder: string = 'asc'; // Orden inicial
   totalPages: number = 0;
   totalElements: number = 0;
 
   constructor(
     private lendBookService: LendBookService,
-    private kcService: KeycloakService,
   ) {}
 
   ngOnInit(): void {
     this.loadLendBooks();  // Cargar los libros en la inicialización
+  }
+
+  loadLendBooks(): void {
+    this.lendBookService.getLendBooks(this.page, this.size, this.sortField, this.sortOrder).subscribe(
+      (response: LendBookPageResponse) => {
+        this.lendBooks = response.content;
+        this.totalPages = response.totalPages;
+        this.totalElements = response.totalElements;
+        console.log('Libros cargados:', this.lendBooks); // Verificar datos cargados
+      },
+      (error) => {
+        console.error('Error fetching lend books:', error);
+      }
+    );
   }
 
   nextPage(): void {
@@ -48,14 +61,16 @@ export class LendBooksComponent implements OnInit {
     }
   }
 
-  changeSortOrder(order: string): void {
-    this.sortOrder = order;
-    this.loadLendBooks();
+  // Cambiar el campo de ordenamiento
+  changeSortField(field: string): void {
+    this.sortField = field;  // Cambiar el campo de ordenamiento
+    this.loadLendBooks(); // Recargar los libros con el nuevo campo de orden
   }
 
-  changeSortField(field: string): void {
-    this.sortField = field;
-    this.loadLendBooks();
+  // Cambiar el orden ascendente/descendente
+  changeSortOrder(order: string): void {
+    this.sortOrder = order;  // Cambiar el orden
+    this.loadLendBooks(); // Recargar los libros con el nuevo orden
   }
 
   getStatusText(status: number): string {
@@ -69,19 +84,5 @@ export class LendBooksComponent implements OnInit {
       default:
         return 'Desconocido';
     }
-  }
-
-  loadLendBooks(): void {
-    const kcId = this.kcService.getKeycloakInstance().subject!;
-    this.lendBookService.getLendBooksByKcUuid(kcId, this.page, this.size, this.sortOrder, this.sortField).subscribe(
-      (response: LendBookPageResponse) => {
-        this.lendBooks = response.content;
-        this.totalPages = response.totalPages;
-        this.totalElements = response.totalElements;
-      },
-      (error) => {
-        console.error('Error fetching lend books:', error);
-      }
-    );
   }
 }

@@ -33,4 +33,3 @@ export interface LendBookDto {
     first: boolean;
     empty: boolean;
   }
-  

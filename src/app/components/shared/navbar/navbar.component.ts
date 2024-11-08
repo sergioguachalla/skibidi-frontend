@@ -46,8 +46,12 @@ export class NavbarComponent {
     this.router.navigate(['/ingresar-libro']);
   }
 
+  onClickToLendClientHistory() {
+    this.router.navigate(['lend-client-history']); // Asegúrate de que esta sea la ruta correcta
+  }
+
   onClickToLendHistory() {
-    this.router.navigate(['/lend-history']); // Asegúrate de que esta sea la ruta correcta
+    this.router.navigate(['lend-history']); // Asegúrate de que esta sea la ruta correcta
   }
 
 

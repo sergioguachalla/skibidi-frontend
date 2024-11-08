@@ -55,6 +55,23 @@
           </ul>
         </li>
 
+                <!-- Nueva opción en el navbar para ver historial de reservas -->
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Historial reservas de libros
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" (click)="onClickToLendClientHistory()" role="button">Historial reservas de libros (Cliente)</a></li>
+                    <li><a class="dropdown-item" (click)="onClickToLendHistory()" role="button">Historial reservas de libros (Bibliotecario)</a></li>
+                  </ul>
+                </li>
+        
+
         <li class="nav-item">
           <a
             class="nav-link active"
@@ -64,14 +81,6 @@
           >Mi información</a>
         </li>
 
-        <!-- Nueva opción en el navbar para ver historial de reservas -->
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            role="button"
-            (click)="onClickToLendHistory()"
-          >Historial de Reservas</a>
-        </li>
       </ul>
       <form class="d-flex" role="search" style="background-color: azure">
         <button class="btn btn-outline-success" (click)="logout()">
