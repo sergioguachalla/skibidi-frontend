@@ -161,3 +161,8 @@
     margin-left: 5px;
   }
   
+  /* Estilo para marcar los libros con estado retrasado */
+  .overdue-status {
+    color: red;
+    font-weight: bold;
+  }

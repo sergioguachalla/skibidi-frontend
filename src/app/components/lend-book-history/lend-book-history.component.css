@@ -109,3 +109,9 @@ tr:last-child td:first-child {
 tr:last-child td:last-child {
     border-bottom-right-radius: 8px;
 }
+
+/* Estilo para marcar los libros con estado retrasado */
+.overdue-status {
+    color: red;
+    font-weight: bold;
+}

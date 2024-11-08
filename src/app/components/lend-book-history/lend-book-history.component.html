@@ -18,6 +18,11 @@
     </button>
   </div>
 
+  <!-- Mensaje cuando no hay libros prestados -->
+   <div *ngIf="lendBooks.length === 0" class="alert alert-info">
+    No se han encontrado libros prestados.
+  </div>
+  
   <!-- Tabla de libros prestados -->
   <table class="table table-striped">
     <thead class="thead-dark">
@@ -35,9 +40,11 @@
         <td>{{book.clientName}}</td>
         <td>{{ book.title }}</td>
         <td>{{ book.authors }}</td>
-        <td>{{ book.lendDate | date: 'shortDate' }}</td>
-        <td>{{ book.returnDate | date: 'shortDate' }}</td>
-        <td>{{ getStatusText(book.status) }}</td>
+        <td>{{ book.lendDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ book.returnDate | date: 'dd/MM/yyyy' }}</td>        
+        <td [ngClass]="{'overdue-status': book.status === 3}">
+          {{ getStatusText(book.status) }}
+        </td>
       </tr>
     </tbody>
   </table>
