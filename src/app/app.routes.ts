@@ -13,6 +13,7 @@ import {EditReservationComponent} from "./components/edit-reservation/edit-reser
 import {UpdatePasswordComponent} from "./components/update-password/update-password.component";
 import {ForbiddenComponent} from "./components/shared/forbidden/forbidden.component";
 import {AuthGuard} from "./guards/auth.guard";
+import {FineListComponent} from "./components/fine-list/fine-list.component";
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },
@@ -28,5 +29,6 @@ export const routes: Routes = [
     {path: 'reservation-history', component: ReservationHistoryComponent },
     {path: 'client-environment/edit/:id', component: EditReservationComponent},
     {path: 'update-password', component: UpdatePasswordComponent},
-    {path: 'forbidden', component: ForbiddenComponent}
+    {path: 'forbidden', component: ForbiddenComponent},
+    {path: 'fines', component: FineListComponent}
 ];
