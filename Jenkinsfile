@@ -4,7 +4,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-
                 git url: 'https://github.com/sergioguachalla/skibidi-frontend', branch: 'sk-50'
             }
         }
@@ -13,18 +12,17 @@ pipeline {
             steps {
                 script {
                     def nodeHome = tool name: 'NodeJS', type: 'NodeJSInstallation'
-                    env.PATH = "${nodeHome}/bin:${env.PATH}"
-                    sh 'npm install'
+                    env.PATH = "${nodeHome}/bin;${env.PATH}"
+                    bat 'npm install'
                 }
             }
         }
 
         stage('Build') {
             steps {
-                sh 'ng build --prod'
+                bat 'ng build --prod'
             }
         }
-
     }
 
     post {
