@@ -1,33 +1,39 @@
 pipeline {
     agent any
-
+    environment {
+        NODE_ENV = 'production'
+    }
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/sergioguachalla/skibidi-frontend', branch: 'sk-50'
+                git branch: 'sk-50', url: 'https://github.com/sergioguachalla/skibidi-frontend'
             }
         }
-
         stage('Install Dependencies') {
             steps {
                 script {
-                    def nodeHome = tool name: 'NodeJS', type: 'NodeJSInstallation'
-                    env.PATH = "${nodeHome}/bin;${env.PATH}"
-                    bat 'npm install'
+                    sh 'npm install'
                 }
             }
         }
-
         stage('Build') {
             steps {
-                bat 'ng build --prod'
+                script {
+                    sh 'npm run build -- --prod'
+                }
             }
         }
     }
-
     post {
         always {
+            // Limpia el workspace después del build
             cleanWs()
+        }
+        success {
+            echo 'Build completado exitosamente'
+        }
+        failure {
+            echo 'El build falló'
         }
     }
 }
