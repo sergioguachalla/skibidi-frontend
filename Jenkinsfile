@@ -11,22 +11,27 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                script {
-                    sh 'npm install'
-                }
+                bat 'npm install'
             }
         }
         stage('Build') {
             steps {
-                script {
-                    sh 'npm run build -- --prod'
-                }
+                bat 'npm run build -- --prod'
+            }
+        }
+        stage('Test') {
+            steps {
+                bat 'npm test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploy realizado con éxito'
             }
         }
     }
     post {
         always {
-            // Limpia el workspace después del build
             cleanWs()
         }
         success {
