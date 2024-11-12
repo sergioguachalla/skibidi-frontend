@@ -86,7 +86,9 @@ export class RegisterCustomerComponent {
         lastName: this.registerForm.get('apellidos')?.value,
         idNumber: this.registerForm.get('ci')?.value,
         expedition: this.registerForm.get('departamento')?.value,
-        address: this.registerForm.get('direccion')?.value
+        address: this.registerForm.get('direccion')?.value,
+        phoneNumber: this.registerForm.get('celular')?.value
+
       };
 
       const userDto = {
