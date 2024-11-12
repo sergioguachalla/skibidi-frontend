@@ -1,0 +1,117 @@
+.reservation-history-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+h2 {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.sort-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.sort-options select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    color: #007bff;
+    font-family: 'Arial', sans-serif;
+}
+
+.sort-options button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-family: 'Arial', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+}
+
+.sort-options button.active-asc {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.sort-options button.active-desc {
+    background-color: #d9534f;
+    color: #fff;
+}
+
+.sort-options button:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+.sort-options button.active-asc:hover,
+.sort-options button.active-desc:hover {
+    opacity: 0.9;
+}
+
+.sort-options button .arrow {
+    margin-left: 5px;
+}
+
+/* Tabla y otros estilos */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Arial', sans-serif;
+    text-align: left;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(even) td {
+    background-color: #e9ecef;
+}
+
+tr:hover td {
+    background-color: #d6eaff;
+    cursor: pointer;
+}
+
+tr:first-child th:first-child {
+    border-top-left-radius: 8px;
+}
+
+tr:first-child th:last-child {
+    border-top-right-radius: 8px;
+}
+
+tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+/* Estilo para marcar los libros con estado retrasado */
+.overdue-status {
+    color: red;
+    font-weight: bold;
+}
