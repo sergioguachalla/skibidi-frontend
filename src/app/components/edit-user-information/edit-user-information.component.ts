@@ -139,7 +139,7 @@ export class EditUserInformationComponent {
       lastName: this.updateForm.get('apellidos')?.value,
       idNumber: this.updateForm.get('ci')?.value,
       expedition: this.updateForm.get('departamento')?.value,
-      address: this.updateForm.get('direccion')?.value
+      address: this.updateForm.get('direccion')?.value,
     };
 
     const userDto = {
