@@ -19,7 +19,7 @@
   </div>
 
   <!-- Mensaje cuando no hay libros prestados -->
-   <div *ngIf="lendBooks.length === 0" class="alert alert-info">
+  <div *ngIf="lendBooks.length === 0" class="alert alert-info">
     No se han encontrado libros prestados.
   </div>
   
@@ -33,6 +33,7 @@
         <th>Fecha de Préstamo</th>
         <th>Fecha de Devolución</th>
         <th>Estado</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -44,6 +45,20 @@
         <td>{{ book.returnDate | date: 'dd/MM/yyyy' }}</td>        
         <td [ngClass]="{'overdue-status': book.status === 3}">
           {{ getStatusText(book.status) }}
+        </td>
+        <td>
+          <div class="d-flex flex-column">
+            <!-- Botones de acción -->
+            <button *ngIf="book.status === 0" (click)="openAcceptLoanModal(book)" class="btn btn-success btn-sm mb-1">
+              Aceptar Préstamo <i class="bi bi-check-circle"></i>
+            </button>
+            <button *ngIf="book.status === 1" (click)="markAsReturned(book)" class="btn btn-primary btn-sm mb-1">
+              Marcar como Devuelto <i class="bi bi-box-arrow-in-down"></i>
+            </button>
+            <button *ngIf="book.status === 1 || book.status === 3" (click)="extendReturnDate(book)" class="btn btn-warning btn-sm">
+              Extender Fecha de Retorno <i class="bi bi-calendar-plus"></i>
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -58,5 +73,59 @@
     <button (click)="nextPage()" class="btn btn-outline-secondary ms-2" [disabled]="page === totalPages - 1">
       Siguiente
     </button>
+  </div>
+</div>
+<!-- Modal de confirmación para aceptar préstamo -->
+<div class="modal" *ngIf="isAcceptLoanModalOpen" tabindex="-1" role="dialog" aria-labelledby="acceptLoanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="acceptLoanModalLabel">Confirmación de Aceptación de Préstamo</h5>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas aceptar este préstamo?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeAcceptLoanModal()">Cancelar</button>
+        <button type="button" class="btn btn-success" (click)="confirmAcceptLoan()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmación para marcar como devuelto -->
+<div class="modal" *ngIf="isReturnModalOpen" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="returnModalLabel">Confirmación de Devolución</h5>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas marcar este préstamo como devuelto?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeReturnModal()">No, volver</button>
+        <button type="button" class="btn btn-primary" (click)="confirmReturn()">Sí, marcar como devuelto</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmación para extender la fecha de retorno -->
+<div class="modal" *ngIf="isExtendDateModalOpen" tabindex="-1" role="dialog" aria-labelledby="extendDateModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="extendDateModalLabel">Extender Fecha de Retorno</h5>
+      </div>
+      <div class="modal-body">
+        <p>Seleccione la nueva fecha de retorno:</p>
+        <input type="date" [(ngModel)]="newReturnDate" class="form-control">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeExtendDateModal()">Cancelar</button>
+        <button type="button" class="btn btn-warning" (click)="confirmExtendDate()">Extender</button>
+      </div>
+    </div>
   </div>
 </div>

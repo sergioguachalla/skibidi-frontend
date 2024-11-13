@@ -3,7 +3,7 @@ import { LendBookService } from '../../services/lend-book.service';
 import { LendBookDto, LendBookPageResponse } from '../../Model/lend-book.model';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Import FormsModule here
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lend-book-history',
@@ -20,17 +20,20 @@ export class LendBookHistoryComponent implements OnInit {
   lendBooks: LendBookDto[] = [];
   page: number = 0;
   size: number = 5;
-  sortField: string = 'lendDate'; // Campo de ordenamiento inicial
-  sortOrder: string = 'asc'; // Orden inicial
+  sortField: string = 'lendDate';
+  sortOrder: string = 'asc';
   totalPages: number = 0;
   totalElements: number = 0;
+  isReturnModalOpen: boolean = false;
+  isExtendDateModalOpen: boolean = false;
+  newReturnDate: string = '';
+  isAcceptLoanModalOpen: boolean = false;
+  selectedBook: any;
 
-  constructor(
-    private lendBookService: LendBookService,
-  ) {}
+  constructor(private lendBookService: LendBookService) {}
 
   ngOnInit(): void {
-    this.loadLendBooks();  // Cargar los libros en la inicialización
+    this.loadLendBooks();
   }
 
   loadLendBooks(): void {
@@ -39,7 +42,7 @@ export class LendBookHistoryComponent implements OnInit {
         this.lendBooks = response.content;
         this.totalPages = response.totalPages;
         this.totalElements = response.totalElements;
-        console.log('Libros cargados:', this.lendBooks); // Verificar datos cargados
+        console.log('Libros cargados:', this.lendBooks);
       },
       (error) => {
         console.error('Error fetching lend books:', error);
@@ -63,18 +66,20 @@ export class LendBookHistoryComponent implements OnInit {
 
   // Cambiar el campo de ordenamiento
   changeSortField(field: string): void {
-    this.sortField = field;  // Cambiar el campo de ordenamiento
-    this.loadLendBooks(); // Recargar los libros con el nuevo campo de orden
+    this.sortField = field;
+    this.loadLendBooks();
   }
 
   // Cambiar el orden ascendente/descendente
   changeSortOrder(order: string): void {
-    this.sortOrder = order;  // Cambiar el orden
-    this.loadLendBooks(); // Recargar los libros con el nuevo orden
+    this.sortOrder = order;
+    this.loadLendBooks();
   }
 
   getStatusText(status: number): string {
     switch (status) {
+      case 0:
+        return 'En espera';
       case 1:
         return 'Prestado';
       case 2:
@@ -84,5 +89,73 @@ export class LendBookHistoryComponent implements OnInit {
       default:
         return 'Desconocido';
     }
+  }
+
+  // Métodos para el manejo de los modales
+  acceptLoan(book: any): void {
+    // Aquí solo lo dejaremos vacío por ahora, para probar los modales
+  }
+  
+  markAsReturned(book: any): void {
+    this.selectedBook = book;
+    this.isReturnModalOpen = true;
+  }
+  
+  extendReturnDate(book: any): void {
+    this.selectedBook = book;
+    this.isExtendDateModalOpen = true;
+  }
+  
+  closeReturnModal(): void {
+    this.isReturnModalOpen = false;
+  }
+  
+  confirmReturn(): void {
+    if (this.selectedBook && this.selectedBook.lendBookId) { // Usa lendBookId aquí
+      console.log(`Marcando como devuelto el libro con ID ${this.selectedBook.lendBookId}`);
+      this.lendBookService.markAsReturned(this.selectedBook.lendBookId).subscribe(
+        (response) => {
+          console.log('Libro marcado como devuelto:', response);
+          this.closeReturnModal();
+          this.loadLendBooks();  // Recargar la lista para actualizar el estado
+        },
+        (error) => {
+          console.error('Error al marcar el libro como devuelto:', error);
+        }
+      );
+    }
+  }  
+  closeExtendDateModal(): void {
+    this.isExtendDateModalOpen = false;
+  }
+  
+  confirmExtendDate(): void {
+    if (this.selectedBook && this.selectedBook.lendBookId && this.newReturnDate) { // Usa lendBookId aquí
+      console.log(`Extendiendo fecha de retorno para el libro con ID ${this.selectedBook.lendBookId} a ${this.newReturnDate}`);
+      this.lendBookService.extendReturnDate(this.selectedBook.lendBookId, this.newReturnDate).subscribe(
+        (response) => {
+          console.log('Fecha de retorno extendida:', response);
+          this.closeExtendDateModal();
+          this.loadLendBooks();  
+        },
+        (error) => {
+          console.error('Error al extender la fecha de retorno:', error);
+        }
+      );
+    }
+  }
+
+  openAcceptLoanModal(book: any): void {
+    this.selectedBook = book;
+    this.isAcceptLoanModalOpen = true;
+  }
+
+  closeAcceptLoanModal(): void {
+    this.isAcceptLoanModalOpen = false;
+  }
+
+  confirmAcceptLoan(): void {
+    this.acceptLoan(this.selectedBook);
+    this.closeAcceptLoanModal();
   }
 }
