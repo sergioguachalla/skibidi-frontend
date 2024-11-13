@@ -14,6 +14,12 @@ import {UpdatePasswordComponent} from "./components/update-password/update-passw
 import {ForbiddenComponent} from "./components/shared/forbidden/forbidden.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {FineListComponent} from "./components/fine-list/fine-list.component";
+<<<<<<< HEAD
+=======
+import { LendBooksComponent } from './components/lend-books/lend-books.component';
+import { LendBookHistoryComponent } from './components/lend-book-history/lend-book-history.component';
+import {ClientListComponent} from "./components/client-list/client-list.component";
+>>>>>>> c698002 (add client list component)
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },
@@ -37,6 +43,7 @@ export const routes: Routes = [
     {path: 'fines', component: FineListComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
     { path: 'lend-client-history', component: LendBooksComponent },
     { path: 'lend-history', component: LendBookHistoryComponent },
+    {path: 'clients', component: ClientListComponent}
 
 >>>>>>> bf2c7e8 (update guard in fines component)
 ];

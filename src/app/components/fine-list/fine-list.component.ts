@@ -29,7 +29,7 @@ export class FineListComponent implements OnInit {
   }
 
   findAllFines(page: number = 0) {
-    this.fineService.findAll(page, 5, null).subscribe((response) => {
+    this.fineService.findAll(page, 5, null, null).subscribe((response) => {
       this.fines = response.data.content;
       this.currentPage = response.data.pageable.pageNumber;
       this.totalPages = response.data.totalPages;
