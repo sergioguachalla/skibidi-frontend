@@ -24,6 +24,42 @@ export class LendBookHistoryComponent implements OnInit {
   sortOrder: string = 'asc'; // Orden inicial
   totalPages: number = 0;
   totalElements: number = 0;
+  // Propiedades necesarias para los modales
+  isReturnModalOpen: boolean = false;
+  isExtendDateModalOpen: boolean = false;
+  newReturnDate: string = '';
+
+  // Métodos necesarios para manejar las acciones
+  acceptLoan(book: any): void {
+    // Lógica para aceptar el préstamo
+  }
+
+  markAsReturned(book: any): void {
+    // Lógica para marcar el libro como devuelto
+  }
+
+  extendReturnDate(book: any): void {
+    this.isExtendDateModalOpen = true;
+    // Lógica para extender la fecha de devolución
+  }
+
+  closeReturnModal(): void {
+    this.isReturnModalOpen = false;
+  }
+
+  confirmReturn(): void {
+    // Lógica para confirmar la devolución
+    this.isReturnModalOpen = false;
+  }
+
+  closeExtendDateModal(): void {
+    this.isExtendDateModalOpen = false;
+  }
+
+  confirmExtendDate(): void {
+    // Lógica para confirmar la extensión de la fecha
+    this.isExtendDateModalOpen = false;
+  }
 
   constructor(
     private lendBookService: LendBookService,
@@ -75,6 +111,8 @@ export class LendBookHistoryComponent implements OnInit {
 
   getStatusText(status: number): string {
     switch (status) {
+      case 0:
+        return 'En espera';
       case 1:
         return 'Prestado';
       case 2:

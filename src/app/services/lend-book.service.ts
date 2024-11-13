@@ -8,6 +8,12 @@ import { LendBookPageResponse } from '../Model/lend-book.model'; // Modelo de re
   providedIn: 'root',
 })
 export class LendBookService {
+  markAsReturned(lendBookId: number) {
+    throw new Error('Method not implemented.');
+  }
+  extendReturnDate(lendBookId: number, newReturnDate: string) {
+    throw new Error('Method not implemented.');
+  }
   private baseUrl = `${Development.API_URL}/lend-books`;
 
   constructor(private http: HttpClient) {}
