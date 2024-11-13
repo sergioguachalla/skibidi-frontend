@@ -30,5 +30,13 @@ export const routes: Routes = [
     {path: 'client-environment/edit/:id', component: EditReservationComponent},
     {path: 'update-password', component: UpdatePasswordComponent},
     {path: 'forbidden', component: ForbiddenComponent},
+<<<<<<< HEAD
     {path: 'fines', component: FineListComponent}
+=======
+  //TODO: Change the role to 'VIEW_FINES' when the role is created
+    {path: 'fines', component: FineListComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
+    { path: 'lend-client-history', component: LendBooksComponent },
+    { path: 'lend-history', component: LendBookHistoryComponent },
+
+>>>>>>> bf2c7e8 (update guard in fines component)
 ];
