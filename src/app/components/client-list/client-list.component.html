@@ -16,10 +16,38 @@
 
 
           <!-- Botón para consultar deudas -->
-          <button class="btn btn-primary" (click)="onConsultDebt(client.kcUuid)">Consultar deudas</button>
+          <button class="btn btn-primary" (click)="onConsultDebts(client.kcUuid)">Consultar deudas</button>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Modal personalizado -->
+<div class="custom-modal" *ngIf="isModalOpen">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>Deudas de {{ selectedClient.username }}</h5>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="debts && debts.length > 0; else noDebts">
+        <ul class="debt-list">
+          <li *ngFor="let debt of debts">
+            <strong>Tipo de deuda:</strong> {{ debt.type }} <br />
+            <strong>Monto:</strong> {{ debt.amount}} <br />
+            <strong>Fecha de vencimiento:</strong> {{ debt.dueDate }}
+          </li>
+        </ul>
+      </div>
+      <ng-template #noDebts>
+        <p>El usuario {{ selectedClient.username }} no tiene deudas.</p>
+      </ng-template>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+    </div>
+  </div>
+  <div class="modal-overlay" (click)="closeModal()"></div>
 </div>
 
