@@ -1,27 +1,6 @@
 <navbar></navbar>
 <div class="container">
   <h2 class="text-center my-4">Lista de Clientes</h2>
-
-  <div class="row mb-4">
-    <div class="col-md-6 mx-auto">
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Buscar cliente por nombre o ID"
-          [(ngModel)]="searchTerm"
-          (input)="onSearchTermChange()"
-          [ngClass]="{'is-invalid': !isValidSearchTerm}" />
-        <button class="btn btn-primary" (click)="searchClient()" [disabled]="!isValidSearchTerm">Buscar</button>
-      </div>
-      <div *ngIf="!isValidSearchTerm" class="text-danger mt-1">
-        Solo se permiten letras, números y espacios. Por favor corrige tu búsqueda.
-      </div>
-    </div>
-  </div>
-
-
-  <!-- Lista de clientes -->
   <div class="row">
     <div class="col-md-4 mb-4" *ngFor="let client of clients">
       <div class="card shadow-sm">
@@ -35,45 +14,12 @@
           <h5 class="card-title">{{ client.username }}</h5>
           <p class="card-text text-muted">ID de Cliente: {{ client.clientId }}</p>
 
+
           <!-- Botón para consultar deudas -->
-          <button class="btn btn-primary" (click)="onConsultDebts(client.kcUuid)">Consultar deudas</button>
+          <button class="btn btn-primary" (click)="onConsultDebt(client.kcUuid)">Consultar deudas</button>
         </div>
       </div>
     </div>
-    <ng-container *ngIf="clients.length === 0">
-
-        <p class="text-center">No se encontraron clientes con ese nombre de usuario.</p>
-    </ng-container>
   </div>
 </div>
 
-<!-- Modal personalizado -->
-<div class="custom-modal" *ngIf="isModalOpen">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5>Deudas de {{ selectedClient.username }}</h5>
-      <button class="close-btn" (click)="closeModal()">×</button>
-    </div>
-    <div class="modal-body">
-      <div *ngIf="debts && debts.length > 0; else noDebts">
-        <ul class="debt-list">
-          <li *ngFor="let debt of debts">
-            <strong>Tipo de deuda:</strong> {{ debt.typeFine }} <br />
-            <strong>Monto Inicial:</strong> {{ debt.amount}} Bs. <br />
-            <strong>Monto Más Recargos:</strong> {{ debt.amountPlusInterest }} Bs. <br />
-            <strong>Fecha de vencimiento:</strong> {{ debt.dueDate }}
-            <strong>Estado:</strong>
-            <p [ngClass]="{'status-pending': debt.status === 'Pendiente', 'status-paid': debt.status === 'Pagada'}">{{ debt.status }}</p>
-          </li>
-        </ul>
-      </div>
-      <ng-template #noDebts>
-        <p>El usuario {{ selectedClient.username }} no tiene deudas.</p>
-      </ng-template>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
-    </div>
-  </div>
-  <div class="modal-overlay" (click)="closeModal()"></div>
-</div>
