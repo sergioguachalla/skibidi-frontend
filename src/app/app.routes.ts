@@ -11,6 +11,9 @@ import {ReservationsComponent} from "./components/reservations/reservations.comp
 import{ReservationHistoryComponent} from "./components/reservation-history/reservation-history.component"
 import {EditReservationComponent} from "./components/edit-reservation/edit-reservation.component";
 import {UpdatePasswordComponent} from "./components/update-password/update-password.component";
+import {ForbiddenComponent} from "./components/shared/forbidden/forbidden.component";
+import {AuthGuard} from "./guards/auth.guard";
+import {FineListComponent} from "./components/fine-list/fine-list.component";
 import { LendBooksComponent } from './components/lend-books/lend-books.component';
 import { LendBookHistoryComponent } from './components/lend-book-history/lend-book-history.component';
 
@@ -20,7 +23,7 @@ export const routes: Routes = [
     {path: 'register-librarian', component: RegisterLibrarianComponent},
     {path: 'books', component: ViewBooksComponent},
     {path: 'ingresar-libro', component: IngresarLibroComponent},
-    {path: 'reservation-enviroment', component: ReservationComponent},
+    {path: 'reservation-enviroment', component: ReservationComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
     {path: 'client-environment', component: EnvironmentClientComponent },
     {path: 'reservations', component: ReservationsComponent},
     {path: 'my-information', component: EditUserInformationComponent},
@@ -28,6 +31,8 @@ export const routes: Routes = [
     {path: 'reservation-history', component: ReservationHistoryComponent },
     {path: 'client-environment/edit/:id', component: EditReservationComponent},
     {path: 'update-password', component: UpdatePasswordComponent},
+    {path: 'forbidden', component: ForbiddenComponent},
+    {path: 'fines', component: FineListComponent},
     { path: 'lend-client-history', component: LendBooksComponent },
     { path: 'lend-history', component: LendBookHistoryComponent },
     
