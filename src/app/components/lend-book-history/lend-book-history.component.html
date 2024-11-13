@@ -1,0 +1,62 @@
+<navbar></navbar>
+
+<div class="reservation-history-container">
+  <h2>Historial de Libros Prestados</h2>
+
+  <!-- Opciones de ordenamiento -->
+  <div class="sort-options">
+    <select [(ngModel)]="sortField" (change)="loadLendBooks()">
+      <option value="lendDate">Fecha de Préstamo</option>
+      <option value="returnDate">Fecha de Devolución</option>
+    </select>
+
+    <button (click)="changeSortOrder('asc')" [ngClass]="{'active-asc': sortOrder === 'asc'}">
+      Ordenar Ascendente <span *ngIf="sortOrder === 'asc'" class="arrow">↑</span>
+    </button>
+    <button (click)="changeSortOrder('desc')" [ngClass]="{'active-desc': sortOrder === 'desc'}">
+      Ordenar Descendente <span *ngIf="sortOrder === 'desc'" class="arrow">↓</span>
+    </button>
+  </div>
+
+  <!-- Mensaje cuando no hay libros prestados -->
+   <div *ngIf="lendBooks.length === 0" class="alert alert-info">
+    No se han encontrado libros prestados.
+  </div>
+  
+  <!-- Tabla de libros prestados -->
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>Cliente</th>
+        <th>Título</th>
+        <th>Autores</th>
+        <th>Fecha de Préstamo</th>
+        <th>Fecha de Devolución</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let book of lendBooks">
+        <td>{{book.clientName}}</td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.authors }}</td>
+        <td>{{ book.lendDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ book.returnDate | date: 'dd/MM/yyyy' }}</td>        
+        <td [ngClass]="{'overdue-status': book.status === 3}">
+          {{ getStatusText(book.status) }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Controles de paginación -->
+  <div class="pagination-controls d-flex justify-content-center align-items-center mt-3">
+    <button (click)="previousPage()" class="btn btn-outline-secondary me-2" [disabled]="page === 0">
+      Anterior
+    </button>
+    <span class="mx-3">Página {{page + 1}} de {{totalPages}}</span>
+    <button (click)="nextPage()" class="btn btn-outline-secondary ms-2" [disabled]="page === totalPages - 1">
+      Siguiente
+    </button>
+  </div>
+</div>

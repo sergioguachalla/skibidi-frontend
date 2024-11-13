@@ -83,6 +83,7 @@ export class RegisterLibrarianComponent {
       const modal = new bootstrap.Modal(modalElement!);
       modal.show();
 
+
       const personDto = {
         name: this.registerForm.get('nombres')?.value,
         lastName: this.registerForm.get('apellidos')?.value,
@@ -90,6 +91,7 @@ export class RegisterLibrarianComponent {
         expedition: this.registerForm.get('departamento')?.value,
         address: this.registerForm.get('direccion')?.value,
         phoneNumber: this.registerForm.get('celular')?.value
+
 
       };
 
