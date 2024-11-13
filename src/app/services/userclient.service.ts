@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserClient } from '../Model/userclient.model';
 import { ResponseDto } from '../Model/common/responseDto';
+// @ts-ignore
 import {UserRegistrationDto} from "../model/dto/UserRegistrationDto";
 import {Development} from "../environments/development";
 
