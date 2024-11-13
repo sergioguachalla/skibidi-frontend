@@ -15,6 +15,9 @@ export class FinesService {
     if (isPaid != null) {
       return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}&isPaid=${isPaid}`);
   }
+    if (userKcId != null) {
+      return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}&userKcId=${userKcId}`);
+    }
     return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}`);
   }
 

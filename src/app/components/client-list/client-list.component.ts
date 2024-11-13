@@ -1,12 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {UserClientService} from "../../services/userclient.service";
-<<<<<<< HEAD
-import {NgClass, NgForOf, NgIf} from "@angular/common";
-import {FinesService} from "../../services/fines.service";
-import {FormsModule} from "@angular/forms";
-=======
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {FinesService} from "../../services/fines.service";
 >>>>>>> c698002 (add client list component)
 
@@ -15,14 +10,7 @@ import {FinesService} from "../../services/fines.service";
   standalone: true,
   imports: [
     NavbarComponent,
-<<<<<<< HEAD
-    NgForOf,
-    NgIf,
-    NgClass,
-    FormsModule
-=======
     NgForOf
->>>>>>> c698002 (add client list component)
   ],
   templateUrl: './client-list.component.html',
   styleUrl: './client-list.component.css'
@@ -45,9 +33,15 @@ export class ClientListComponent {
     });
   }
 
-  onConsultDebt(userKcId: string) {
-    this.fineService.findAll(0, 10, null, userKcId).subscribe((response) => {
-      console.log(response);
+  onConsultDebts(userKcId: string): void {
+    this.selectedClient = userKcId;
+    this.fineService.findAll(0,10,null, userKcId).subscribe((response) => {
+      this.debts = response.data.content;
+      this.isModalOpen = true;
     });
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
   }
 }
