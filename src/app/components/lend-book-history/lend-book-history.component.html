@@ -49,7 +49,7 @@
         <td>
           <div class="d-flex flex-column">
             <!-- Botones de acción -->
-            <button *ngIf="book.status === 0" (click)="acceptLoan(book)" class="btn btn-success btn-sm mb-1">
+            <button *ngIf="book.status === 0" (click)="openAcceptLoanModal(book)" class="btn btn-success btn-sm mb-1">
               Aceptar Préstamo <i class="bi bi-check-circle"></i>
             </button>
             <button *ngIf="book.status === 1" (click)="markAsReturned(book)" class="btn btn-primary btn-sm mb-1">
@@ -73,6 +73,23 @@
     <button (click)="nextPage()" class="btn btn-outline-secondary ms-2" [disabled]="page === totalPages - 1">
       Siguiente
     </button>
+  </div>
+</div>
+<!-- Modal de confirmación para aceptar préstamo -->
+<div class="modal" *ngIf="isAcceptLoanModalOpen" tabindex="-1" role="dialog" aria-labelledby="acceptLoanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="acceptLoanModalLabel">Confirmación de Aceptación de Préstamo</h5>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas aceptar este préstamo?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeAcceptLoanModal()">Cancelar</button>
+        <button type="button" class="btn btn-success" (click)="confirmAcceptLoan()">Aceptar</button>
+      </div>
+    </div>
   </div>
 </div>
 

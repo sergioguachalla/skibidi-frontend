@@ -28,38 +28,53 @@ export class LendBookHistoryComponent implements OnInit {
   isReturnModalOpen: boolean = false;
   isExtendDateModalOpen: boolean = false;
   newReturnDate: string = '';
+  isAcceptLoanModalOpen: boolean = false;
+  selectedBook: any;
 
-  // Métodos necesarios para manejar las acciones
   acceptLoan(book: any): void {
-    // Lógica para aceptar el préstamo
+    // Aquí solo lo dejaremos vacío por ahora, para probar los modales
   }
-
+  
   markAsReturned(book: any): void {
-    // Lógica para marcar el libro como devuelto
+    this.isReturnModalOpen = true;  // Abrir modal para marcar como devuelto
   }
-
+  
   extendReturnDate(book: any): void {
-    this.isExtendDateModalOpen = true;
-    // Lógica para extender la fecha de devolución
+    this.isExtendDateModalOpen = true;  // Abrir modal para extender fecha de retorno
   }
-
+  
   closeReturnModal(): void {
     this.isReturnModalOpen = false;
   }
-
+  
   confirmReturn(): void {
-    // Lógica para confirmar la devolución
-    this.isReturnModalOpen = false;
+    this.isReturnModalOpen = false;  // Confirmar devolución y cerrar modal
   }
-
+  
   closeExtendDateModal(): void {
     this.isExtendDateModalOpen = false;
   }
-
+  
   confirmExtendDate(): void {
-    // Lógica para confirmar la extensión de la fecha
-    this.isExtendDateModalOpen = false;
+    this.isExtendDateModalOpen = false;  // Confirmar extensión y cerrar modal
   }
+  // Método para abrir el modal de confirmación
+openAcceptLoanModal(book: any): void {
+  this.selectedBook = book;
+  this.isAcceptLoanModalOpen = true;
+}
+
+// Método para cerrar el modal de confirmación
+closeAcceptLoanModal(): void {
+  this.isAcceptLoanModalOpen = false;
+}
+
+// Método para confirmar y aceptar el préstamo
+confirmAcceptLoan(): void {
+  // Lógica para aceptar el préstamo
+  this.acceptLoan(this.selectedBook);
+  this.closeAcceptLoanModal();  // Cierra el modal
+}
 
   constructor(
     private lendBookService: LendBookService,

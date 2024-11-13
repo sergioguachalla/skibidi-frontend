@@ -115,3 +115,12 @@ tr:last-child td:last-child {
     color: red;
     font-weight: bold;
 }
+.modal {
+    display: block; /* Asegura que el modal sea visible */
+    z-index: 1050;  /* Asegúrate de que el modal esté por encima de otros elementos */
+  }
+  
+  .modal-dialog {
+    max-width: 500px;  /* Ajusta el tamaño del modal */
+  }
+  
