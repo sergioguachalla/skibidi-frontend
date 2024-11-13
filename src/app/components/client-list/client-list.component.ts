@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {UserClientService} from "../../services/userclient.service";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {FinesService} from "../../services/fines.service";
 
 @Component({
@@ -9,7 +9,8 @@ import {FinesService} from "../../services/fines.service";
   standalone: true,
   imports: [
     NavbarComponent,
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './client-list.component.html',
   styleUrl: './client-list.component.css'
@@ -32,9 +33,15 @@ export class ClientListComponent {
     });
   }
 
-  onConsultDebt(userKcId: string) {
-    this.fineService.findAll(0, 10, null, userKcId).subscribe((response) => {
-      console.log(response);
+  onConsultDebts(userKcId: string): void {
+    this.selectedClient = userKcId;
+    this.fineService.findAll(0,10,null, userKcId).subscribe((response) => {
+      this.debts = response.data.content;
+      this.isModalOpen = true;
     });
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
   }
 }
