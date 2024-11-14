@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {UserClientService} from "../../services/userclient.service";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FinesService} from "../../services/fines.service";
 >>>>>>> c698002 (add client list component)
 
@@ -10,7 +10,9 @@ import {FinesService} from "../../services/fines.service";
   standalone: true,
   imports: [
     NavbarComponent,
-    NgForOf
+    NgForOf,
+    NgIf,
+    NgClass
   ],
   templateUrl: './client-list.component.html',
   styleUrl: './client-list.component.css'
@@ -34,7 +36,7 @@ export class ClientListComponent {
   }
 
   onConsultDebts(userKcId: string): void {
-    this.selectedClient = userKcId;
+    this.selectedClient = this.clients.find(client => client.kcUuid === userKcId);
     this.fineService.findAll(0,10,null, userKcId).subscribe((response) => {
       this.debts = response.data.content;
       this.isModalOpen = true;
