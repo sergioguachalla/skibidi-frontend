@@ -8,7 +8,7 @@
       <th>ID</th>
       <th>Tipo de Multa</th>
       <th>Fecha de Vencimiento</th>
-      <th>Monto</th>
+      <th>Monto (Bs.)</th>
       <th>Estado</th>
       <th>Usuario</th>
       <th>Fecha de Pago</th>
@@ -19,11 +19,14 @@
       <td>{{ fine.fineId }}</td>
       <td>{{ fine.typeFine }}</td>
       <td>{{ fine.dueDate || 'N/A' }}</td>
-      <td>{{ fine.amount}}</td>
-      <td>{{ fine.status }}</td>
+      <td>{{ fine.amount }}</td>
+      <td [ngClass]="{'status-pending': fine.status === 'Pendiente', 'status-paid': fine.status === 'Pagada'}">
+        {{ fine.status }}
+      </td>
       <td>{{ fine.username }}</td>
       <td>{{ fine.paidDate }}</td>
     </tr>
+
     </tbody>
   </table>
 

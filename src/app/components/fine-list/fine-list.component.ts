@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {FinesService} from "../../services/fines.service";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {toArray} from "rxjs";
 
 @Component({
@@ -10,7 +10,8 @@ import {toArray} from "rxjs";
   imports: [
     NavbarComponent,
     NgForOf,
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: './fine-list.component.html',
   styleUrl: './fine-list.component.css'
