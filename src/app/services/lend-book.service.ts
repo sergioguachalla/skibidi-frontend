@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Development } from '../environments/development';
 import { LendBookPageResponse } from '../Model/lend-book.model';
@@ -17,13 +17,17 @@ export class LendBookService {
     return this.http.put(url, {});
   }
 
-  extendReturnDate(lendBookId: number, newReturnDate: String): Observable<any> {
-    const url = `${this.baseUrl}/${lendBookId}/return-date`;
-    return this.http.put(url, { returnDate: newReturnDate }, {  // Enviando la fecha en un objeto JSON
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }  
-
+  extendReturnDate(lendBookId: number, newReturnDate: Date): Observable<any> {
+    return this.http.put<any>(
+        `http://localhost:8091/api/v1/lend-books/${lendBookId}/return-date`,
+        JSON.stringify(newReturnDate.toISOString()),  // Enviar solo el String de la fecha
+        {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        }
+    );
+}
   getLendBooksByKcUuid(
     kcUuid: string,
     page: number = 0,
