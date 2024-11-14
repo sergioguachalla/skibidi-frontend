@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Development } from '../environments/development';
-import { LendBookPageResponse } from '../Model/lend-book.model'; // Modelo de respuesta que contiene el objeto pageable
+import { LendBookPageResponse } from '../Model/lend-book.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +12,22 @@ export class LendBookService {
 
   constructor(private http: HttpClient) {}
 
+  markAsReturned(lendBookId: number): Observable<any> {
+    const url = `${this.baseUrl}/${lendBookId}/status`;
+    return this.http.put(url, {});
+  }
+
+  extendReturnDate(lendBookId: number, newReturnDate: Date): Observable<any> {
+    return this.http.put<any>(
+        `http://localhost:8091/api/v1/lend-books/${lendBookId}/return-date`,
+        JSON.stringify(newReturnDate.toISOString()),  // Enviar solo el String de la fecha
+        {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        }
+    );
+}
   getLendBooksByKcUuid(
     kcUuid: string,
     page: number = 0,
@@ -23,7 +39,7 @@ export class LendBookService {
       .set('page', page.toString())
       .set('size', size.toString())
       .set('sortOrder', sortOrder)
-      .set('sortField', sortField);  // Nuevo parámetro para el campo de orden
+      .set('sortField', sortField);
 
     const url = `${this.baseUrl}/${kcUuid}`;
     return this.http.get<LendBookPageResponse>(url, { params });
@@ -44,5 +60,4 @@ export class LendBookService {
     const url = `${this.baseUrl}`;
     return this.http.get<LendBookPageResponse>(url, { params });
   }
-  
 }
