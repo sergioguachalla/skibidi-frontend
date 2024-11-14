@@ -130,20 +130,27 @@ export class LendBookHistoryComponent implements OnInit {
   }
   
   confirmExtendDate(): void {
-    if (this.selectedBook && this.selectedBook.lendBookId && this.newReturnDate) { // Usa lendBookId aquí
-      console.log(`Extendiendo fecha de retorno para el libro con ID ${this.selectedBook.lendBookId} a ${this.newReturnDate}`);
-      this.lendBookService.extendReturnDate(this.selectedBook.lendBookId, this.newReturnDate).subscribe(
-        (response) => {
-          console.log('Fecha de retorno extendida:', response);
-          this.closeExtendDateModal();
-          this.loadLendBooks();  
-        },
-        (error) => {
-          console.error('Error al extender la fecha de retorno:', error);
-        }
-      );
+    if (this.selectedBook && this.selectedBook.lendBookId && this.newReturnDate) {
+        console.log(`Extendiendo fecha de retorno para el libro con ID ${this.selectedBook.lendBookId} a ${this.newReturnDate}`);
+
+        // Crear la fecha y ajustar la hora a las 12:00 PM
+        const dateWithTime = new Date(this.newReturnDate);
+        dateWithTime.setHours(21, 0, 0, 0); // Establecer la hora a las 12:00
+
+        // Enviar el objeto Date directamente
+        this.lendBookService.extendReturnDate(this.selectedBook.lendBookId, dateWithTime).subscribe(
+            (response) => {
+                console.log('Fecha de retorno extendida:', response);
+                this.closeExtendDateModal();
+                this.loadLendBooks();
+            },
+            (error) => {
+                console.error('Error al extender la fecha de retorno:', error);
+            }
+        );
     }
-  }
+}
+       
 
   openAcceptLoanModal(book: any): void {
     this.selectedBook = book;
