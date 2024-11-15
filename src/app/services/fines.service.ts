@@ -21,6 +21,10 @@ export class FinesService {
     return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}`);
   }
 
+  findFineDetail(fineId: number) {
+    return this.http.get<any>(`${this.API_URL}details/${fineId}`);
+  }
+
 
 
 
