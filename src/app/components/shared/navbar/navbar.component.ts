@@ -53,6 +53,9 @@ export class NavbarComponent {
   onClickToLendHistory() {
     this.router.navigate(['lend-history']); // Asegúrate de que esta sea la ruta correcta
   }
+  onClickToLend() {
+    this.router.navigate(['fines']);
+  }
 
 
   openIsbnModal(): void {
