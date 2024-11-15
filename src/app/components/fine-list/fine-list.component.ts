@@ -18,9 +18,11 @@ import {toArray} from "rxjs";
 })
 export class FineListComponent implements OnInit {
   fines: any = [];
+  fineDetail: any;
   currentPage: number = 0;
   totalPages: number = 0;
   pagesArray: number[] = [];
+  isModalOpen: boolean = false;
   private fineService: FinesService = inject(FinesService);
 
   constructor() {}
@@ -54,5 +56,20 @@ export class FineListComponent implements OnInit {
 
     return Array.from({ length: endPage - startPage }, (_, i) => startPage + i);
   }
+  showFineDetail(fineId: number){
+    this.showModal();
+    this.fineService.findFineDetail(fineId).subscribe((response) => {
+      console.log(response);
+      this.fineDetail = response.data;
+    });
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+  }
+  showModal(): void {
+    this.isModalOpen = true;
+  }
+
 
 }
