@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BookDto } from '../Model/book.model';
+import {Development} from "../environments/development";
 
 interface PageableApiResponse {
   data: {
@@ -28,7 +29,9 @@ interface ApiResponse {
   providedIn: 'root'
 })
 export class BookService {
-  private apiUrl = 'http://localhost:8091/api/v1/books/';
+  private apiUrl = `${Development.API_URL}/books/`;
+
+  //private apiUrl = 'http://localhost:8091/api/v1/books/';
 
   constructor(private http: HttpClient) {}
 

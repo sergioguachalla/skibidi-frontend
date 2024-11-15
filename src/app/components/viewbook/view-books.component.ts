@@ -13,6 +13,8 @@ import {LanguageDto} from "../../Model/dto/languageDto";
 import {EditorialService} from "../../services/editorial.service";
 import {EditorialDto} from "../../Model/dto/EditorialDto";
 import {ActivatedRoute, Router} from "@angular/router";
+import {LendBookService} from "../../services/lend-book.service";
+import {KeycloakService} from "keycloak-angular";
 
 declare var bootstrap: any;
 interface filtersParams {
@@ -37,14 +39,14 @@ interface filtersParams {
 })
 
 export class ViewBooksComponent implements OnInit {
-  selectedBook: any = null; 
+  selectedBook: any = null;
 
   openModal(libro: BookDetailsDto) {
     this.bookService.getBookById(libro.bookId as number).subscribe(
       (response: any) => {
-        this.selectedBook = response.data; 
-        const modalElement = document.getElementById('bookDetailsModal'); 
-        const modal = new bootstrap.Modal(modalElement!); 
+        this.selectedBook = response.data;
+        const modalElement = document.getElementById('bookDetailsModal');
+        const modal = new bootstrap.Modal(modalElement!);
         modal.show();
       },
       error => {
@@ -52,15 +54,15 @@ export class ViewBooksComponent implements OnInit {
       }
     );
   }
-  
+
 verMasInformacion(bookId: number | null): void {
   if (bookId !== null) {
     this.bookService.getBookById(bookId).subscribe(
       response => {
         //console.log('Detalles del libro:', response);
-        this.selectedBook = response.data; 
-        const modalElement = document.getElementById('bookModal'); 
-        const modal = new bootstrap.Modal(modalElement!); 
+        this.selectedBook = response.data;
+        const modalElement = document.getElementById('bookModal');
+        const modal = new bootstrap.Modal(modalElement!);
         modal.show();
       },
       error => {
@@ -74,9 +76,9 @@ verMasInformacion(bookId: number | null): void {
 
 closeModal() {
   const modalElement = document.getElementById('bookModal');
-  const modal = bootstrap.Modal.getInstance(modalElement!); 
-  modal.hide(); 
-  this.selectedBook = null; 
+  const modal = bootstrap.Modal.getInstance(modalElement!);
+  modal.hide();
+  this.selectedBook = null;
 }
 
   protected genreService : GenreService = inject(GenreService);
@@ -113,9 +115,15 @@ closeModal() {
   availability: boolean | null = null;
   startDate: string = '';
   endDate: string = '';
+  returnDate: string = '';
+  note: string = '';
 
-
-  constructor(private bookService: BookService, private router: Router) {
+  constructor(
+    private bookService: BookService,
+    private lendBookService: LendBookService,
+    private router: Router,
+    private keycloakService: KeycloakService,
+    ) {
   }
 
   ngOnInit() {
@@ -377,5 +385,55 @@ closeModal() {
     }
     this.buildQueryParams(this.filters,0);
     this.applyFilters(0);
+  }
+
+
+
+
+
+  openReserveModal(book: BookDto) {
+    this.selectedBook = book;
+    const modalElement = document.getElementById('reserveModal');
+    const modal = new bootstrap.Modal(modalElement!);
+    modal.show();
+  }
+
+  closeReserveModal() {
+    const modalElement = document.getElementById('reserveModal');
+    const modal = bootstrap.Modal.getInstance(modalElement!);
+    modal.hide();
+    this.resetForm();
+  }
+
+  resetForm() {
+    this.returnDate = '';
+    this.note = '';
+    this.selectedBook = null;
+  }
+
+  reserveBook() {
+    if (!this.returnDate || !this.note) {
+      console.warn("Por favor, completa todos los campos");
+      return;
+    }
+
+    const reserveData = {
+      bookId: this.selectedBook.bookId,
+      //TODO: Cambiar el librarianId :p
+      librarianId: 1,
+      clientKcId: this.keycloakService.getKeycloakInstance().subject!,
+      returnDate: new Date(this.returnDate).toISOString(),
+      note: this.note
+    };
+
+    this.lendBookService.reserveBook(reserveData).subscribe(
+      response => {
+        console.log('Reserva realizada con éxito:', response);
+        this.closeReserveModal();
+      },
+      error => {
+        console.error('Error al realizar la reserva:', error);
+      }
+    );
   }
 }
