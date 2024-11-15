@@ -34,9 +34,12 @@
       <div *ngIf="debts && debts.length > 0; else noDebts">
         <ul class="debt-list">
           <li *ngFor="let debt of debts">
-            <strong>Tipo de deuda:</strong> {{ debt.type }} <br />
-            <strong>Monto:</strong> {{ debt.amount}} <br />
+            <strong>Tipo de deuda:</strong> {{ debt.typeFine }} <br />
+            <strong>Monto Inicial:</strong> {{ debt.amount}} Bs. <br />
+            <strong>Monto Más Recargos:</strong> {{ debt.amountPlusInterest }} Bs. <br />
             <strong>Fecha de vencimiento:</strong> {{ debt.dueDate }}
+            <strong>Estado:</strong> <p [ngClass]="{'status-pending': debt.status === 'Pendiente', 'status-paid': debt.status === 'Pagada'}">{{ debt.status }}</p>
+
           </li>
         </ul>
       </div>

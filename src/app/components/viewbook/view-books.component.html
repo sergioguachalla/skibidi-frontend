@@ -141,9 +141,13 @@
         <input type="checkbox" [checked]="libro.status" (change)="toggleAvailability(libro)">
         <span class="slider"></span>
       </label>
-      <span class="availability" [ngClass]="{'available': libro.status, 'unavailable': !libro.status}">
-        {{ libro.status ? 'DISPONIBLE' : 'OCUPADO' }}
-      </span>
+      <div class="d-flex flex-column align-items-center">
+        <span class="availability" [ngClass]="{'available': libro.status, 'unavailable': !libro.status}">
+          {{ libro.status ? 'DISPONIBLE' : 'OCUPADO' }}
+        </span>
+        <button class="btn btn-primary mt-2" (click)="openReserveModal(libro)">Reservar</button>
+      </div>
+
     </div>
   </div>
 
@@ -207,6 +211,35 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal para reservar libro -->
+<div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reserveModalLabel">Reservar Libro</h5>
+        <button type="button" class="btn-close" (click)="closeReserveModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="returnDate" class="form-label">Fecha de Devolución</label>
+            <input type="date" id="returnDate" [(ngModel)]="returnDate" name="returnDate" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="note" class="form-label">Nota de la Reserva</label>
+            <textarea id="note" [(ngModel)]="note" name="note" class="form-control"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeReserveModal()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="reserveBook()">Reservar</button>
       </div>
     </div>
   </div>

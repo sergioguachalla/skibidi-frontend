@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Development } from '../environments/development';
 import { LendBookPageResponse } from '../Model/lend-book.model';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -56,11 +55,14 @@ export class LendBookService {
       .set('size', size.toString())
       .set('sortField', sortField)
       .set('sortOrder', sortOrder);
-  
+
     const url = `${this.baseUrl}`;
     return this.http.get<LendBookPageResponse>(url, { params });
   }
-  requestExtension(lendBookId: number): Observable<any> {
+  reserveBook(reserveData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}`, reserveData);
+  }
+requestExtension(lendBookId: number): Observable<any> {
     const url = `${this.baseUrl}/${lendBookId}/request-extension`;
     return this.http.put(url, null, {
       headers: new HttpHeaders({

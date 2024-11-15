@@ -85,3 +85,15 @@
   border: 1px solid #ddd;
   border-radius: 5px;
 }
+
+/* Color para estado pendiente (amarillo o naranja) */
+.status-pending {
+  color: #ff9800; /* Naranja */
+  font-weight: bold;
+}
+
+/* Color para estado pagado (verde) */
+.status-paid {
+  color: #4caf50; /* Verde */
+  font-weight: bold;
+}

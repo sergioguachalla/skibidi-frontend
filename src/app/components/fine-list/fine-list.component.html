@@ -9,7 +9,7 @@
       <th>ID</th>
       <th>Tipo de Multa</th>
       <th>Fecha de Vencimiento</th>
-      <th>Monto</th>
+      <th>Monto (Bs.)</th>
       <th>Estado</th>
       <th>Usuario</th>
       <th>Fecha de Pago</th>
@@ -20,11 +20,15 @@
       <td>{{ fine.fineId }}</td>
       <td>{{ fine.typeFine }}</td>
       <td>{{ fine.dueDate || 'N/A' }}</td>
-      <td>{{ fine.amount}}</td>
-      <td>{{ fine.status }}</td>
-      <td>{{ fine.username }}</td>
+      <td>{{ fine.amount }}</td>
+      <td [ngClass]="{'status-pending': fine.status === 'Pendiente', 'status-paid': fine.status === 'Pagada'}">
+        {{ fine.status }}
+      </td>
+      <td class="username-link" (click)="showFineDetail(fine.fineId)"> {{ fine.username }} </td>
       <td>{{ fine.paidDate }}</td>
     </tr>
+
+
     </tbody>
   </table>
 
@@ -47,3 +51,32 @@
     </ul>
   </nav>
 </div>
+
+
+<!-- Modal personalizado -->
+<div class="custom-modal" *ngIf="isModalOpen">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>Detalles de la multa para: {{ fineDetail.title }}</h5>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Título:</strong> {{ fineDetail.book.title }}</p>
+      <p><strong>Usuario:</strong> {{ fineDetail.username }}</p>
+      <p><strong>Días de retraso:</strong> {{ fineDetail.delayDays }}</p>
+      <p><strong>Fecha de vencimiento:</strong> {{ fineDetail.dueDate }}</p>
+      <p><strong>Monto inicial:</strong> {{ fineDetail.originalAmount }} Bs.</p>
+      <p><strong>Monto total con recargos:</strong> {{ fineDetail.totalAmount }} Bs.</p>
+      <p><strong>Estado:</strong>
+        <span [ngClass]="{'status-pending': fineDetail.status === 'Pending', 'status-paid': fineDetail.status === 'Paid'}">
+          {{ fineDetail.status }}
+        </span>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+    </div>
+  </div>
+  <div class="modal-overlay" (click)="closeModal()"></div>
+</div>
+
