@@ -429,7 +429,20 @@ closeModal() {
     this.lendBookService.reserveBook(reserveData).subscribe(
       response => {
         console.log('Reserva realizada con éxito:', response);
-        this.closeReserveModal();
+
+        this.selectedBook.status = false;
+        const updatedBook = { ...this.selectedBook };
+
+        this.bookService.updateBook(this.selectedBook.bookId!, updatedBook).subscribe(
+          updateResponse => {
+            console.log('Estado del libro actualizado con éxito:', updateResponse);
+            this.closeReserveModal();
+            this.applyFilters(this.pageNumber);
+          },
+          updateError => {
+            console.error('Error al actualizar el estado del libro:', updateError);
+          }
+        );
       },
       error => {
         console.error('Error al realizar la reserva:', error);

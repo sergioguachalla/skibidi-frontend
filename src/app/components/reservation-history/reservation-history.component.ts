@@ -39,9 +39,13 @@ export class ReservationHistoryComponent implements OnInit {
   getReservationHistory(page: number): void {
     this.reservationHistoryService.getReservationHistory(page, 2).subscribe(
       (response) => {
-        this.reservations = response.data.content || [];
-        this.currentPage = response.data.number;
-        this.totalPages = response.data.totalPages;
+        if (response.successful){
+          this.reservations = response.data.content || [];
+          this.currentPage = response.data.number;
+          this.totalPages = response.data.totalPages;
+        } else {
+          console.error('Error en la respuesta del servidor: ', response.message);
+        }
       },
       (error) => {
         console.error('Error al obtener el historial de reservas:', error);

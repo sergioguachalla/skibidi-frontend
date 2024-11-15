@@ -8,6 +8,7 @@ export interface LendBookDto {
     title: string;
     authors: string;
     status: number;
+    request_extension: number;
   }
   
   export interface Pageable {

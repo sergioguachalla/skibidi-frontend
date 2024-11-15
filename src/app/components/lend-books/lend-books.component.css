@@ -166,3 +166,25 @@
     color: red;
     font-weight: bold;
   }
+  .modal {
+    display: block; /* Asegura que sea visible */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    width: 500px;
+    padding: 20px;
+  }
+  .modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-content {
+    width: 100%;
+  }
+  
