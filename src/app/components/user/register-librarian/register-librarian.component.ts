@@ -1,11 +1,7 @@
 import {Component, inject} from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
-import {NgIf} from "@angular/common";
 import { CommonModule } from '@angular/common';
-import {PersonDto} from "../../../model/dto/PersonDto";
-import {UserDto} from "../../../model/dto/UserDto";
-import {UserRegistrationDto} from "../../../model/dto/UserRegistrationDto";
 import {LibrarianService} from "../../../services/librarian.service";
 import {BehaviorSubject} from "rxjs";
 import {Router} from "@angular/router";
