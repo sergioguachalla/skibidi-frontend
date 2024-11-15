@@ -20,7 +20,7 @@ export class LendBookService {
   extendReturnDate(lendBookId: number, newReturnDate: Date): Observable<any> {
     return this.http.put<any>(
         `http://localhost:8091/api/v1/lend-books/${lendBookId}/return-date`,
-        JSON.stringify(newReturnDate.toISOString()),  // Enviar solo el String de la fecha
+        JSON.stringify(newReturnDate.toISOString()),  
         {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'
@@ -59,5 +59,13 @@ export class LendBookService {
   
     const url = `${this.baseUrl}`;
     return this.http.get<LendBookPageResponse>(url, { params });
+  }
+  requestExtension(lendBookId: number): Observable<any> {
+    const url = `${this.baseUrl}/${lendBookId}/request-extension`;
+    return this.http.put(url, null, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    });
   }
 }

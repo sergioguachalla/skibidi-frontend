@@ -90,6 +90,16 @@ export class LendBookHistoryComponent implements OnInit {
         return 'Desconocido';
     }
   }
+  getStatusText2(request_extension: number): string {
+    switch (request_extension) {
+      case 0:
+        return 'sin solicitud';
+      case 1:
+        return 'solicitado';
+      default:
+        return 'Desconocido';
+    }
+  }
 
   // Métodos para el manejo de los modales
   acceptLoan(book: any): void {
@@ -130,26 +140,47 @@ export class LendBookHistoryComponent implements OnInit {
   }
   
   confirmExtendDate(): void {
-    if (this.selectedBook && this.selectedBook.lendBookId && this.newReturnDate) {
-        console.log(`Extendiendo fecha de retorno para el libro con ID ${this.selectedBook.lendBookId} a ${this.newReturnDate}`);
-
-        // Crear la fecha y ajustar la hora a las 12:00 PM
-        const dateWithTime = new Date(this.newReturnDate);
-        dateWithTime.setHours(21, 0, 0, 0); // Establecer la hora a las 12:00
-
-        // Enviar el objeto Date directamente
-        this.lendBookService.extendReturnDate(this.selectedBook.lendBookId, dateWithTime).subscribe(
-            (response) => {
-                console.log('Fecha de retorno extendida:', response);
-                this.closeExtendDateModal();
-                this.loadLendBooks();
-            },
-            (error) => {
-                console.error('Error al extender la fecha de retorno:', error);
-            }
-        );
+    if (!this.newReturnDate) {
+        alert('Por favor, selecciona una fecha.');
+        return;
     }
+
+    const today = new Date();
+    const selectedDate = new Date(this.newReturnDate);
+
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+        alert('No puedes seleccionar una fecha anterior a hoy.');
+        return;
+    }
+
+    const maxDate = new Date(today);
+    maxDate.setDate(today.getDate() + 10);
+
+    if (selectedDate > maxDate) {
+        alert('No puedes seleccionar una fecha mayor a 10 días desde hoy.');
+        return;
+    }
+
+    console.log(`Extendiendo fecha de retorno para el libro con ID ${this.selectedBook.lendBookId} a ${this.newReturnDate}`);
+
+    const dateWithTime = new Date(this.newReturnDate);
+    dateWithTime.setHours(21, 0, 0, 0);
+
+    this.lendBookService.extendReturnDate(this.selectedBook.lendBookId, dateWithTime).subscribe(
+        (response) => {
+            console.log('Fecha de retorno extendida:', response);
+            this.closeExtendDateModal();
+            this.loadLendBooks();
+        },
+        (error) => {
+            console.error('Error al extender la fecha de retorno:', error);
+        }
+    );
 }
+
        
 
   openAcceptLoanModal(book: any): void {

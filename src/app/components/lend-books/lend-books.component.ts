@@ -24,6 +24,8 @@ export class LendBooksComponent implements OnInit {
   sortField: string = 'lendDate';  // Campo de orden inicial
   totalPages: number = 0;
   totalElements: number = 0;
+  isExtensionModalOpen: boolean = false; // Controla si el modal está abierto
+  selectedBook: LendBookDto | null = null;
 
   constructor(
     private lendBookService: LendBookService,
@@ -84,4 +86,46 @@ export class LendBooksComponent implements OnInit {
       }
     );
   }
+  requestExtension(book: LendBookDto): void {
+    this.lendBookService.requestExtension(book.lendBookId).subscribe(
+      (response) => {
+        console.log('Extensión solicitada exitosamente:', response);
+        alert('La solicitud de extensión ha sido enviada.');
+        // Aquí podrías actualizar el estado del libro si el backend devuelve datos relevantes.
+        this.loadLendBooks(); // Recargar la lista para reflejar cambios si aplica.
+      },
+      (error) => {
+        console.error('Error al solicitar extensión:', error);
+        alert('No se pudo procesar la solicitud de extensión. Intente nuevamente.');
+      }
+    );
+  }
+  openExtensionModal(book: LendBookDto): void {
+    this.selectedBook = book; // Asigna el libro seleccionado
+    this.isExtensionModalOpen = true; // Abre el modal
+  }
+  
+  closeExtensionModal(): void {
+    this.isExtensionModalOpen = false; // Cierra el modal
+    this.selectedBook = null; // Limpia el libro seleccionado
+  }
+  
+  confirmExtension(): void {
+    if (!this.selectedBook) return;
+  
+    // Llamar al servicio para solicitar extensión
+    this.lendBookService.requestExtension(this.selectedBook.lendBookId).subscribe(
+      (response) => {
+        console.log('Extensión solicitada exitosamente:', response);
+        alert('La solicitud de extensión ha sido enviada.');
+        this.closeExtensionModal(); // Cierra el modal después de confirmar
+        this.loadLendBooks(); // Recarga la lista de libros prestados
+      },
+      (error) => {
+        console.error('Error al solicitar extensión:', error);
+        alert('No se pudo procesar la solicitud de extensión. Intente nuevamente.');
+        this.closeExtensionModal(); // Cierra el modal en caso de error
+      }
+    );
+  }  
 }

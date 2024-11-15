@@ -19,7 +19,7 @@
   </div>
 
   <!-- Mensaje cuando no hay libros prestados -->
-   <div *ngIf="lendBooks.length === 0" class="alert alert-info">
+  <div *ngIf="lendBooks.length === 0" class="alert alert-info">
     No se han encontrado libros prestados.
   </div>
 
@@ -32,6 +32,7 @@
         <th>Fecha de Préstamo</th>
         <th>Fecha de Devolución</th>
         <th>Estado</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -39,9 +40,17 @@
         <td>{{ book.title }}</td>
         <td>{{ book.authors }}</td>
         <td>{{ book.lendDate | date: 'dd/MM/yyyy' }}</td>
-        <td>{{ book.returnDate | date: 'dd/MM/yyyy' }}</td>        
+        <td>{{ book.returnDate | date: 'dd/MM/yyyy' }}</td>
         <td [ngClass]="{'overdue-status': book.status === 3}">
           {{ getStatusText(book.status) }}
+        </td>
+        <td>
+          <button 
+            *ngIf="book.status === 1" 
+            (click)="openExtensionModal(book)" 
+            class="btn btn-info btn-sm">
+            Solicitar Extensión <i class="bi bi-calendar-event"></i>
+          </button>
         </td>
       </tr>
     </tbody>
@@ -56,5 +65,23 @@
     <button (click)="nextPage()" class="btn btn-outline-secondary ms-2" [disabled]="page === totalPages - 1">
       Siguiente
     </button>
+  </div>
+</div>
+
+<!-- Modal de confirmación para solicitar extensión -->
+<div class="modal" *ngIf="isExtensionModalOpen" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Confirmar Solicitud</h5>
+      </div>
+      <div class="modal-body">
+        <p>¿Está seguro de que desea solicitar una extensión para el libro "<strong>{{ selectedBook?.title }}</strong>"?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeExtensionModal()">Cancelar</button>
+        <button type="button" class="btn btn-info" (click)="confirmExtension()">Confirmar</button>
+      </div>
+    </div>
   </div>
 </div>
