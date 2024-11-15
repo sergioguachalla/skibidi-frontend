@@ -55,7 +55,7 @@
             <button *ngIf="book.status === 1" (click)="markAsReturned(book)" class="btn btn-primary btn-sm mb-1">
               Marcar como Devuelto <i class="bi bi-box-arrow-in-down"></i>
             </button>
-            <button *ngIf="book.status === 1 || book.status === 3" (click)="extendReturnDate(book)" class="btn btn-warning btn-sm">
+            <button *ngIf="book.request_extension === 1" (click)="extendReturnDate(book)" class="btn btn-warning btn-sm">
               Extender Fecha de Retorno <i class="bi bi-calendar-plus"></i>
             </button>
           </div>
