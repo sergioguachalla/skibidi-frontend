@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {FinesService} from "../../services/fines.service";
 import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-paid-fines',
@@ -11,7 +12,8 @@ import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
     CurrencyPipe,
     DatePipe,
     NgForOf,
-    NgIf
+    NgIf,
+    FormsModule
   ],
   templateUrl: './paid-fines.component.html',
   styleUrl: './paid-fines.component.css'
@@ -19,22 +21,23 @@ import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 export class PaidFinesComponent {
 
   private fineService: FinesService = inject(FinesService);
-
   protected paidFines: any = [];
-
   private page: number = 0;
-  private size: number = 10;
-
+  private size: number = 5;
   currentPage = 1;
+  usernameQuery = '';
 
   totalPages = 0;
   constructor() {
-    this.findPaidFines()
+    this.findPaidFines(this.page, this.size);
     this.updateTotalPages();
   }
 
-  findPaidFines() {
-    this.fineService.findPaidFines(this.page, this.size).subscribe((response) => {
+  findPaidFines(page:number, size: number) {
+    page = this.page;
+    size = this.size;
+
+    this.fineService.findPaidFines(this.page, this.size,null).subscribe((response) => {
       this.paidFines = response.data.content;
       this.totalPages = response.data.totalPages;
       console.log(response.data.content)
@@ -55,6 +58,17 @@ export class PaidFinesComponent {
   changePage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.findPaidFines(page, this.size);
     }
   }
+  searchUsername() {
+    if (this.usernameQuery === '') {
+      this.findPaidFines(this.page, this.size);
+    }
+    this.fineService.findPaidFines(this.page, this.size, this.usernameQuery).subscribe((response) => {
+      this.paidFines = response.data.content;
+      this.totalPages = response.data.totalPages;
+    });
+  }
+
 }
