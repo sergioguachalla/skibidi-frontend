@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {FinesService} from "../../services/fines.service";
-import {CurrencyPipe, DatePipe} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-paid-fines',
@@ -9,7 +9,9 @@ import {CurrencyPipe, DatePipe} from "@angular/common";
   imports: [
     NavbarComponent,
     CurrencyPipe,
-    DatePipe
+    DatePipe,
+    NgForOf,
+    NgIf
   ],
   templateUrl: './paid-fines.component.html',
   styleUrl: './paid-fines.component.css'
@@ -18,32 +20,41 @@ export class PaidFinesComponent {
 
   private fineService: FinesService = inject(FinesService);
 
-  private paidFines: any = [];
+  protected paidFines: any = [];
 
   private page: number = 0;
   private size: number = 10;
 
-  currentPage: number = 1;
-  itemsPerPage: number = 5;
+  currentPage = 1;
+
+  totalPages = 0;
   constructor() {
     this.findPaidFines()
+    this.updateTotalPages();
   }
 
   findPaidFines() {
     this.fineService.findPaidFines(this.page, this.size).subscribe((response) => {
-      this.paidFines = response
-      console.log(response)
+      this.paidFines = response.data.content;
+      this.totalPages = response.data.totalPages;
+      console.log(response.data.content)
     });
   }
 
 
-  get paginatedFines() {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    return this.paidFines.slice(start, end);
+  updateTotalPages() {
+    this.totalPages = Math.ceil(this.paidFines.length / this.size);
   }
 
-  onPageChange(page: number) {
-    this.currentPage = page;
+  get paginatedFines() {
+    const startIndex = (this.currentPage - 1) * this.size;
+    const endIndex = startIndex + this.size;
+    return this.paidFines.slice(startIndex, endIndex);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
   }
 }
