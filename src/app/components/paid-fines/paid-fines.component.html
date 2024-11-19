@@ -1,6 +1,15 @@
 <navbar></navbar>
 <div class="container mt-4">
   <h3>Multas de Usuarios</h3>
+  <div class="d-flex mb-3">
+    <input
+      type="text"
+      class="form-control me-2"
+      placeholder="Buscar por nombre de usuario"
+      [(ngModel)]="usernameQuery" />
+    <button class="btn btn-primary" (click)="searchUsername()">Buscar</button>
+  </div>
+
   <table class="table table-striped">
     <thead class="thead-dark">
     <tr>
