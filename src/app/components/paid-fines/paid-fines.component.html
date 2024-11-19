@@ -1,0 +1,38 @@
+<navbar></navbar>
+<div class="container mt-4">
+  <h3>Multas de Usuarios</h3>
+  <table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+      <th>ID</th>
+      <th>Usuario</th>
+      <th>Título del Libro</th>
+      <th>Tipo de Multa</th>
+      <th>Monto</th>
+      <th>Fecha de Pago</th>
+      <th>Retraso</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let fine of paidFines">
+      <td>{{ fine.fineId }}</td>
+      <td>{{ fine.username }}</td>
+      <td>{{ fine.bookTitle }}</td>
+      <td>{{ fine.typeFine }}</td>
+      <td>{{ fine.amount | currency }}</td>
+      <td>{{ fine.paidDate | date: 'mediumDate' }}</td>
+      <td>
+          <span [class.text-danger]="fine.overdue">
+            {{ fine.overdue ? 'Sí' : 'No' }}
+          </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <pagination-controls
+    (pageChange)="onPageChange($event)"
+    autoHide="true"
+    class="my-3"
+  ></pagination-controls>
+</div>

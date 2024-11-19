@@ -25,6 +25,10 @@ export class FinesService {
     return this.http.get<any>(`${this.API_URL}details/${fineId}`);
   }
 
+  findPaidFines(page: number, size: number) {
+    return this.http.get<any>(`${this.API_URL}paid?page=${page}&size=${size}`);
+  }
+
 
 
 
