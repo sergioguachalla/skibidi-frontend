@@ -51,6 +51,9 @@ export class TypeFineComponent {
     this.isEditModalOpen = false;
   }
   saveEdit() {
-
+    this.typeFineService.updateFine(this.selectedFine).subscribe(() => {
+      this.findAllTypeFines();
+      this.cancelEdit();
+    });
   }
 }
