@@ -3,7 +3,7 @@ import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {UserClientService} from "../../services/userclient.service";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {FinesService} from "../../services/fines.service";
->>>>>>> c698002 (add client list component)
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-client-list',
@@ -12,7 +12,8 @@ import {FinesService} from "../../services/fines.service";
     NavbarComponent,
     NgForOf,
     NgIf,
-    NgClass
+    NgClass,
+    FormsModule
   ],
   templateUrl: './client-list.component.html',
   styleUrl: './client-list.component.css'
@@ -22,6 +23,7 @@ export class ClientListComponent {
   private userClientService: UserClientService = inject(UserClientService);
   private fineService: FinesService = inject(FinesService);
   protected clients: any[] = [];
+  protected searchTerm: string = '';
   selectedClient: any;
   debts: any[] = [];
   isModalOpen: boolean = false;
@@ -30,7 +32,7 @@ export class ClientListComponent {
   }
 
   findAllClients() {
-    this.userClientService.getAllUserClients().subscribe((response) => {
+    this.userClientService.getAllUserClients(null).subscribe((response) => {
       this.clients = response.data;
     });
   }
@@ -45,5 +47,10 @@ export class ClientListComponent {
 
   closeModal(): void {
     this.isModalOpen = false;
+  }
+  searchClient() {
+    this.userClientService.getAllUserClients(this.searchTerm).subscribe((response) => {
+      this.clients = response.data;
+    });
   }
 }
