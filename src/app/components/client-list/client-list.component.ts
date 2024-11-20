@@ -27,6 +27,8 @@ export class ClientListComponent {
   selectedClient: any;
   debts: any[] = [];
   isModalOpen: boolean = false;
+  isValidSearchTerm: boolean = true;
+
   constructor() {
     this.findAllClients();
   }
@@ -48,7 +50,17 @@ export class ClientListComponent {
   closeModal(): void {
     this.isModalOpen = false;
   }
+  onSearchTermChange() {
+    this.searchTerm = this.searchTerm.trim();
+
+    const validPattern = /^[a-zA-Z0-9\s]*$/;
+    this.isValidSearchTerm = validPattern.test(this.searchTerm);
+  }
+
   searchClient() {
+    if (!this.isValidSearchTerm) {
+      return;
+    }
     this.userClientService.getAllUserClients(this.searchTerm).subscribe((response) => {
       this.clients = response.data;
     });
