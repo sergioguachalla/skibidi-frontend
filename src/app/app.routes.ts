@@ -17,6 +17,7 @@ import {FineListComponent} from "./components/fine-list/fine-list.component";
 import { LendBooksComponent } from './components/lend-books/lend-books.component';
 import { LendBookHistoryComponent } from './components/lend-book-history/lend-book-history.component';
 import {ClientListComponent} from "./components/client-list/client-list.component";
+import {PaidFinesComponent} from "./components/paid-fines/paid-fines.component";
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },
@@ -37,6 +38,7 @@ export const routes: Routes = [
     {path: 'fines', component: FineListComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
     { path: 'lend-client-history', component: LendBooksComponent },
     { path: 'lend-history', component: LendBookHistoryComponent },
-    {path: 'clients', component: ClientListComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}}
+    {path: 'clients', component: ClientListComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
+  {path: 'paid-fines', component: PaidFinesComponent}
 
 ];
