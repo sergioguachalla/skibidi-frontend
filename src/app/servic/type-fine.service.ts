@@ -14,5 +14,8 @@ export class TypeFineService {
     return this.http.get<any>(`${this.API_URL}/`);
   }
 
+  updateFine(typefine: any) {
+    return this.http.put<any>(`${this.API_URL}/`, typefine);
+  }
 
 }
