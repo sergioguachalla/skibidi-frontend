@@ -1,7 +1,7 @@
 <navbar></navbar>
 <div class="container mt-4">
   <h2>Lista de Multas</h2>
-  <button class="btn btn-primary mb-3" (click)="addFine()">Agregar Multa</button>
+  <button class="btn btn-primary mb-3" >Agregar Multa</button>
   <table class="table table-bordered table-striped">
     <thead class="thead-dark">
     <tr>
@@ -15,12 +15,45 @@
     <tr *ngFor="let fine of typeFines">
       <td>{{ fine.id }}</td>
       <td>{{ fine.description }}</td>
-      <td>Bs. {{ fine.amount}}</td>
+      <td>{{ fine.amount}}</td>
       <td>
-        <button class="btn btn-warning btn-sm" (click)="editFine()">Editar</button>
-        <button class="btn btn-danger btn-sm" (click)="deleteFine()">Eliminar</button>
+        <button class="btn btn-warning btn-sm" (click)="openEditModal(fine)">Editar</button>
+        <button class="btn btn-danger btn-sm" >Eliminar</button>
       </td>
     </tr>
     </tbody>
   </table>
+
+  <!-- Formulario de edición -->
+  <div *ngIf="isEditModalOpen" class="mt-4">
+    <h4>Editar Multa</h4>
+    <form #editForm="ngForm">
+      <div class="mb-3">
+        <label for="description" class="form-label">Descripción</label>
+        <input
+          type="text"
+          id="description"
+          class="form-control"
+          [(ngModel)]="selectedFine.description"
+          name="description"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="amount" class="form-label">Monto</label>
+        <input
+          type="number"
+          id="amount"
+          class="form-control"
+          [(ngModel)]="selectedFine.amount"
+          name="amount"
+          required
+        />
+      </div>
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-secondary me-2" (click)="cancelEdit()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveEdit()">Guardar Cambios</button>
+      </div>
+    </form>
+  </div>
 </div>
