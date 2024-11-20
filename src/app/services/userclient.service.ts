@@ -19,7 +19,10 @@ export class UserClientService {
     return this.http.get<ResponseDto<UserClient>>(`${this.apiUrl}/clients/${kcId}`);
   }
 
-  getAllUserClients(): Observable<{ data: UserClient[], message: string, successful: boolean}> {
+  getAllUserClients(username: string | null): Observable<{ data: UserClient[], message: string, successful: boolean}> {
+    if (username) {
+      return this.http.get<{ data: UserClient[], message: string, successful: boolean }>(`${this.apiUrl}/clients?username=${username}`);
+    }
     return this.http.get<{ data: UserClient[], message: string, successful: boolean }>(`${this.apiUrl}/clients`);
   }
 
