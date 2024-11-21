@@ -13,6 +13,7 @@
       <th>Estado</th>
       <th>Usuario</th>
       <th>Fecha de Pago</th>
+      <th>Acciones</th>
     </tr>
     </thead>
     <tbody>
@@ -26,9 +27,16 @@
       </td>
       <td class="username-link" (click)="showFineDetail(fine.fineId)"> {{ fine.username }} </td>
       <td>{{ fine.paidDate }}</td>
+      <td>
+        <!-- Botón para bloquear préstamos -->
+        <button 
+          *ngIf="fine.status === 'Pendiente'" 
+          class="btn btn-warning btn-sm" 
+          (click)="blockBorrowingPermission(fine.userId)">
+          Bloquear Préstamos
+        </button>
+      </td>
     </tr>
-
-
     </tbody>
   </table>
 
@@ -51,7 +59,6 @@
     </ul>
   </nav>
 </div>
-
 
 <!-- Modal personalizado -->
 <div class="custom-modal" *ngIf="isModalOpen">
@@ -79,4 +86,3 @@
   </div>
   <div class="modal-overlay" (click)="closeModal()"></div>
 </div>
-

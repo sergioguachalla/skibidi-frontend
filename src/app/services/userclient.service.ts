@@ -49,4 +49,12 @@ export class UserClientService {
   checkUserReservationEligibility(selectedClientId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${selectedClientId}/studyroom/status`)
   }
+
+  changeBorrowPermission(selectedClientId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${selectedClientId}/books/status`, {});
+  }
+
+  checkUserBorrowEligibility(selectedClientId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${selectedClientId}/books/status`)
+  }
 }

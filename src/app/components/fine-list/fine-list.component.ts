@@ -3,6 +3,7 @@ import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {FinesService} from "../../services/fines.service";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {toArray} from "rxjs";
+import { UserClientService } from '../../services/userclient.service';
 
 @Component({
   selector: 'app-fine-list',
@@ -24,6 +25,7 @@ export class FineListComponent implements OnInit {
   pagesArray: number[] = [];
   isModalOpen: boolean = false;
   private fineService: FinesService = inject(FinesService);
+  private userService: UserClientService = inject(UserClientService);
 
   constructor() {}
 
@@ -71,5 +73,19 @@ export class FineListComponent implements OnInit {
     this.isModalOpen = true;
   }
 
+  blockBorrowingPermission(userId: string): void {
+    // Implementar lógica para bloquear los préstamos
+    this.userService.changeBorrowPermission(userId).subscribe(
+      () => {
+        alert('El permiso para realizar préstamos ha sido bloqueado para el usuario.');
+        // Actualiza la lista de multas o usuarios
+      },
+      (error) => {
+        console.error('Error al bloquear permisos:', error);
+        alert('No se pudo bloquear el permiso. Intenta de nuevo.');
+      }
+    );
+  }
+  
 
 }
