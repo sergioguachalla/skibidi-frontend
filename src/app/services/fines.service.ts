@@ -11,12 +11,15 @@ export class FinesService {
   private http: HttpClient = inject(HttpClient);
   constructor() { }
 
-  findAll(page: number, size: number, isPaid: boolean | null, userKcId: string | null) {
+  findAll(page: number, size: number, isPaid: boolean | null, userKcId: string | null, startDate: string | null, endDate: string | null) {
     if (isPaid != null) {
       return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}&isPaid=${isPaid}`);
   }
     if (userKcId != null) {
       return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}&userKcId=${userKcId}`);
+    }
+    if (startDate != null && endDate != null) {
+      return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}&startDate=${startDate}&endDate=${endDate}`);
     }
     return this.http.get<any>(`${this.API_URL}?page=${page}&size=${size}`);
   }
