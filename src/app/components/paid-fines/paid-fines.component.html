@@ -1,0 +1,61 @@
+<navbar></navbar>
+<div class="container mt-4">
+  <h3>Multas de Usuarios</h3>
+  <div class="d-flex mb-3">
+    <input
+      type="text"
+      class="form-control me-2"
+      placeholder="Buscar por nombre de usuario"
+      [(ngModel)]="usernameQuery" />
+    <button class="btn btn-primary" (click)="searchUsername()">Buscar</button>
+  </div>
+
+  <table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+      <th>ID</th>
+      <th>Usuario</th>
+      <th>Título del Libro</th>
+      <th>Tipo de Multa</th>
+      <th>Monto</th>
+      <th>Fecha de Pago</th>
+      <th>Retraso</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngIf="paidFines.length === 0">
+      <tr>
+        <td colspan="7" class="text-center">No hay multas pagadas</td>
+      </tr>
+    </ng-container>
+    <tr *ngFor="let fine of paidFines">
+      <td>{{ fine.fineId }}</td>
+      <td>{{ fine.username }}</td>
+      <td>{{ fine.bookTitle }}</td>
+      <td>{{ fine.typeFine }}</td>
+      <td>Bs. {{  fine.amount }}</td>
+      <td>{{ fine.paidDate | date: 'mediumDate' }}</td>
+      <td>
+          <span [class.text-danger]="fine.overdue">
+            {{ fine.overdue ? 'Sí' : 'No' }}
+          </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="changePage(currentPage - 1)">Anterior</button>
+      </li>
+      <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+          [class.active]="currentPage === i + 1">
+        <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="changePage(currentPage + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
+
+</div>
