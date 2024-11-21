@@ -41,12 +41,4 @@ export class UserClientService {
   registerCustomer(userRegistrationDto: UserRegistrationDto): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/clients`, userRegistrationDto);
   }
-
-  toggleReservationPermission(selectedClientId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/${selectedClientId}/studyroom/status`, {});
-  }
-
-  checkUserReservationEligibility(selectedClientId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${selectedClientId}/studyroom/status`)
-  }
 }
