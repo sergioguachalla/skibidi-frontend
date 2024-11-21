@@ -1,27 +1,6 @@
 <navbar></navbar>
 <div class="container">
   <h2 class="text-center my-4">Lista de Clientes</h2>
-
-  <div class="row mb-4">
-    <div class="col-md-6 mx-auto">
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Buscar cliente por nombre o ID"
-          [(ngModel)]="searchTerm"
-          (input)="onSearchTermChange()"
-          [ngClass]="{'is-invalid': !isValidSearchTerm}" />
-        <button class="btn btn-primary" (click)="searchClient()" [disabled]="!isValidSearchTerm">Buscar</button>
-      </div>
-      <div *ngIf="!isValidSearchTerm" class="text-danger mt-1">
-        Solo se permiten letras, números y espacios. Por favor corrige tu búsqueda.
-      </div>
-    </div>
-  </div>
-
-
-  <!-- Lista de clientes -->
   <div class="row">
     <div class="col-md-4 mb-4" *ngFor="let client of clients">
       <div class="card shadow-sm">
@@ -34,6 +13,7 @@
           <!-- Información del cliente -->
           <h5 class="card-title">{{ client.username }}</h5>
           <p class="card-text text-muted">ID de Cliente: {{ client.clientId }}</p>
+
 
           <!-- Botón para consultar deudas -->
           <button class="btn btn-primary" (click)="onConsultDebts(client.kcUuid)">Consultar deudas</button>
@@ -58,8 +38,8 @@
             <strong>Monto Inicial:</strong> {{ debt.amount}} Bs. <br />
             <strong>Monto Más Recargos:</strong> {{ debt.amountPlusInterest }} Bs. <br />
             <strong>Fecha de vencimiento:</strong> {{ debt.dueDate }}
-            <strong>Estado:</strong>
-            <p [ngClass]="{'status-pending': debt.status === 'Pendiente', 'status-paid': debt.status === 'Pagada'}">{{ debt.status }}</p>
+            <strong>Estado:</strong> <p [ngClass]="{'status-pending': debt.status === 'Pendiente', 'status-paid': debt.status === 'Pagada'}">{{ debt.status }}</p>
+
           </li>
         </ul>
       </div>
@@ -73,3 +53,4 @@
   </div>
   <div class="modal-overlay" (click)="closeModal()"></div>
 </div>
+

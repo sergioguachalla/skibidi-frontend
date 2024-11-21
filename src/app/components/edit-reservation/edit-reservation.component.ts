@@ -69,7 +69,7 @@ export class EditReservationComponent implements OnInit {
       }
     });
 
-    this.userClientService.getAllUserClients(null).subscribe(response => {
+    this.userClientService.getAllUserClients().subscribe(response => {
       this.userClients = response.data;
     });
 
