@@ -22,6 +22,17 @@
       </td>
     </tr>
     </tbody>
+    <ng-container *ngIf="typeFines.length === 0">
+      <tr>
+        <td colspan="4" class="text-center">No hay multas registradas</td>
+      </tr>
+      </ng-container>
+
+        <ng-container *ngIf="error">
+          <tr>
+            <td colspan="4" class="text-center text-danger">{{ error }}</td>
+          </tr>
+        </ng-container>
   </table>
 
   <!-- Formulario de edición -->
