@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NgIf } from "@angular/common";
 import { NavbarComponent } from "../shared/navbar/navbar.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,7 +6,6 @@ import { EnvironmentService } from "../../services/environment.service";
 import { KeycloakService } from "keycloak-angular";
 import { EnvironmentReservationDto } from "../../Model/environment.model";
 import {Router} from "@angular/router";
-import {UserClientService} from "../../services/userclient.service";
 declare var bootstrap: any;
 
 @Component({
@@ -20,7 +19,7 @@ declare var bootstrap: any;
   templateUrl: './environment-client.component.html',
   styleUrl: './environment-client.component.css'
 })
-export class EnvironmentClientComponent implements OnInit{
+export class EnvironmentClientComponent {
   @ViewChild('mapa', { static: false }) mapaRef!: ElementRef;
   mensaje: string = '';
   today: string = "";
@@ -33,7 +32,6 @@ export class EnvironmentClientComponent implements OnInit{
 
   constructor(
     private environmentService: EnvironmentService,
-    private userClientService: UserClientService,
     private keycloakService: KeycloakService,
     private formBuilder: FormBuilder,
     private router: Router
@@ -197,27 +195,6 @@ export class EnvironmentClientComponent implements OnInit{
     } else {
       alert('Por favor, seleccione una sala disponible antes de enviar la reserva.');
     }
-  }
-
-  ngOnInit(): void {
-    this.checkReservationAvailability()
-  }
-
-  checkReservationAvailability(){
-    const kcId = this.keycloakService.getKeycloakInstance().subject;
-    this.userClientService.checkUserReservationEligibility(kcId!).subscribe(
-      (response) => {
-        if (!response.data){ // if the user's NOT eligible to make reservations
-          alert('Usuario restringido para realizar reservas, por favor ponte en contacto con un administrador.');
-          this.router.navigate(['/'])
-        }
-      },
-      (error) => {
-        console.error('Error al verificar la disponibilidad de reserva de salas de estudio')
-        alert('Hubo un error al verificar la disponibilidad, intente de nuevo mas tarde.')
-        this.router.navigate(['/'])
-      }
-    )
   }
 
 
