@@ -21,7 +21,7 @@ export class UpdateStudyRoomReservationCapabilitiesComponent implements OnInit {
 
   ngOnInit(): void {
     // Fetch all users from the service
-    this.userClientService.getAllUserClients().subscribe(response => {
+    this.userClientService.getAllUserClients(null).subscribe(response => {
       this.userClients = response.data;  // Store the fetched users in the `userClients` array
     });
   }

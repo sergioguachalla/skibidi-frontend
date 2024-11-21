@@ -42,7 +42,7 @@ export const routes: Routes = [
     { path: 'lend-client-history', component: LendBooksComponent },
     { path: 'lend-history', component: LendBookHistoryComponent },
     {path: 'clients', component: ClientListComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
-  {path: 'study-room-reservation-capabilities', component: UpdateStudyRoomReservationCapabilitiesComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
+  {path: 'reservation-eligibility', component: UpdateStudyRoomReservationCapabilitiesComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
   {path: 'paid-fines', component: PaidFinesComponent}
 
 ];
