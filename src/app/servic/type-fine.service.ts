@@ -18,4 +18,12 @@ export class TypeFineService {
     return this.http.put<any>(`${this.API_URL}/`, typefine);
   }
 
+  saveFine(typefine: any) {
+    return this.http.post<any>(`${this.API_URL}/`, typefine);
+  }
+
+  deleteFine(id: number) {
+    return this.http.delete<any>(`${this.API_URL}/${id}`);
+  }
+
 }
