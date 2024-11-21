@@ -46,7 +46,7 @@ export class ReservationComponent implements OnInit {
       this.environments = response.data;
     });
 
-    this.userClientService.getAllUserClients().subscribe(response => {
+    this.userClientService.getAllUserClients(null).subscribe(response => {
       this.userClients = response.data;
     });
   }

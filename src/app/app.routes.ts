@@ -20,6 +20,7 @@ import {ClientListComponent} from "./components/client-list/client-list.componen
 import {
   UpdateStudyRoomReservationCapabilitiesComponent
 } from "./components/update-study-room-reservation-capabilities/update-study-room-reservation-capabilities.component";
+import {PaidFinesComponent} from "./components/paid-fines/paid-fines.component";
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },
@@ -41,8 +42,7 @@ export const routes: Routes = [
     { path: 'lend-client-history', component: LendBooksComponent },
     { path: 'lend-history', component: LendBookHistoryComponent },
     {path: 'clients', component: ClientListComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
-  {path: 'study-room-reservation-capabilities', component: UpdateStudyRoomReservationCapabilitiesComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}}
-
-
+  {path: 'study-room-reservation-capabilities', component: UpdateStudyRoomReservationCapabilitiesComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
+  {path: 'paid-fines', component: PaidFinesComponent}
 
 ];
