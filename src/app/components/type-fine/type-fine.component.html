@@ -1,0 +1,103 @@
+<navbar></navbar>
+<div class="container mt-4">
+  <h2>Lista de Multas</h2>
+  <button class="btn btn-primary mb-3" (click)="openCreateModal()">Agregar Multa</button>
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+    <tr>
+      <th>ID</th>
+      <th>Descripción</th>
+      <th>Monto</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let fine of typeFines">
+      <td>{{ fine.id }}</td>
+      <td>{{ fine.description }}</td>
+      <td>{{ fine.amount}}</td>
+      <td>
+        <button class="btn btn-warning btn-sm" (click)="openEditModal(fine)">Editar</button>
+        <button class="btn btn-danger btn-sm" (click)="deleteFine(fine.id)" >Eliminar</button>
+      </td>
+    </tr>
+    </tbody>
+    <ng-container *ngIf="typeFines.length === 0">
+      <tr>
+        <td colspan="4" class="text-center">No hay multas registradas</td>
+      </tr>
+      </ng-container>
+
+        <ng-container *ngIf="error">
+          <tr>
+            <td colspan="4" class="text-center text-danger">{{ error }}</td>
+          </tr>
+        </ng-container>
+  </table>
+
+  <!-- Formulario de edición -->
+  <div *ngIf="isEditModalOpen" class="mt-4">
+    <h4>{{ isEditModalOpen ? 'Editar Multa' : 'Agregar Multa' }}</h4>
+    <form #editForm="ngForm">
+      <div class="mb-3">
+        <label for="description" class="form-label">Descripción</label>
+        <input
+          type="text"
+          id="description"
+          class="form-control"
+          [(ngModel)]="selectedFine.description"
+          name="description"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="amount" class="form-label">Monto</label>
+        <input
+          type="number"
+          id="amount"
+          class="form-control"
+          [(ngModel)]="selectedFine.amount"
+          name="amount"
+          required
+        />
+      </div>
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-secondary me-2" (click)="cancelEdit()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveEdit()">Guardar Cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Formulario de creacion -->
+<div *ngIf="isSaveModalOpen" class="mt-4">
+  <h4>{{ isEditModalOpen ? 'Editar Multa' : 'Agregar Multa' }}</h4>
+  <form #editForm="ngForm">
+    <div class="mb-3">
+      <label for="description" class="form-label">Descripción</label>
+      <input
+        type="text"
+        id="description-add"
+        class="form-control"
+        [(ngModel)]="selectedFine.description"
+        name="description"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="amount" class="form-label">Monto</label>
+      <input
+        type="number"
+        id="amount-add"
+        class="form-control"
+        [(ngModel)]="selectedFine.amount"
+        name="amount"
+        required
+      />
+    </div>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-secondary me-2" (click)="cancelEdit()">Cancelar</button>
+      <button class="btn btn-primary" (click)="saveTypeFine()">Guardar</button>
+    </div>
+  </form>
+</div>

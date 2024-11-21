@@ -1,0 +1,14 @@
+.container {
+  max-width: 800px;
+}
+
+form {
+  background: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+form .btn {
+  min-width: 100px;
+}
