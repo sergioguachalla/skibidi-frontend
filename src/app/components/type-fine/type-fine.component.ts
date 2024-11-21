@@ -72,8 +72,8 @@ export class TypeFineComponent {
         this.findAllTypeFines();
       },
       error => {
-        alert('No se puede eliminar el tipo de multa');
-        this.error = error;
+
+        this.error = error.error.message;
       }
       );
   }
