@@ -40,6 +40,10 @@
         </div>
       </div>
     </div>
+    <ng-container *ngIf="clients.length === 0">
+
+        <p class="text-center">No se encontraron clientes con ese nombre de usuario.</p>
+    </ng-container>
   </div>
 </div>
 
