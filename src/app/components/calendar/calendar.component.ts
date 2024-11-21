@@ -1,13 +1,13 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import {CalendarUtils, DateAdapter} from "angular-calendar";
-import {adapterFactory} from "angular-calendar/date-adapters/moment";
+import { CalendarUtils, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/moment';
+import { KeycloakService } from 'keycloak-angular';
+import { ReservationHistoryService } from '../../services/reservation-history.service';
 
 interface Book {
   bookName: string;
@@ -30,29 +30,34 @@ interface Environment {
   imports: [CommonModule, FullCalendarModule],
 
   providers: [
-    CalendarUtils, // Proveer CalendarUtils
+    CalendarUtils,
     {
-      provide: DateAdapter, // Proveer el DateAdapter
+      provide: DateAdapter,
       useFactory: adapterFactory,
     },
   ],
 })
 export class CalendarComponent implements OnInit {
+
+  constructor(
+    private keycloakService: KeycloakService,
+    private reservationHistoryService: ReservationHistoryService
+  ) {}
   calendarOptions: any = {
     initialView: 'dayGridMonth',
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
     events: [],
   };
 
-  constructor(private http: HttpClient) {}
+
+
 
   ngOnInit(): void {
     this.fetchCalendarData();
   }
 
   fetchCalendarData(): void {
-    const url = 'http://localhost:8091/api/v1/reservations/calendar?kcid=28708456-073d-47ab-8767-6800311e700b';
-    this.http.get<any>(url).subscribe(
+    this.reservationHistoryService.getCalendarData(this.keycloakService.getKeycloakInstance().subject!).subscribe(
       (response) => {
         if (response.successful) {
           this.mapEvents(response.data.books, response.data.environments);
