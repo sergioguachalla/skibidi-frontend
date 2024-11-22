@@ -76,4 +76,20 @@ export class NavbarComponent {
       document.getElementById('registerIsbnModal'),
     ).hide();
   }
+
+  onClickToFineHistory() {
+    this.router.navigate(['/fines']);
+  }
+
+  onClickToClients() {
+    this.router.navigate(['/clients']);
+  }
+
+  onClickToPaidFines() {
+    this.router.navigate(['/paid-fines']);
+  }
+
+  onClickToTypeFine() {
+    this.router.navigate(['/type-fine']);
+  }
 }
