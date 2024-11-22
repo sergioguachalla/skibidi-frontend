@@ -474,4 +474,5 @@ closeModal() {
     this.router.navigate(['/'], { queryParams: { logout: 'true' } });
 
   }
+
 }

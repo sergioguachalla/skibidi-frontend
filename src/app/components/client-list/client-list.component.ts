@@ -41,7 +41,7 @@ export class ClientListComponent {
 
   onConsultDebts(userKcId: string): void {
     this.selectedClient = this.clients.find(client => client.kcUuid === userKcId);
-    this.fineService.findAll(0,10,null, userKcId).subscribe((response) => {
+    this.fineService.findAll(0,10,null, userKcId, null, null).subscribe((response) => {
       this.debts = response.data.content;
       this.isModalOpen = true;
     });

@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { NavbarComponent } from "../shared/navbar/navbar.component";
 import { FinesService } from "../../services/fines.service";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 import { UserClientService } from '../../services/userclient.service';
 
 @Component({
@@ -11,10 +12,11 @@ import { UserClientService } from '../../services/userclient.service';
     NavbarComponent,
     NgForOf,
     NgIf,
-    NgClass
+    NgClass,
+    FormsModule
   ],
   templateUrl: './fine-list.component.html',
-  styleUrl: './fine-list.component.css'
+  styleUrls: ['./fine-list.component.css']
 })
 export class FineListComponent implements OnInit {
   fines: any = [];
@@ -26,6 +28,8 @@ export class FineListComponent implements OnInit {
   isConfirmModalOpen: boolean = false;
   selectedUserId: string | null = null;
   selectedFine: any;  // Nueva variable para guardar el "fine" seleccionado
+  startDate: any;
+  endDate: any;
 
   private fineService: FinesService = inject(FinesService);
   private userService: UserClientService = inject(UserClientService);
@@ -37,7 +41,7 @@ export class FineListComponent implements OnInit {
   }
 
   findAllFines(page: number = 0) {
-    this.fineService.findAll(page, 5, null, null).subscribe((response) => {
+    this.fineService.findAll(page, 5, null, null, null, null).subscribe((response) => {
       this.fines = response.data.content;
       this.currentPage = response.data.pageable.pageNumber;
       this.totalPages = response.data.totalPages;
@@ -130,17 +134,34 @@ export class FineListComponent implements OnInit {
       }
     }
   }
-  
-  blockUser(fine: any): void {
-    // Lógica para bloquear al usuario asociado con la multa
-    console.log(`Bloqueando al usuario asociado con la multa ID: ${fine.fineId}`);
-    // Aquí puedes llamar a un servicio para realizar la acción en el backend
-    this.userService.blockUser(fine.userKcId).subscribe({
-      next: () => {
-        alert('Usuario bloqueado exitosamente.');
-      },
-      error: (err) => console.error('Error al bloquear al usuario:', err),
+
+  filterFines() {
+    if (this.startDate && this.endDate) {
+      const startDate = new Date(this.startDate);
+      const endDate = new Date(this.endDate);
+
+      const formattedStartDate = startDate.toISOString().split('T')[0];
+      const formattedEndDate = endDate.toISOString().split('T')[0];
+
+      this.fineService.findAll(this.currentPage, 5, null, null, formattedStartDate, formattedEndDate).subscribe((response) => {
+        this.fines = response.data.content;
+        this.currentPage = response.data.pageable.pageNumber;
+        this.totalPages = response.data.totalPages;
+        this.pagesArray = this.getPagesSubset(this.currentPage, this.totalPages);
+      });
+    }
+  }
+
+  clearFilter() {
+    this.startDate = null;
+    this.endDate = null;
+    this.findAllFines();
+  }
+
+  payFine(fineId: number) {
+    confirm('Desea registrar el pago de la multa?');
+    this.fineService.payFine(fineId).subscribe(() => {
+      this.findAllFines();
     });
   }
-  
 }
