@@ -51,10 +51,18 @@ export class UserClientService {
   }
 
   changeBorrowPermission(selectedClientId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/${selectedClientId}/books/status`, {});
+    return this.http.put<any>(`${this.apiUrl}/${selectedClientId}/books/status`, {});
   }
 
   checkUserBorrowEligibility(selectedClientId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${selectedClientId}/books/status`)
+  }
+
+  blockUser(selectedClientId: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${selectedClientId}/blocked/status`, {})
+  }
+
+  checkUserBlockStatus(selectedClientId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${selectedClientId}/blocked/status`)
   }
 }

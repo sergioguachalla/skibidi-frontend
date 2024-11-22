@@ -125,10 +125,12 @@ closeModal() {
     private userService: UserClientService = inject(UserClientService),
     private router: Router,
     private keycloakService: KeycloakService,
+    
     ) {
   }
 
   ngOnInit() {
+    this.checkUserStatus();  // Verifica el estado del usuario
     this.applyFilters(0);
     this.findGenres();
     this.findLanguages();
@@ -149,8 +151,20 @@ closeModal() {
         this.applyFilters(page);
 
     });
+  }
 
-
+  checkUserStatus() {
+    this.userService.checkUserBlockStatus(this.keycloakService.getKeycloakInstance().subject!).subscribe(
+      (response: any) => {
+        if (response && response.data === true) {
+          // Si el usuario está bloqueado, realiza logout
+          this.logout();
+        }
+      },
+      error => {
+        console.error('Error al verificar el estado de bloqueo del usuario:', error);
+      }
+    );
   }
 
   toggleAvailability(libro: BookDto) {
@@ -454,5 +468,10 @@ closeModal() {
         console.error('Error al realizar la reserva:', error);
       }
     );
+  }
+
+  logout() {
+    this.router.navigate(['/'], { queryParams: { logout: 'true' } });
+
   }
 }

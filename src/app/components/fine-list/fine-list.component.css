@@ -203,11 +203,6 @@ tr:last-child td:last-child {
 }
 
 
-.gray-row {
-  background-color: #d3d3d3;  /* Color gris claro */
-}
-
-
 /* Estilo para asegurar que el modal de confirmación esté en la parte superior */
 .modal {
   position: fixed;
@@ -238,3 +233,4 @@ tr:last-child td:last-child {
   justify-content: flex-end;
   gap: 10px;
 }
+

@@ -30,10 +30,19 @@
         </td>
         <td class="username-link" (click)="showFineDetail(fine.fineId)"> {{ fine.username }} </td>
         <td>{{ fine.paidDate }}</td>
-        <td>
+        <td class="action-buttons">
+          <!-- Botón para bloquear usuarios por daño o pérdida de material -->
+          <button 
+            *ngIf="fine.typeFine === 'Daño o Pérdida de Material'" 
+            class="btn btn-sm btn-danger" 
+            title="Bloquear Usuario" 
+            (click)="openConfirmModal(fine)">
+            <i class="fa fa-ban"></i> {{ fine.isBlocked ? 'Desbloquear Usuario' : 'Bloquear Usuario' }}
+          </button>
+          <!-- Botón para bloquear/desbloquear préstamos -->
           <button 
             *ngIf="fine.status === 'Pendiente'" 
-            class="btn" 
+            class="btn btn-sm" 
             [ngClass]="{'btn-warning': fine.canBorrowBooks, 'btn-success': !fine.canBorrowBooks}" 
             (click)="openConfirmModal(fine)">
             {{ fine.canBorrowBooks ? 'Bloquear Préstamos' : 'Desbloquear Préstamos' }}
@@ -41,7 +50,7 @@
         </td>
         <td>{{ fine.canBorrowBooks ? 'Sí' : 'No' }}</td>
       </tr>
-    </tbody>
+    </tbody>    
   </table>
 
   <!-- Paginación -->
@@ -73,7 +82,17 @@
         <button type="button" class="close" (click)="closeConfirmModal()">&times;</button>
       </div>
       <div class="modal-body">
-        <p>¿Estás seguro de que deseas {{ selectedFine?.canBorrowBooks ? 'bloquear' : 'desbloquear' }} los préstamos para este usuario?</p>
+        <!-- Mensaje dinámico basado en la acción -->
+        <p *ngIf="selectedFine?.typeFine === 'Daño o Pérdida de Material'">
+          ¿Estás seguro de que deseas 
+          {{ selectedFine?.isBlocked ? 'bloquear' : 'desbloquear' }} 
+          al usuario <strong>{{ selectedFine?.username }}</strong> debido a una multa por daño o pérdida de material?
+        </p>
+        <p *ngIf="selectedFine?.typeFine !== 'Daño o Pérdida de Material'">
+          ¿Estás seguro de que deseas 
+          {{ selectedFine?.canBorrowBooks ? 'bloquear' : 'desbloquear' }} 
+          los préstamos para el usuario <strong>{{ selectedFine?.username }}</strong>?
+        </p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-danger" (click)="confirmBlock()">Confirmar</button>
@@ -81,4 +100,31 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Modal Detalles de Multa -->
+<div *ngIf="isModalOpen" class="modal custom-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>Detalles de la Multa para: {{ fineDetail.title }}</h5>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Título:</strong> {{ fineDetail.book.title }}</p>
+      <p><strong>Usuario:</strong> {{ fineDetail.username }}</p>
+      <p><strong>Días de retraso:</strong> {{ fineDetail.delayDays }}</p>
+      <p><strong>Fecha de vencimiento:</strong> {{ fineDetail.dueDate }}</p>
+      <p><strong>Monto inicial:</strong> {{ fineDetail.originalAmount }} Bs.</p>
+      <p><strong>Monto total con recargos:</strong> {{ fineDetail.totalAmount }} Bs.</p>
+      <p><strong>Estado:</strong>
+        <span [ngClass]="{'status-pending': fineDetail.status === 'Pending', 'status-paid': fineDetail.status === 'Paid'}">
+          {{ fineDetail.status }}
+        </span>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" (click)="closeModal()">Cerrar</button>
+    </div>
+  </div>
+  <div class="modal-overlay" (click)="closeModal()"></div>
 </div>

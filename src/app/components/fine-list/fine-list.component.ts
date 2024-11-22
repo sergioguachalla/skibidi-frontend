@@ -91,24 +91,56 @@ export class FineListComponent implements OnInit {
   }
   
   confirmBlock(): void {
-    console.log("Confirmación de bloqueo iniciada");
     if (this.selectedFine) {
-      this.userService.changeBorrowPermission(this.selectedFine.userKcId).subscribe(
-        () => {
-          let message = this.selectedFine.canBorrowBooks 
-                        ? 'El permiso para realizar préstamos ha sido bloqueado para el usuario.'
-                        : 'El permiso para realizar préstamos ha sido desbloqueado para el usuario.';
-          console.log('Permiso actualizado para el usuario:', this.selectedFine.userKcId);
-          alert(message);
-          this.findAllFines(); // Actualiza la lista
-          this.closeConfirmModal();
-        },
-        (error) => {
-          console.error('Error al cambiar los permisos:', error);
-          alert('No se pudo cambiar el permiso. Intenta de nuevo.');
-          this.closeConfirmModal();
-        }
-      );
+      // Bloquear al usuario completo si es por daño/pérdida de material
+      if (this.selectedFine.typeFine === 'Daño o Pérdida de Material') {
+        this.userService.blockUser(this.selectedFine.userKcId).subscribe({
+          next: () => {
+            const message = this.selectedFine.isBlocked
+              ? 'El usuario ha sido bloqueado exitosamente.'
+              : 'El usuario ha sido desbloqueado exitosamente.';
+            alert(message);
+            this.findAllFines(); // Refresca la lista de multas
+
+            this.closeConfirmModal();
+          },
+          error: (err) => {
+            console.error('Error al bloquear/desbloquear al usuario:', err);
+            alert('No se pudo completar la acción. Intenta de nuevo.');
+            this.closeConfirmModal();
+          },
+        });
+      } else {
+        // Cambiar permisos de préstamos
+        this.userService.changeBorrowPermission(this.selectedFine.userKcId).subscribe({
+          next: () => {
+            const message = this.selectedFine.canBorrowBooks
+              ? 'El permiso para realizar préstamos ha sido bloqueado para el usuario.'
+              : 'El permiso para realizar préstamos ha sido desbloqueado para el usuario.';
+            alert(message);
+            this.findAllFines(); // Refresca la lista de multas
+            this.closeConfirmModal();
+          },
+          error: (err) => {
+            console.error('Error al cambiar los permisos:', err);
+            alert('No se pudo completar la acción. Intenta de nuevo.');
+            this.closeConfirmModal();
+          },
+        });
+      }
     }
   }
+  
+  blockUser(fine: any): void {
+    // Lógica para bloquear al usuario asociado con la multa
+    console.log(`Bloqueando al usuario asociado con la multa ID: ${fine.fineId}`);
+    // Aquí puedes llamar a un servicio para realizar la acción en el backend
+    this.userService.blockUser(fine.userKcId).subscribe({
+      next: () => {
+        alert('Usuario bloqueado exitosamente.');
+      },
+      error: (err) => console.error('Error al bloquear al usuario:', err),
+    });
+  }
+  
 }
