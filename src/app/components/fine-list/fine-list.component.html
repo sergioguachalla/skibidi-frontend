@@ -78,8 +78,14 @@
           </button>
         </td>
         <td>{{ fine.canBorrowBooks ? 'Sí' : 'No' }}</td>
+        <td>
+          <button class="btn btn-primary" (click)="payFine(fine.fineId)" *ngIf="fine.status === 'Pendiente'">Registrar Pago</button>
+        </td>
       </tr>
     </tbody>
+    <div *ngIf="fines.length === 0">
+      No existen multas registradas
+    </div>
   </table>
 
   <!-- Paginación -->
