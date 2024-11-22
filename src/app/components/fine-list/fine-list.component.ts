@@ -3,6 +3,7 @@ import {NavbarComponent} from "../shared/navbar/navbar.component";
 import {FinesService} from "../../services/fines.service";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {toArray} from "rxjs";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-fine-list',
@@ -11,7 +12,8 @@ import {toArray} from "rxjs";
     NavbarComponent,
     NgForOf,
     NgIf,
-    NgClass
+    NgClass,
+    FormsModule
   ],
   templateUrl: './fine-list.component.html',
   styleUrl: './fine-list.component.css'
@@ -24,6 +26,8 @@ export class FineListComponent implements OnInit {
   pagesArray: number[] = [];
   isModalOpen: boolean = false;
   private fineService: FinesService = inject(FinesService);
+  startDate: any;
+  endDate: any;
 
   constructor() {}
 
@@ -32,7 +36,7 @@ export class FineListComponent implements OnInit {
   }
 
   findAllFines(page: number = 0) {
-    this.fineService.findAll(page, 5, null, null).subscribe((response) => {
+    this.fineService.findAll(page, 5, null, null, null, null).subscribe((response) => {
       this.fines = response.data.content;
       this.currentPage = response.data.pageable.pageNumber;
       this.totalPages = response.data.totalPages;
@@ -69,6 +73,29 @@ export class FineListComponent implements OnInit {
   }
   showModal(): void {
     this.isModalOpen = true;
+  }
+
+  filterFines() {
+    if (this.startDate && this.endDate) {
+      const startDate = new Date(this.startDate);
+      const endDate = new Date(this.endDate);
+
+      const formattedStartDate = startDate.toISOString().split('T')[0];
+      const formattedEndDate = endDate.toISOString().split('T')[0];
+
+      this.fineService.findAll(this.currentPage, 5, null, null, formattedStartDate, formattedEndDate).subscribe((response) => {
+        this.fines = response.data.content;
+        this.currentPage = response.data.pageable.pageNumber;
+        this.totalPages = response.data.totalPages;
+        this.pagesArray = this.getPagesSubset(this.currentPage, this.totalPages);
+      });
+    }
+  }
+
+  clearFilter() {
+    this.startDate = null;
+    this.endDate = null;
+    this.findAllFines();
   }
 
 
