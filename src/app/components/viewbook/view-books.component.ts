@@ -15,6 +15,7 @@ import {EditorialDto} from "../../Model/dto/EditorialDto";
 import {ActivatedRoute, Router} from "@angular/router";
 import {LendBookService} from "../../services/lend-book.service";
 import {KeycloakService} from "keycloak-angular";
+import {UserClientService} from "../../services/userclient.service";
 
 declare var bootstrap: any;
 interface filtersParams {
@@ -121,12 +122,15 @@ closeModal() {
   constructor(
     private bookService: BookService,
     private lendBookService: LendBookService,
+    private userService: UserClientService = inject(UserClientService),
     private router: Router,
     private keycloakService: KeycloakService,
+    
     ) {
   }
 
   ngOnInit() {
+    this.checkUserStatus();  // Verifica el estado del usuario
     this.applyFilters(0);
     this.findGenres();
     this.findLanguages();
@@ -147,8 +151,20 @@ closeModal() {
         this.applyFilters(page);
 
     });
+  }
 
-
+  checkUserStatus() {
+    this.userService.checkUserBlockStatus(this.keycloakService.getKeycloakInstance().subject!).subscribe(
+      (response: any) => {
+        if (response && response.data === true) {
+          // Si el usuario está bloqueado, realiza logout
+          this.logout();
+        }
+      },
+      error => {
+        console.error('Error al verificar el estado de bloqueo del usuario:', error);
+      }
+    );
   }
 
   toggleAvailability(libro: BookDto) {
@@ -391,12 +407,29 @@ closeModal() {
 
 
 
-  openReserveModal(book: BookDto) {
-    this.selectedBook = book;
-    const modalElement = document.getElementById('reserveModal');
-    const modal = new bootstrap.Modal(modalElement!);
-    modal.show();
+  openReserveModal(libro: BookDto) {
+    console.log('Libro seleccionado:', libro);
+    console.log("Verificando elegibilidad del usuario para reservar libros...");
+    this.userService.checkUserBorrowEligibility(this.keycloakService.getKeycloakInstance().subject!).subscribe(
+      (response: any) => {
+        if (response.successful && response.data === false) {
+          // Si el usuario está bloqueado, muestra un mensaje
+          this.mensaje = 'Usted tiene la opción bloqueada para reservas libros, contactese con un bibliotecario, no puedes hacer reservas.';
+          alert(this.mensaje);  // Puedes usar un modal o cualquier otra forma de alerta
+        } else {
+          // Si el usuario es elegible, abre el modal de reserva
+          this.selectedBook = libro;
+          const modalElement = document.getElementById('reserveModal');
+          const modal = new bootstrap.Modal(modalElement!);
+          modal.show();
+        }
+      },
+      error => {
+        console.error('Error al verificar elegibilidad del usuario:', error);
+      }
+    );
   }
+  
 
   closeReserveModal() {
     const modalElement = document.getElementById('reserveModal');
@@ -437,17 +470,22 @@ closeModal() {
     );
   }
 
-  addToFavorites(book: BookDto){
+  logout() {
+    this.router.navigate(['/'], { queryParams: { logout: 'true' } });
+  }
+
+  addToFavorites(book: BookDto) {
     if (book) {
       const kcId = this.keycloakService.getKeycloakInstance().subject;
       this.bookService.addOrRemoveFromFavorites(kcId!, book.bookId).subscribe(
         (response) => {
-          alert(response.data)
+          alert(response.data);
         },
         (error) => {
-          alert(error.message())
+          console.error('Error al agregar o quitar de favoritos:', error);
+          alert('No se pudo realizar la operación.');
         }
-      )
+      );
     }
   }
 }
