@@ -8,6 +8,7 @@ import { CalendarUtils, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import { KeycloakService } from 'keycloak-angular';
 import { ReservationHistoryService } from '../../services/reservation-history.service';
+import {NavbarComponent} from "../shared/navbar/navbar.component";
 
 interface Book {
   bookName: string;
@@ -27,7 +28,7 @@ interface Environment {
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
   standalone: true,
-  imports: [CommonModule, FullCalendarModule],
+  imports: [CommonModule, FullCalendarModule, NavbarComponent],
 
   providers: [
     CalendarUtils,
