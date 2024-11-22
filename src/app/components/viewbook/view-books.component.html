@@ -231,13 +231,21 @@
       </div>
       <div class="modal-body">
         <form>
+          <!-- Campo para la fecha de devolución -->
           <div class="mb-3">
             <label for="returnDate" class="form-label">Fecha de Devolución</label>
-            <input type="date" id="returnDate" [(ngModel)]="returnDate" name="returnDate" class="form-control">
+            <input type="date" id="returnDate" [(ngModel)]="returnDate" name="returnDate" class="form-control" [min]="todayDate">
           </div>
+          
+          <!-- Campo para la nota -->
           <div class="mb-3">
             <label for="note" class="form-label">Nota de la Reserva</label>
             <textarea id="note" [(ngModel)]="note" name="note" class="form-control"></textarea>
+          </div>
+          
+          <!-- Mostrar el mensaje de error si existe -->
+          <div *ngIf="mensaje" class="alert alert-danger">
+            {{ mensaje }}
           </div>
         </form>
       </div>
