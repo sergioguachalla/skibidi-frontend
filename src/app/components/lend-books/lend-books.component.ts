@@ -127,5 +127,19 @@ export class LendBooksComponent implements OnInit {
         this.closeExtensionModal(); // Cierra el modal en caso de error
       }
     );
-  }  
+  }
+  cancelLendBefore(book: LendBookDto): void {
+    if (confirm(`¿Está seguro de que desea cancelar el préstamo del libro "${book.title}" de forma anticipada?`)) {
+      this.lendBookService.ReturnedBefore(book.lendBookId).subscribe(
+        (response) => {
+          alert('El préstamo ha sido marcado como cancelado anticipadamente.');
+          this.loadLendBooks(); // Recargar la lista para reflejar los cambios
+        },
+        (error) => {
+          console.error('Error al cancelar el préstamo anticipadamente:', error);
+          alert('No se pudo procesar la cancelación anticipada. Intente nuevamente.');
+        }
+      );
+    }
+  }    
 }
