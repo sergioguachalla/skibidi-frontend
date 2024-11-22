@@ -96,4 +96,7 @@ export class NavbarComponent {
   onClickToTypeFine() {
     this.router.navigate(['/type-fine']);
   }
+  onClickToCalendar() {
+    this.router.navigate(['/calendar']);
+  }
 }
