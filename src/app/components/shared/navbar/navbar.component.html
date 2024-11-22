@@ -55,34 +55,71 @@
           </ul>
         </li>
 
-                <!-- Nueva opción en el navbar para ver historial de reservas -->
-                <li class="nav-item dropdown">
-                  <a
-                    class="nav-link dropdown-toggle"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    Historial reservas de libros
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" (click)="onClickToLendClientHistory()" role="button">Historial reservas de libros (Cliente)</a></li>
-                    <li><a class="dropdown-item" (click)="onClickToLendHistory()" role="button">Historial reservas de libros (Bibliotecario)</a></li>
-                    <li><a class="dropdown-item" (click)="onClickToLend()" role="button">Historial de multas (libros)</a></li>
-
-                  </ul>
-                </li>
-
-
-        <li class="nav-item">
+        <!-- Nueva opción en el navbar para ver historial de reservas -->
+        <li class="nav-item dropdown">
           <a
-            class="nav-link active"
-            aria-current="page"
+            class="nav-link dropdown-toggle"
             role="button"
-            (click)="goToMyInformation()"
-          >Mi información</a>
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Historial reservas de libros
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="onClickToLendClientHistory()" role="button">Historial reservas de libros (Cliente)</a></li>
+            <li><a class="dropdown-item" (click)="onClickToLendHistory()" role="button">Historial reservas de libros (Bibliotecario)</a></li>
+            <li><a class="dropdown-item" (click)="onClickToLend()" role="button">Historial de multas (libros)</a></li>
+
+          </ul>
         </li>
 
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >Mi Perfil</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="goToMyInformation()" role="button">Mi Información</a></li>
+            <li><a class="dropdown-item" (click)="goToMyFavorites()" role="button">Mis Favoritos</a></li>
+          </ul>
+        </li>
+        
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Registrar Libros
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="openIsbnModal()" role="button">Registrar por ISBN</a></li>
+            <li><a class="dropdown-item" (click)="onClickToRegisterManual()" role="button">Registro manual</a></li>
+          </ul>
+        </li>
+
+        <!-- Nueva opción en el navbar para ver historial de reservas -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Multas
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="onClickToFineHistory()" role="button">Historial de multas</a></li>
+            <li><a class="dropdown-item" (click)="onClickToClients()" role="button">Clientes</a></li>
+            <li><a class="dropdown-item" (click)="onClickToPaidFines()" role="button">Multas Pagadas</a></li>
+            <li><a class="dropdown-item" (click)="onClickToTypeFine()" role="button">Tipos de Multa</a></li>
+
+
+          </ul>
+        </li>
       </ul>
       <form class="d-flex" role="search" style="background-color: azure">
         <button class="btn btn-outline-success" (click)="logout()">

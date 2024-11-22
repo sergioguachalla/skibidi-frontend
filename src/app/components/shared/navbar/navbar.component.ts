@@ -76,4 +76,24 @@ export class NavbarComponent {
       document.getElementById('registerIsbnModal'),
     ).hide();
   }
+
+  goToMyFavorites() {
+    this.router.navigate(['/favorite-books'])
+  }
+
+  onClickToFineHistory() {
+    this.router.navigate(['/fines']);
+  }
+
+  onClickToClients() {
+    this.router.navigate(['/clients']);
+  }
+
+  onClickToPaidFines() {
+    this.router.navigate(['/paid-fines']);
+  }
+
+  onClickToTypeFine() {
+    this.router.navigate(['/type-fine']);
+  }
 }

@@ -16,4 +16,9 @@ export class ReservationHistoryService {
     return this.http.get<any>(url);
   }
 
+  getCalendarData(kcid: string): Observable<any> {
+    const url = `${this.apiUrl}/calendar?kcid=${kcid}`;
+    return this.http.get<any>(url);
+  }
+
 }

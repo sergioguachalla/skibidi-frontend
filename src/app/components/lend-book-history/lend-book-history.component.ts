@@ -86,6 +86,8 @@ export class LendBookHistoryComponent implements OnInit {
         return 'Devuelto';
       case 3:
         return 'Retrasado';
+      case 4:
+        return 'Devolucion anticipada';
       default:
         return 'Desconocido';
     }

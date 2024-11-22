@@ -27,7 +27,7 @@ export class FineListComponent implements OnInit {
   isModalOpen: boolean = false;
   isConfirmModalOpen: boolean = false;
   selectedUserId: string | null = null;
-  selectedFine: any;  // Nueva variable para guardar el "fine" seleccionado
+  selectedFine: any;
   startDate: any;
   endDate: any;
 
@@ -83,20 +83,19 @@ export class FineListComponent implements OnInit {
   }
 
   openConfirmModal(fine: any): void {
-    this.selectedFine = fine;  // Guarda el "fine" seleccionado
+    this.selectedFine = fine;
     this.isConfirmModalOpen = true;
-    console.log("Modal abierto para el usuario", fine.userKcId); // Verifica si se abre
+    console.log("Modal abierto para el usuario", fine.userKcId);
   }
-  
+
   closeConfirmModal(): void {
     this.selectedUserId = null;
-    this.selectedFine = null;  // Limpiar la selección del "fine"
+    this.selectedFine = null;
     this.isConfirmModalOpen = false;
   }
-  
+
   confirmBlock(): void {
     if (this.selectedFine) {
-      // Bloquear al usuario completo si es por daño/pérdida de material
       if (this.selectedFine.typeFine === 'Daño o Pérdida de Material') {
         this.userService.blockUser(this.selectedFine.userKcId).subscribe({
           next: () => {
@@ -104,8 +103,7 @@ export class FineListComponent implements OnInit {
               ? 'El usuario ha sido bloqueado exitosamente.'
               : 'El usuario ha sido desbloqueado exitosamente.';
             alert(message);
-            this.findAllFines(); // Refresca la lista de multas
-
+            this.findAllFines();
             this.closeConfirmModal();
           },
           error: (err) => {
@@ -115,14 +113,13 @@ export class FineListComponent implements OnInit {
           },
         });
       } else {
-        // Cambiar permisos de préstamos
         this.userService.changeBorrowPermission(this.selectedFine.userKcId).subscribe({
           next: () => {
             const message = this.selectedFine.canBorrowBooks
               ? 'El permiso para realizar préstamos ha sido bloqueado para el usuario.'
               : 'El permiso para realizar préstamos ha sido desbloqueado para el usuario.';
             alert(message);
-            this.findAllFines(); // Refresca la lista de multas
+            this.findAllFines();
             this.closeConfirmModal();
           },
           error: (err) => {
@@ -159,9 +156,10 @@ export class FineListComponent implements OnInit {
   }
 
   payFine(fineId: number) {
-    confirm('Desea registrar el pago de la multa?');
-    this.fineService.payFine(fineId).subscribe(() => {
-      this.findAllFines();
-    });
+    if (confirm('Desea registrar el pago de la multa?')) {
+      this.fineService.payFine(fineId).subscribe(() => {
+        this.findAllFines();
+      });
+    }
   }
 }

@@ -70,4 +70,8 @@ requestExtension(lendBookId: number): Observable<any> {
       })
     });
   }
+  ReturnedBefore(lendBookId: number): Observable<any> {
+    const url = `${this.baseUrl}/${lendBookId}/return-before`;
+    return this.http.put(url, {});
+  }
 }

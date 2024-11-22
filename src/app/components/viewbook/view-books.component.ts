@@ -472,7 +472,20 @@ closeModal() {
 
   logout() {
     this.router.navigate(['/'], { queryParams: { logout: 'true' } });
-
   }
 
+  addToFavorites(book: BookDto) {
+    if (book) {
+      const kcId = this.keycloakService.getKeycloakInstance().subject;
+      this.bookService.addOrRemoveFromFavorites(kcId!, book.bookId).subscribe(
+        (response) => {
+          alert(response.data);
+        },
+        (error) => {
+          console.error('Error al agregar o quitar de favoritos:', error);
+          alert('No se pudo realizar la operación.');
+        }
+      );
+    }
+  }
 }

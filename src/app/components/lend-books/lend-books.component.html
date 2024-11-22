@@ -51,6 +51,12 @@
             class="btn btn-info btn-sm">
             Solicitar Extensión <i class="bi bi-calendar-event"></i>
           </button>
+          <button 
+            *ngIf="book.status === 1" 
+            (click)="cancelLendBefore(book)" 
+            class="btn btn-danger btn-sm">
+            Cancelar prestamo<i class="bi bi-arrow-down-up"></i>
+          </button>
         </td>
       </tr>
     </tbody>
