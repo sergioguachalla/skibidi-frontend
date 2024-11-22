@@ -5,7 +5,7 @@ export interface BookDto {
   title: string;
   isbn: string;
   registrationDate: Date;
-  status: boolean;
+  status: number;
   image_url: string;
   genreId: number;
   authors: string[];
