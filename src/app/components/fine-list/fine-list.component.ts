@@ -99,4 +99,11 @@ export class FineListComponent implements OnInit {
   }
 
 
+  payFine(fineId: number) {
+    confirm('Desea registrar el pago de la multa?');
+    this.fineService.payFine(fineId).subscribe(() => {
+      this.findAllFines();
+    });
+
+  }
 }
