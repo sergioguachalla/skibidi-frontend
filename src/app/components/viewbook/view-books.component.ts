@@ -436,4 +436,18 @@ closeModal() {
       }
     );
   }
+
+  addToFavorites(book: BookDto){
+    if (book) {
+      const kcId = this.keycloakService.getKeycloakInstance().subject;
+      this.bookService.addOrRemoveFromFavorites(kcId!, book.bookId).subscribe(
+        (response) => {
+          alert(response.data)
+        },
+        (error) => {
+          alert(error.message())
+        }
+      )
+    }
+  }
 }

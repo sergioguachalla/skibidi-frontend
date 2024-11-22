@@ -1,0 +1,23 @@
+<navbar></navbar>
+<div class="container mt-4">
+  <h2 class="text-center">Mis Libros Favoritos</h2>
+
+  <div *ngIf="favorites && favorites.length > 0; else noFavorites">
+    <div *ngFor="let book of favorites" class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ book.title }}</h5>
+        <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+        <p><strong>Género:</strong> {{ book.genreId }}</p>
+        <p><strong>Autores:</strong> {{ book.authors ? book.authors.join(', ') : 'No hay autores' }}</p>
+        <p><strong>Editorial:</strong> {{ book.editorialId }}</p>
+        <p><strong>Idioma:</strong> {{ book.idLanguage }}</p>
+        <button class="btn btn-danger" (click)="removeFromFavorites(book)">Eliminar de Favoritos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message if no favorite books are found -->
+  <ng-template #noFavorites>
+    <p class="text-center mt-5">No tienes libros en tu lista de favoritos.</p>
+  </ng-template>
+</div>

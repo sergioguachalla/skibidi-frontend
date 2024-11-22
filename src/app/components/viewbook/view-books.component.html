@@ -97,31 +97,35 @@
   </div>
 
   </div>
-  <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="bookModalLabel">{{ selectedBook?.title }}</h5>
-          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p><strong>ISBN:</strong> {{ selectedBook?.isbn }}</p>
-          <p><strong>Fecha de Registro:</strong> {{ selectedBook?.registrationDate | date }}</p>
-          <p><strong>Género:</strong> {{ selectedBook?.genre }}</p>
-          <strong>Estado:</strong>
-            <span [ngClass]="{'available': selectedBook?.status, 'not-available': !selectedBook?.status}">
-              {{ selectedBook?.status ? 'Disponible' : 'No Disponible' }}
-            </span>
-          <p><strong>Autores:</strong> {{ selectedBook?.authors ? selectedBook.authors.join(', ') : 'No hay autores' }}</p>
-          <p><strong>Editorial:</strong> {{ selectedBook?.editorialName }}</p>
-          <p><strong>Language:</strong> {{ selectedBook?.languageName }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
-        </div>
+<!-- INFORMATION MODAL -->
+<div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookModalLabel">{{ selectedBook?.title }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>ISBN:</strong> {{ selectedBook?.isbn }}</p>
+        <p><strong>Fecha de Registro:</strong> {{ selectedBook?.registrationDate | date }}</p>
+        <p><strong>Género:</strong> {{ selectedBook?.genre }}</p>
+        <strong>Estado:</strong>
+        <span [ngClass]="{'available': selectedBook?.status, 'not-available': !selectedBook?.status}">
+            {{ selectedBook?.status ? 'Disponible' : 'No Disponible' }}
+          </span>
+        <p><strong>Autores:</strong> {{ selectedBook?.authors ? selectedBook.authors.join(', ') : 'No hay autores' }}</p>
+        <p><strong>Editorial:</strong> {{ selectedBook?.editorialName }}</p>
+        <p><strong>Idioma:</strong> {{ selectedBook?.languageName }}</p>
+
+        <!-- Add to Favorites Button -->
+        <button class="btn btn-warning mt-3" (click)="addToFavorites(selectedBook)">Añadir a favoritos</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
       </div>
     </div>
   </div>
+</div>
 
 
   <!-- Filtered books -->

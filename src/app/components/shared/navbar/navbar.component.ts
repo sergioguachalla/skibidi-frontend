@@ -77,6 +77,10 @@ export class NavbarComponent {
     ).hide();
   }
 
+  goToMyFavorites() {
+    this.router.navigate(['/favorite-books'])
+  }
+
   onClickToFineHistory() {
     this.router.navigate(['/fines']);
   }
