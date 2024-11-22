@@ -26,7 +26,7 @@ export class LendBooksComponent implements OnInit {
   totalElements: number = 0;
   isExtensionModalOpen: boolean = false; // Controla si el modal está abierto
   selectedBook: LendBookDto | null = null;
-
+  successMessage: string | null = null;
   constructor(
     private lendBookService: LendBookService,
     private kcService: KeycloakService,
@@ -68,6 +68,8 @@ export class LendBooksComponent implements OnInit {
         return 'Devuelto';
       case 3:
         return 'Retrasado';
+      case 4:
+        return 'Solicitud de devolucion enviada';
       default:
         return 'Desconocido';
     }
@@ -132,7 +134,9 @@ export class LendBooksComponent implements OnInit {
     if (confirm(`¿Está seguro de que desea cancelar el préstamo del libro "${book.title}" de forma anticipada?`)) {
       this.lendBookService.ReturnedBefore(book.lendBookId).subscribe(
         (response) => {
-          alert('El préstamo ha sido marcado como cancelado anticipadamente.');
+          alert(
+            'Gracias por enviar la solicitud de devolución anticipada. Por favor, diríjase con el libro a la biblioteca para que el bibliotecario lo marque como devuelto.'
+          );
           this.loadLendBooks(); // Recargar la lista para reflejar los cambios
         },
         (error) => {
@@ -141,5 +145,5 @@ export class LendBooksComponent implements OnInit {
         }
       );
     }
-  }    
+  }      
 }

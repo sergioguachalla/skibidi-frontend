@@ -26,7 +26,9 @@ export class IngresarLibroComponent implements OnInit {
     this.libroForm = this.formBuilder.group({
       title: ['', Validators.required],
       isbn: ['', Validators.required],
-      status: [true],
+      status: 1,
+      languageId:1,
+      editorialId:1,
       registrationDate: [new Date()],
       image_url: [''],
       genreId: ['', Validators.required], // Cambiado a genreId

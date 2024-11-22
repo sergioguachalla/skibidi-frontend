@@ -61,7 +61,9 @@
       </tr>
     </tbody>
   </table>
-
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
   <!-- Controles de paginación -->
   <div class="pagination-controls d-flex justify-content-center align-items-center mt-3">
     <button (click)="previousPage()" class="btn btn-outline-secondary me-2" [disabled]="page === 0">
