@@ -58,6 +58,9 @@
             <button *ngIf="book.request_extension === 1" (click)="extendReturnDate(book)" class="btn btn-warning btn-sm">
               Extender Fecha de Retorno <i class="bi bi-calendar-plus"></i>
             </button>
+            <button *ngIf="book.status === 4" (click)="markAsReturned(book)" class="btn btn-danger btn-sm">
+              Aceptar devolucion anticipada <i class="bi bi-arrow-down-up"></i>
+            </button>
           </div>
         </td>
       </tr>
