@@ -42,7 +42,15 @@ interface filtersParams {
 export class ViewBooksComponent implements OnInit {
   selectedBook: any = null;
   todayDate: string = new Date().toISOString().split('T')[0]; // Esto formatea la fecha a 'yyyy-mm-dd'
-
+  isAdmin: boolean=false;
+  privatearchive(){
+    const role = this.keycloakService.getUserRoles()
+    console.log(role)
+    if(role.includes('MAKE_RESERVATION')){
+      this.isAdmin=true
+    }
+  
+  }
 
   openModal(libro: BookDetailsDto) {
     this.bookService.getBookById(libro.bookId as number).subscribe(
@@ -132,6 +140,7 @@ closeModal() {
   }
 
   ngOnInit() {
+    this.privatearchive();
     this.checkUserStatus();  // Verifica el estado del usuario
     this.applyFilters(0);
     this.findGenres();
@@ -495,8 +504,6 @@ closeModal() {
     );
   }
 
-
-
   logout() {
     this.router.navigate(['/'], { queryParams: { logout: 'true' } });
   }
@@ -514,5 +521,45 @@ closeModal() {
         }
       );
     }
+  }
+  archiveBook(book: BookDto): void {
+    if (book.bookId === null) {
+      console.error('El libro no tiene un ID válido');
+      return;
+    }
+
+    const confirmArchive = confirm('¿Seguro que quiere archivar este libro?');
+    if (!confirmArchive) {
+      return;
+    }
+
+    // Llamada al servicio para obtener los detalles del libro por su ID
+    this.bookService.getBookById(book.bookId).subscribe(
+      (response: any) => {
+        const bookToArchive = response.data; // Obtenemos el libro desde la respuesta
+
+        if (!bookToArchive) {
+          console.error('No se encontró el libro para archivar');
+          return;
+        }
+
+        this.bookService.archiveBook(book.bookId!, bookToArchive).subscribe(
+          response => {
+            if (response.successful) {
+              alert('El libro ha sido archivado exitosamente.');
+            } else {
+              alert('No se pudo archivar el libro. Intente nuevamente.');
+            }
+          },
+          error => {
+            console.error('Error al archivar el libro:', error);
+            alert('Ocurrió un error al archivar el libro.');
+          }
+        );
+      },
+      error => {
+        console.error('Error al obtener detalles del libro:', error);
+      }
+    );
   }
 }

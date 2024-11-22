@@ -150,6 +150,9 @@
           {{ libro.status ? 'DISPONIBLE' : 'OCUPADO' }}
         </span>
         <button class="btn btn-primary mt-2" (click)="openReserveModal(libro)">Reservar</button>
+        <ng-container *ngIf = "isAdmin">
+          <button type="button" class="btn btn-secondary" (click)="archiveBook(libro)">Archivar</button>
+      </ng-container>
       </div>
 
     </div>
