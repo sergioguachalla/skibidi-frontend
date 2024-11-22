@@ -76,4 +76,8 @@ export class NavbarComponent {
       document.getElementById('registerIsbnModal'),
     ).hide();
   }
+
+  goToMyFavorites() {
+    this.router.navigate(['/favorite-books'])
+  }
 }
