@@ -15,6 +15,7 @@ import {EditorialDto} from "../../Model/dto/EditorialDto";
 import {ActivatedRoute, Router} from "@angular/router";
 import {LendBookService} from "../../services/lend-book.service";
 import {KeycloakService} from "keycloak-angular";
+import {UserClientService} from "../../services/userclient.service";
 
 declare var bootstrap: any;
 interface filtersParams {
@@ -121,6 +122,7 @@ closeModal() {
   constructor(
     private bookService: BookService,
     private lendBookService: LendBookService,
+    private userService: UserClientService = inject(UserClientService),
     private router: Router,
     private keycloakService: KeycloakService,
     ) {
@@ -391,12 +393,29 @@ closeModal() {
 
 
 
-  openReserveModal(book: BookDto) {
-    this.selectedBook = book;
-    const modalElement = document.getElementById('reserveModal');
-    const modal = new bootstrap.Modal(modalElement!);
-    modal.show();
+  openReserveModal(libro: BookDto) {
+    console.log('Libro seleccionado:', libro);
+    console.log("Verificando elegibilidad del usuario para reservar libros...");
+    this.userService.checkUserBorrowEligibility(this.keycloakService.getKeycloakInstance().subject!).subscribe(
+      (response: any) => {
+        if (response.successful && response.data === false) {
+          // Si el usuario está bloqueado, muestra un mensaje
+          this.mensaje = 'Usted tiene la opción bloqueada para reservas libros, contactese con un bibliotecario, no puedes hacer reservas.';
+          alert(this.mensaje);  // Puedes usar un modal o cualquier otra forma de alerta
+        } else {
+          // Si el usuario es elegible, abre el modal de reserva
+          this.selectedBook = libro;
+          const modalElement = document.getElementById('reserveModal');
+          const modal = new bootstrap.Modal(modalElement!);
+          modal.show();
+        }
+      },
+      error => {
+        console.error('Error al verificar elegibilidad del usuario:', error);
+      }
+    );
   }
+  
 
   closeReserveModal() {
     const modalElement = document.getElementById('reserveModal');

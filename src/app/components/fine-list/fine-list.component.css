@@ -201,3 +201,40 @@ tr:last-child td:first-child {
 tr:last-child td:last-child {
   border-bottom-right-radius: 8px;
 }
+
+
+.gray-row {
+  background-color: #d3d3d3;  /* Color gris claro */
+}
+
+
+/* Estilo para asegurar que el modal de confirmación esté en la parte superior */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050; /* Asegura que el modal de confirmación esté por encima */
+}
+
+
+.modal-header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

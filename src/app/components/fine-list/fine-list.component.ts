@@ -1,8 +1,7 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {NavbarComponent} from "../shared/navbar/navbar.component";
-import {FinesService} from "../../services/fines.service";
-import {NgClass, NgForOf, NgIf} from "@angular/common";
-import {toArray} from "rxjs";
+import { Component, inject, OnInit } from '@angular/core';
+import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { FinesService } from "../../services/fines.service";
+import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { UserClientService } from '../../services/userclient.service';
 
 @Component({
@@ -24,6 +23,10 @@ export class FineListComponent implements OnInit {
   totalPages: number = 0;
   pagesArray: number[] = [];
   isModalOpen: boolean = false;
+  isConfirmModalOpen: boolean = false;
+  selectedUserId: string | null = null;
+  selectedFine: any;  // Nueva variable para guardar el "fine" seleccionado
+
   private fineService: FinesService = inject(FinesService);
   private userService: UserClientService = inject(UserClientService);
 
@@ -58,7 +61,8 @@ export class FineListComponent implements OnInit {
 
     return Array.from({ length: endPage - startPage }, (_, i) => startPage + i);
   }
-  showFineDetail(fineId: number){
+
+  showFineDetail(fineId: number) {
     this.showModal();
     this.fineService.findFineDetail(fineId).subscribe((response) => {
       console.log(response);
@@ -69,23 +73,42 @@ export class FineListComponent implements OnInit {
   closeModal(): void {
     this.isModalOpen = false;
   }
+
   showModal(): void {
     this.isModalOpen = true;
   }
 
-  blockBorrowingPermission(userId: string): void {
-    // Implementar lógica para bloquear los préstamos
-    this.userService.changeBorrowPermission(userId).subscribe(
-      () => {
-        alert('El permiso para realizar préstamos ha sido bloqueado para el usuario.');
-        // Actualiza la lista de multas o usuarios
-      },
-      (error) => {
-        console.error('Error al bloquear permisos:', error);
-        alert('No se pudo bloquear el permiso. Intenta de nuevo.');
-      }
-    );
+  openConfirmModal(fine: any): void {
+    this.selectedFine = fine;  // Guarda el "fine" seleccionado
+    this.isConfirmModalOpen = true;
+    console.log("Modal abierto para el usuario", fine.userKcId); // Verifica si se abre
   }
   
-
+  closeConfirmModal(): void {
+    this.selectedUserId = null;
+    this.selectedFine = null;  // Limpiar la selección del "fine"
+    this.isConfirmModalOpen = false;
+  }
+  
+  confirmBlock(): void {
+    console.log("Confirmación de bloqueo iniciada");
+    if (this.selectedFine) {
+      this.userService.changeBorrowPermission(this.selectedFine.userKcId).subscribe(
+        () => {
+          let message = this.selectedFine.canBorrowBooks 
+                        ? 'El permiso para realizar préstamos ha sido bloqueado para el usuario.'
+                        : 'El permiso para realizar préstamos ha sido desbloqueado para el usuario.';
+          console.log('Permiso actualizado para el usuario:', this.selectedFine.userKcId);
+          alert(message);
+          this.findAllFines(); // Actualiza la lista
+          this.closeConfirmModal();
+        },
+        (error) => {
+          console.error('Error al cambiar los permisos:', error);
+          alert('No se pudo cambiar el permiso. Intenta de nuevo.');
+          this.closeConfirmModal();
+        }
+      );
+    }
+  }
 }
