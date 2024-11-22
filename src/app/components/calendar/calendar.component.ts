@@ -4,16 +4,16 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { CalendarUtils, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import { KeycloakService } from 'keycloak-angular';
 import { ReservationHistoryService } from '../../services/reservation-history.service';
-import {NavbarComponent} from "../shared/navbar/navbar.component";
+import { NavbarComponent } from "../shared/navbar/navbar.component";
+declare var bootstrap: any;
 
 interface Book {
   bookName: string;
   genre: string;
   date: string;
+  author?: string;
 }
 
 interface Environment {
@@ -25,63 +25,95 @@ interface Environment {
 
 @Component({
   selector: 'app-calendar',
+  standalone: true,
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
-  standalone: true,
   imports: [CommonModule, FullCalendarModule, NavbarComponent],
-
-  providers: [
-    CalendarUtils,
-    {
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    },
-  ],
 })
 export class CalendarComponent implements OnInit {
+  calendarOptions: any = {
+    initialView: 'dayGridMonth',
+    plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
+    events: [],
+    eventClick: this.handleEventClick.bind(this),
+  };
+  selectedEvent: any = null;
 
   constructor(
     private keycloakService: KeycloakService,
     private reservationHistoryService: ReservationHistoryService
   ) {}
-  calendarOptions: any = {
-    initialView: 'dayGridMonth',
-    plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
-    events: [],
-  };
-
-
-
 
   ngOnInit(): void {
     this.fetchCalendarData();
   }
 
   fetchCalendarData(): void {
-    this.reservationHistoryService.getCalendarData(this.keycloakService.getKeycloakInstance().subject!).subscribe(
-      (response) => {
-        if (response.successful) {
-          this.mapEvents(response.data.books, response.data.environments);
+    this.reservationHistoryService
+      .getCalendarData(this.keycloakService.getKeycloakInstance().subject!)
+      .subscribe(
+        (response) => {
+          if (response.successful) {
+            this.mapEvents(response.data.books, response.data.environments);
+          }
+        },
+        (error) => {
+          console.error('Error fetching calendar data:', error);
         }
-      },
-      (error) => {
-        console.error('Error fetching calendar data:', error);
-      }
-    );
+      );
   }
 
   mapEvents(books: Book[], environments: Environment[]): void {
-    const bookEvents = books.map((book) => ({
-      title: `Libro: ${book.bookName} (${book.genre})`,
-      start: book.date,
+    const bookEvents = books.map((book, index) => ({
+      id: `book-${index}`,
+      title: `📘 Préstamo de Libro: ${book.bookName}`,
+      start: new Date(book.date).toISOString(),
+      type: 'Libro',
+      extendedProps: {
+        genre: book.genre || null,
+        author: book.author || 'Autor no especificado',
+      },
     }));
 
-    const environmentEvents = environments.map((env) => ({
-      title: `Ambiente: ${env.environment}`,
-      start: env.clockIn,
-      end: env.clockOut,
+    const environmentEvents = environments.map((env, index) => ({
+      id: `environment-${index}`,
+      title: `🏢 Reserva de Ambiente: ${env.environment}`,
+      start: new Date(env.clockIn).toISOString(),
+      end: new Date(env.clockOut).toISOString(),
+      type: 'Ambiente',
+      extendedProps: {
+        reservationDate: env.reservationDate,
+      },
     }));
 
     this.calendarOptions.events = [...bookEvents, ...environmentEvents];
+  }
+
+  handleEventClick(arg: any): void {
+    const extendedProps = arg.event.extendedProps;
+
+    if (arg.event.extendedProps.type === 'Libro') {
+      this.selectedEvent = {
+        type: 'Prestamo de Libro',
+        title: arg.event.title,
+        genre: extendedProps.genre,
+        author: extendedProps.author,
+        start: new Date(arg.event.start).toLocaleDateString(),
+      };
+    } else if (arg.event.extendedProps.type === 'Ambiente') {
+      this.selectedEvent = {
+        type: 'Reserva de Ambiente',
+        title: arg.event.title,
+        reservationDate: extendedProps.reservationDate,
+        start: new Date(arg.event.start).toLocaleString(),
+        end: new Date(arg.event.end).toLocaleString(),
+      };
+    }
+
+    const modalElement = document.getElementById('eventModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
   }
 }

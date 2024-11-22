@@ -35,6 +35,10 @@ export class FinesService {
     return this.http.get<any>(`${this.API_URL}paid?page=${page}&size=${size}`);
   }
 
+  payFine(fineId: number) {
+    return this.http.put<any>(`${this.API_URL}pay/${fineId}`, null);
+  }
+
 
 
 

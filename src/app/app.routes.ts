@@ -21,6 +21,7 @@ import {
   UpdateStudyRoomReservationCapabilitiesComponent
 } from "./components/update-study-room-reservation-capabilities/update-study-room-reservation-capabilities.component";
 import {PaidFinesComponent} from "./components/paid-fines/paid-fines.component";
+import {FavoritesBooksComponent} from "./components/favorites-books/favorites-books.component";
 
 import {CalendarComponent} from "./components/calendar/calendar.component";
 
@@ -48,10 +49,9 @@ export const routes: Routes = [
     { path: 'lend-history', component: LendBookHistoryComponent },
     {path: 'clients', component: ClientListComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
     {path: 'paid-fines', component: PaidFinesComponent},
-    {path: 'calendar', component: CalendarComponent},
+    {path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard], data:{roles:['USER_MAKE_RESERVATION']}},
     {path: 'type-fine', component: TypeFineComponent},
     {path: 'reservation-eligibility', component: UpdateStudyRoomReservationCapabilitiesComponent, canActivate: [AuthGuard], data:{roles:['MAKE_RESERVATION']}},
-    {path: 'paid-fines', component: PaidFinesComponent}
-
-
+    {path: 'paid-fines', component: PaidFinesComponent},
+    {path: 'favorite-books', component: FavoritesBooksComponent}
 ];

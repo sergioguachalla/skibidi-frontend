@@ -1,9 +1,9 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {NavbarComponent} from "../shared/navbar/navbar.component";
-import {FinesService} from "../../services/fines.service";
-import {NgClass, NgForOf, NgIf} from "@angular/common";
-import {toArray} from "rxjs";
-import {FormsModule} from "@angular/forms";
+import { Component, inject, OnInit } from '@angular/core';
+import { NavbarComponent } from "../shared/navbar/navbar.component";
+import { FinesService } from "../../services/fines.service";
+import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { UserClientService } from '../../services/userclient.service';
 
 @Component({
   selector: 'app-fine-list',
@@ -16,7 +16,7 @@ import {FormsModule} from "@angular/forms";
     FormsModule
   ],
   templateUrl: './fine-list.component.html',
-  styleUrl: './fine-list.component.css'
+  styleUrls: ['./fine-list.component.css']
 })
 export class FineListComponent implements OnInit {
   fines: any = [];
@@ -25,9 +25,14 @@ export class FineListComponent implements OnInit {
   totalPages: number = 0;
   pagesArray: number[] = [];
   isModalOpen: boolean = false;
-  private fineService: FinesService = inject(FinesService);
+  isConfirmModalOpen: boolean = false;
+  selectedUserId: string | null = null;
+  selectedFine: any;
   startDate: any;
   endDate: any;
+
+  private fineService: FinesService = inject(FinesService);
+  private userService: UserClientService = inject(UserClientService);
 
   constructor() {}
 
@@ -60,7 +65,8 @@ export class FineListComponent implements OnInit {
 
     return Array.from({ length: endPage - startPage }, (_, i) => startPage + i);
   }
-  showFineDetail(fineId: number){
+
+  showFineDetail(fineId: number) {
     this.showModal();
     this.fineService.findFineDetail(fineId).subscribe((response) => {
       console.log(response);
@@ -71,8 +77,59 @@ export class FineListComponent implements OnInit {
   closeModal(): void {
     this.isModalOpen = false;
   }
+
   showModal(): void {
     this.isModalOpen = true;
+  }
+
+  openConfirmModal(fine: any): void {
+    this.selectedFine = fine;
+    this.isConfirmModalOpen = true;
+    console.log("Modal abierto para el usuario", fine.userKcId);
+  }
+
+  closeConfirmModal(): void {
+    this.selectedUserId = null;
+    this.selectedFine = null;
+    this.isConfirmModalOpen = false;
+  }
+
+  confirmBlock(): void {
+    if (this.selectedFine) {
+      if (this.selectedFine.typeFine === 'Daño o Pérdida de Material') {
+        this.userService.blockUser(this.selectedFine.userKcId).subscribe({
+          next: () => {
+            const message = this.selectedFine.isBlocked
+              ? 'El usuario ha sido bloqueado exitosamente.'
+              : 'El usuario ha sido desbloqueado exitosamente.';
+            alert(message);
+            this.findAllFines();
+            this.closeConfirmModal();
+          },
+          error: (err) => {
+            console.error('Error al bloquear/desbloquear al usuario:', err);
+            alert('No se pudo completar la acción. Intenta de nuevo.');
+            this.closeConfirmModal();
+          },
+        });
+      } else {
+        this.userService.changeBorrowPermission(this.selectedFine.userKcId).subscribe({
+          next: () => {
+            const message = this.selectedFine.canBorrowBooks
+              ? 'El permiso para realizar préstamos ha sido bloqueado para el usuario.'
+              : 'El permiso para realizar préstamos ha sido desbloqueado para el usuario.';
+            alert(message);
+            this.findAllFines();
+            this.closeConfirmModal();
+          },
+          error: (err) => {
+            console.error('Error al cambiar los permisos:', err);
+            alert('No se pudo completar la acción. Intenta de nuevo.');
+            this.closeConfirmModal();
+          },
+        });
+      }
+    }
   }
 
   filterFines() {
@@ -98,5 +155,11 @@ export class FineListComponent implements OnInit {
     this.findAllFines();
   }
 
-
+  payFine(fineId: number) {
+    if (confirm('Desea registrar el pago de la multa?')) {
+      this.fineService.payFine(fineId).subscribe(() => {
+        this.findAllFines();
+      });
+    }
+  }
 }

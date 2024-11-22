@@ -92,7 +92,19 @@ export class BookService {
   getBookById(id: number): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${this.apiUrl}modal/${id}`);
   }
+
   archiveBook(id: number, book: BookDto): Observable<any> {
     return this.http.put(`http://localhost:8091/api/v1/books/archive/${id}`, book);
+}
+
+  addOrRemoveFromFavorites(kcId: string, bookId: number | null) : Observable<any>{
+    return this.http.post(`${this.apiUrl}favorites`, {
+      "kcId": kcId,
+      "bookId": bookId
+    })
+  }
+
+  getFavoriteBooks(kcId: String): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}favorites?kcId=${kcId}`)
   }
 }

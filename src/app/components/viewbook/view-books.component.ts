@@ -15,6 +15,7 @@ import {EditorialDto} from "../../Model/dto/EditorialDto";
 import {ActivatedRoute, Router} from "@angular/router";
 import {LendBookService} from "../../services/lend-book.service";
 import {KeycloakService} from "keycloak-angular";
+import {UserClientService} from "../../services/userclient.service";
 
 declare var bootstrap: any;
 interface filtersParams {
@@ -40,11 +41,15 @@ interface filtersParams {
 
 export class ViewBooksComponent implements OnInit {
   selectedBook: any = null;
+
   isAdmin: boolean=false;
 privatearchive(){
   const role = this.keycloakService.getUserRoles()
   console.log(role)
   if(role.includes('MAKE_RESERVATION')){
+  todayDate: string = new Date().toISOString().split('T')[0]; // Esto formatea la fecha a 'yyyy-mm-dd'
+
+
 
     this.isAdmin=true
   }
@@ -130,13 +135,16 @@ closeModal() {
   constructor(
     private bookService: BookService,
     private lendBookService: LendBookService,
+    private userService: UserClientService = inject(UserClientService),
     private router: Router,
     private keycloakService: KeycloakService,
+    
     ) {
   }
 
   ngOnInit() {
     this.privatearchive();
+    this.checkUserStatus();  // Verifica el estado del usuario
     this.applyFilters(0);
     this.findGenres();
     this.findLanguages();
@@ -157,8 +165,20 @@ closeModal() {
         this.applyFilters(page);
 
     });
+  }
 
-
+  checkUserStatus() {
+    this.userService.checkUserBlockStatus(this.keycloakService.getKeycloakInstance().subject!).subscribe(
+      (response: any) => {
+        if (response && response.data === true) {
+          // Si el usuario está bloqueado, realiza logout
+          this.logout();
+        }
+      },
+      error => {
+        console.error('Error al verificar el estado de bloqueo del usuario:', error);
+      }
+    );
   }
 
   toggleAvailability(libro: BookDto) {
@@ -401,12 +421,41 @@ closeModal() {
 
 
 
-  openReserveModal(book: BookDto) {
-    this.selectedBook = book;
-    const modalElement = document.getElementById('reserveModal');
-    const modal = new bootstrap.Modal(modalElement!);
-    modal.show();
+  openReserveModal(libro: BookDto) {
+    console.log('Libro seleccionado:', libro);
+
+    // Limpia cualquier mensaje previo
+    this.mensaje = '';
+
+    // Verificar si el libro está disponible (estado no es 0)
+    if (!libro.status) {
+      console.log('Este libro no está disponible para reserva en este momento.');
+      this.mensaje = 'Este libro no está disponible para reserva en este momento.';
+      alert(this.mensaje);  // Muestra un mensaje de alerta
+      return;  // Detiene la ejecución si el libro está ocupado
+    }
+
+    this.userService.checkUserBorrowEligibility(this.keycloakService.getKeycloakInstance().subject!).subscribe(
+      (response: any) => {
+        if (response.successful && response.data === false) {
+          // Si el usuario está bloqueado, muestra un mensaje
+          this.mensaje = 'Usted tiene la opción bloqueada para reservas libros, contactese con un bibliotecario, no puedes hacer reservas.';
+          alert(this.mensaje);  // Muestra un mensaje de alerta
+        } else {
+          // Si el usuario es elegible, abre el modal de reserva
+          this.selectedBook = libro;
+          const modalElement = document.getElementById('reserveModal');
+          const modal = new bootstrap.Modal(modalElement!);
+          modal.show();
+        }
+      },
+      error => {
+        console.error('Error al verificar elegibilidad del usuario:', error);
+      }
+    );
   }
+
+
 
   closeReserveModal() {
     const modalElement = document.getElementById('reserveModal');
@@ -422,30 +471,42 @@ closeModal() {
   }
 
   reserveBook() {
+    const today = new Date().toISOString().split('T')[0]; // Fecha de hoy en formato 'yyyy-mm-dd'
+    
+    // Validar si los campos están completos
     if (!this.returnDate || !this.note) {
-      console.warn("Por favor, completa todos los campos");
+      this.mensaje = "Por favor, completa todos los campos.";  // Mensaje de error visible en la interfaz
       return;
     }
-
+  
+    // Validar si la fecha de devolución es válida (no anterior a hoy)
+    if (this.returnDate < today) {
+      this.mensaje = "La fecha de devolución no puede ser anterior a hoy.";  // Mensaje de error visible en la interfaz
+      return;
+    }
+  
+    // Si todo está correcto, realizar la reserva
     const reserveData = {
       bookId: this.selectedBook.bookId,
-      //TODO: Cambiar el librarianId :p
       librarianId: 1,
       clientKcId: this.keycloakService.getKeycloakInstance().subject!,
       returnDate: new Date(this.returnDate).toISOString(),
       note: this.note
     };
-
+  
     this.lendBookService.reserveBook(reserveData).subscribe(
       response => {
-        console.log('Reserva realizada con éxito:', response);
-        this.closeReserveModal();
+        alert('Reserva realizada con éxito'); // Mensaje de éxito visible con alert
+        this.closeReserveModal(); // Cerrar el modal
+        this.applyFilters(this.pageNumber); // Recargar los libros después de la reserva
       },
       error => {
         console.error('Error al realizar la reserva:', error);
+        this.mensaje = "Ocurrió un error al realizar la reserva.";  // Mensaje de error visible en la interfaz
       }
     );
   }
+
   archiveBook(book: BookDto): void {
     if (book.bookId === null) {
       console.error('El libro no tiene un ID válido');
@@ -487,3 +548,24 @@ closeModal() {
     );
   }
 }    
+
+  logout() {
+    this.router.navigate(['/'], { queryParams: { logout: 'true' } });
+  }
+
+  addToFavorites(book: BookDto) {
+    if (book) {
+      const kcId = this.keycloakService.getKeycloakInstance().subject;
+      this.bookService.addOrRemoveFromFavorites(kcId!, book.bookId).subscribe(
+        (response) => {
+          alert(response.data);
+        },
+        (error) => {
+          console.error('Error al agregar o quitar de favoritos:', error);
+          alert('No se pudo realizar la operación.');
+        }
+      );
+    }
+  }
+}
+

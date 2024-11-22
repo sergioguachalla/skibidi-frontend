@@ -97,31 +97,35 @@
   </div>
 
   </div>
-  <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="bookModalLabel">{{ selectedBook?.title }}</h5>
-          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p><strong>ISBN:</strong> {{ selectedBook?.isbn }}</p>
-          <p><strong>Fecha de Registro:</strong> {{ selectedBook?.registrationDate | date }}</p>
-          <p><strong>Género:</strong> {{ selectedBook?.genre }}</p>
-          <strong>Estado:</strong>
-            <span [ngClass]="{'available': selectedBook?.status, 'not-available': !selectedBook?.status}">
-              {{ selectedBook?.status ? 'Disponible' : 'No Disponible' }}
-            </span>
-          <p><strong>Autores:</strong> {{ selectedBook?.authors ? selectedBook.authors.join(', ') : 'No hay autores' }}</p>
-          <p><strong>Editorial:</strong> {{ selectedBook?.editorialName }}</p>
-          <p><strong>Language:</strong> {{ selectedBook?.languageName }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
-        </div>
+<!-- INFORMATION MODAL -->
+<div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookModalLabel">{{ selectedBook?.title }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>ISBN:</strong> {{ selectedBook?.isbn }}</p>
+        <p><strong>Fecha de Registro:</strong> {{ selectedBook?.registrationDate | date }}</p>
+        <p><strong>Género:</strong> {{ selectedBook?.genre }}</p>
+        <strong>Estado:</strong>
+        <span [ngClass]="{'available': selectedBook?.status, 'not-available': !selectedBook?.status}">
+            {{ selectedBook?.status ? 'Disponible' : 'No Disponible' }}
+          </span>
+        <p><strong>Autores:</strong> {{ selectedBook?.authors ? selectedBook.authors.join(', ') : 'No hay autores' }}</p>
+        <p><strong>Editorial:</strong> {{ selectedBook?.editorialName }}</p>
+        <p><strong>Idioma:</strong> {{ selectedBook?.languageName }}</p>
+
+        <!-- Add to Favorites Button -->
+        <button class="btn btn-warning mt-3" (click)="addToFavorites(selectedBook)">Añadir a favoritos</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
       </div>
     </div>
   </div>
+</div>
 
 
   <!-- Filtered books -->
@@ -231,19 +235,44 @@
       </div>
       <div class="modal-body">
         <form>
+          <!-- Campo para la fecha de devolución -->
           <div class="mb-3">
             <label for="returnDate" class="form-label">Fecha de Devolución</label>
-            <input type="date" id="returnDate" [(ngModel)]="returnDate" name="returnDate" class="form-control">
+            <input type="date" id="returnDate" [(ngModel)]="returnDate" name="returnDate" class="form-control" [min]="todayDate">
           </div>
+          
+          <!-- Campo para la nota -->
           <div class="mb-3">
             <label for="note" class="form-label">Nota de la Reserva</label>
             <textarea id="note" [(ngModel)]="note" name="note" class="form-control"></textarea>
+          </div>
+          
+          <!-- Mostrar el mensaje de error si existe -->
+          <div *ngIf="mensaje" class="alert alert-danger">
+            {{ mensaje }}
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeReserveModal()">Cancelar</button>
         <button type="button" class="btn btn-primary" (click)="reserveBook()">Reservar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para usuarios bloqueados -->
+<div class="modal fade" id="blockedUserModal" tabindex="-1" aria-labelledby="blockedUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="blockedUserModalLabel">Acceso Bloqueado</h5>
+      </div>
+      <div class="modal-body">
+        {{ mensaje }}
+      </div>
+      <div class="modal-footer">
+        <button id="blockedUserModalAccept" type="button" class="btn btn-primary">Aceptar</button>
       </div>
     </div>
   </div>
