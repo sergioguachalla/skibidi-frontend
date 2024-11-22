@@ -40,7 +40,16 @@ interface filtersParams {
 
 export class ViewBooksComponent implements OnInit {
   selectedBook: any = null;
+  isAdmin: boolean=false;
+privatearchive(){
+  const role = this.keycloakService.getUserRoles()
+  console.log(role)
+  if(role.includes('MAKE_RESERVATION')){
 
+    this.isAdmin=true
+  }
+
+}
   openModal(libro: BookDetailsDto) {
     this.bookService.getBookById(libro.bookId as number).subscribe(
       (response: any) => {
@@ -127,6 +136,7 @@ closeModal() {
   }
 
   ngOnInit() {
+    this.privatearchive();
     this.applyFilters(0);
     this.findGenres();
     this.findLanguages();
